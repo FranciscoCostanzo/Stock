@@ -1,0 +1,107 @@
+$bordes: #000 3px solid;
+$rdsGeneral: 20px;
+$rdsChico: 10px;
+
+$sombraGeneral: 6px 6px 30px rgba(0, 0, 0, 0.25);
+$sombraDeco: 0px 0px 30px 20px rgba(0, 0, 0, 0.25);
+
+$textSizeMuyGrande: 46px;
+$textSizeGrande: 32px;
+$textSizeGeneral: 22px;
+$textSizeChico: 16px;
+
+$pGeneral: 20px;
+$pMedio: 9px;
+$pChico: 5px;
+
+// transiciones
+$time-hover: all .3s ease;
+$time-normal: all .5s ease;
+// Tamaño de fuentes
+$font-xxxs: 10px;
+$font-xxs: 12px;
+$font-xs: 15px;
+$font-s: 18px;
+$font-m: 22px;
+$font-l: 28px;
+$font-xl: 32px;
+
+// padding tamaño
+$p-xs: 5px;
+$p-s: 10px;
+$p-m: 15px;
+$p-l: 20px;
+$p-xl: 35px;
+
+// gap tamaño
+$gap-xs: 5px;
+$gap-s: 10px;
+$gap-m: 15px;
+$gap-l: 20px;
+$gap-xl: 35px;
+
+// colores
+
+// transiciones
+$time-hover: all .3s ease;
+$time-normal: all .5s ease;
+
+// Bordes
+$rds_xs: 5px;
+$rds_s: 10px;
+$rds_m: 15px;
+$rds_l: 20px;
+$rds_xl: 25px;
+$rds_o: 50%;
+
+// Titulos
+@font-face {
+  font-family: 'josefin';
+  src: url('../assets/fonts/JosefinSans-VariableFont_wght.ttf') format('truetype'); 
+}
+
+// Contenido
+@font-face {
+  font-family: 'advent';
+  src: url('../assets/fonts/AdventPro-VariableFont_wdth\,wght.ttf') format('truetype'); 
+}
+
+* {
+  font-family: "josefin", sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #fff;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+  box-shadow: inset 0px 0px 100px 10px rgba(0, 0, 0, 0.25);
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+.app {
+  width: 100%;
+  height: 100%;
+}
+
+h1,h2,h3,h4,h5,h6{
+  text-wrap: balance;
+}
+
+p{
+  text-wrap: pretty;
+}
+
+@import './styleScreens/styleHome.scss';
+@import './/styleModules/styleHeader/styleNavBar.scss';
+@import './/styleModules/styleHeader/styleHeader.scss';
+@import './/styleModules/styleModals/Modal.scss';
+@import './/styleModules/styleAuth/styleForms.scss';

@@ -1,0 +1,77 @@
+nav {
+    padding: $pGeneral;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 20px;
+
+    .conteiner__section {
+        position: relative;
+        width: 100%;
+
+        .section__navbar {
+            cursor: pointer;
+            padding: $pChico;
+            color: #000;
+            font-size: $textSizeGeneral;
+            transition: 0.1s ease;
+            border-radius: $rdsChico;
+            box-shadow: 0 5px 6px 1px #0000004e;
+            background-color: #fff;
+
+            &:hover {
+                scale: 1.05;
+            }
+        }
+
+        .conteiner__subsections {
+            top: 100%;
+            animation: clickSubsections 0.4s ease;
+            width: 100%;
+            position: absolute;
+            margin-top: 20px;
+            gap: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            .subsections__navbar {
+                display: grid;
+                place-items: center;
+                font-weight: bold;
+                height: 35px;
+                cursor: pointer;
+                color: #000;
+                text-decoration: none;
+                font-size: $textSizeGeneral;
+                width: 100%;
+                transition: 0.1s ease;
+                border-radius: $rdsChico;
+                box-shadow: 0 5px 6px 1px #0000004e;
+                background-color: #fff;
+
+                &:hover {
+                    scale: 1.05;
+                }
+            }
+        }
+    }
+
+}
+
+@keyframes clickSubsections {
+
+    0%{
+        opacity: 0;
+        top: 0;
+    }
+
+    100%{
+        opacity: 1;
+        top: 100%;
+    }
+    
+}

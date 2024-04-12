@@ -1,9 +1,12 @@
 import Header from "../modules/Header/Header"
 
-const Home = () => {
+const Dashbord = () => {
   return (
+    <>
+    dashbord
     <Header/>
+    </>
   )
 }
 
-export default Home
+export default Dashbord
