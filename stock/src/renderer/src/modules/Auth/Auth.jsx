@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import useForm from "./components/Forms";
 const Auth = () => {
     const camposInicioSesion = [
@@ -16,9 +16,12 @@ const Auth = () => {
 
     const { formData, handleChange, handleSubmit } = useForm(camposInicioSesion, "http://localhost:4000/auth", false);
 
+
+    const navigate = useNavigate()
+
     return (
         <>
-            <form onSubmit={handleSubmit} className="form__registro">
+            <form onSubmit={() => navigate("dashbord")} className="form__registro">
                 <p className="title">Iniciar sesión</p>
                 <p className="message">Ingresa con tu cuenta para continuar</p>
                 {camposInicioSesion.map((campoInicio, index) => (

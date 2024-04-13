@@ -3,7 +3,6 @@ import Header from "../modules/Header/Header"
 const Dashbord = () => {
   return (
     <>
-    dashbord
     <Header/>
     </>
   )
