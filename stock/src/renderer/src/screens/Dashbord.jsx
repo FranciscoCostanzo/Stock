@@ -1,10 +1,8 @@
-import Header from "../modules/Header/Header"
+import Header from '../modules/Header/Header'
 
 const Dashbord = () => {
   return (
-    <>
-    <Header/>
-    </>
+      <Header />
   )
 }
 

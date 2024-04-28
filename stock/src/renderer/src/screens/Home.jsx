@@ -1,9 +1,7 @@
-import Auth from "../modules/Auth/Auth"
+import Auth from '../modules/Auth/Auth'
 
 const Home = () => {
-  return (
-    <Auth/>
-  )
+  return <Auth />
 }
 
 export default Home
