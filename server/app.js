@@ -5,17 +5,17 @@ const routes = require("./routes/endpoints.js");
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+// Middleware para establecer la CSP
+app.use((req, res, next) => {
+  res.setHeader('Content-Security-Policy', `default-src 'self' http://localhost:${PORT}`);
+  next();
+});
+
 // Aplicar middleware de CORS
 app.use(cors);
 
 // Analizar el cuerpo de las solicitudes JSON
 app.use(express.json());
-
-// Configurar la Política de Seguridad de Contenido (CSP)
-app.use((req, res, next) => {
-    res.setHeader(`Content-Security-Policy', "default-src 'self' http://localhost:${PORT}/`);
-    next();
-});
 
 // Definir las rutas de la aplicación
 app.use("/", routes);

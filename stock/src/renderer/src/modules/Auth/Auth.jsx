@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import useForm from "./components/Forms";
-import { fetchData } from "./utils/utilsAuth";
 
 const Login = () => {
     const camposInicioSesion = [

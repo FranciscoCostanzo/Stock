@@ -5,10 +5,20 @@ import { AuthRouter } from './modules/Auth/libs/AuthRouter'
 import GenerarAlta from './modules/GenerarAlta/GenerarAlta'
 import Auth from './modules/Auth/Auth'
 import Register from './modules/Register/Register'
-
+import { useEffect } from 'react'
 function App() {
-  return (
+  useEffect(() => {
+    // Configurar la CSP aquí
+    const cspMetaTag = document.createElement('meta')
+    cspMetaTag.setAttribute('http-equiv', 'Content-Security-Policy')
+    cspMetaTag.setAttribute(
+      'content',
+      "default-src 'self'; connect-src 'self' *"
+    )
+    document.head.appendChild(cspMetaTag)
+  }, [])
 
+  return (
     <Routes>
       <Route index path="/" element={<Home />} />
       <Route element={<AuthRouter />}>

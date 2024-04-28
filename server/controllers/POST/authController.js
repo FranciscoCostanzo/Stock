@@ -3,22 +3,22 @@ const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 
 module.exports.auth = async (req, res) => {
-    const { user, password } = req.body;
-    const consult = 'SELECT * FROM Locales WHERE (nombreLocal = ?)';
+    const { nombre_local, password } = req.body;
+    const consult = 'SELECT * FROM locales WHERE nombreLocal = ?';
     
     try {
         const connection = await poolConnection.getConnection();
-        const [rows, fields] = await connection.query(consult, [user, user]);
+        const [rows, fields] = await connection.query(consult, [nombre_local]);
         
         if (rows.length > 0) {
-            const usuario = rows[0];
+            const local = rows[0];
             
             // Comparar la contraseña hasheada con la proporcionada por el usuario
-            const match = await bcrypt.compare(password, usuario.password);
+            const match = await bcrypt.compare(password, local.password);
             
             if (match) {
                 // Generar el token de autenticación
-                const token = jwt.sign({ user }, "Stack", { expiresIn: "1h" });
+                const token = jwt.sign({ nombre_local }, "Stack", { expiresIn: "1h" });
 
                 // Configuración de la cookie
                 const cookieOptions = {
@@ -29,14 +29,14 @@ module.exports.auth = async (req, res) => {
                 };
 
                 // Establecer la cookie en la respuesta y enviar la respuesta al cliente
-                res.cookie('token', token, cookieOptions).send({ message: 'Usuario autenticado', user: usuario, token });
+                res.cookie('token', token, cookieOptions).send({ message: 'Local autenticado', local, token });
             } else {
                 console.log('Credenciales incorrectas');
                 res.status(401).send({ message: 'Credenciales incorrectas' });
             }
         } else {
-            console.log('Usuario no encontrado');
-            res.status(404).send({ message: 'Usuario no encontrado' });
+            console.log('Local no encontrado');
+            res.status(404).send({ message: 'Local no encontrado' });
         }
 
         connection.release();

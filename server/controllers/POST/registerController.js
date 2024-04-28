@@ -38,7 +38,7 @@ module.exports.register = async (req, res) => {
         };
 
         // Establecer la cookie en la respuesta y enviar la respuesta al cliente
-        res.cookie('token', token, cookieOptions).send({ message: 'Local registrado exitosamente', nombre_local });
+        res.cookie('token', token, cookieOptions).send({ message: 'Local registrado exitosamente', nombre_local, token });
     } catch (error) {
         console.error('Error al ejecutar la consulta:', error);
         res.status(500).send({ error: 'Error interno del servidor' });

@@ -67,7 +67,7 @@ const Forms = (fields, endpoint, tipoDeForm) => {
             );
 
             navigate("/dashbord");
-            window.location.reload();
+            // window.location.reload();
             localStorage.setItem("userData", JSON.stringify(responseData));
         } catch (error) {
             console.error("Error al enviar datos:", error.message);
