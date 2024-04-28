@@ -1,10 +1,12 @@
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import useForm from "./components/Forms";
-const Auth = () => {
+import { fetchData } from "./utils/utilsAuth";
+
+const Login = () => {
     const camposInicioSesion = [
         {
-            label: "Email o Usuario",
-            name: "user",
+            label: "Locales",
+            name: "nombre_local",
             type: "text",
         },
         {
@@ -16,12 +18,9 @@ const Auth = () => {
 
     const { formData, handleChange, handleSubmit } = useForm(camposInicioSesion, "http://localhost:4000/auth", false);
 
-
-    const navigate = useNavigate()
-
     return (
         <>
-            <form onSubmit={() => navigate("dashbord")} className="form__registro">
+            <form onSubmit={handleSubmit} className="form__registro">
                 <p className="title">Iniciar sesión</p>
                 <p className="message">Ingresa con tu cuenta para continuar</p>
                 {camposInicioSesion.map((campoInicio, index) => (
@@ -49,4 +48,4 @@ const Auth = () => {
     );
 };
 
-export default Auth;
+export default Login;
