@@ -1,0 +1,156 @@
+# Migración de Base de Datos a MySQL
+
+##
+# Migración de Base de Datos a MySQL
+
+## Creación de la Base de Datos
+
+### Paso 1: Crear la base de datos
+
+```sql
+CREATE DATABASE TUBASE;
+
+CREATE TABLE Mercaderia (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    descripcion VARCHAR(255),
+    costo DECIMAL(10, 2),
+    publico DECIMAL(10, 2)
+);
+
+CREATE TABLE Stock (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_mercaderia INT,
+    id_sucursal INT,
+    cantidad INT,
+    FOREIGN KEY (id_mercaderia) REFERENCES Mercaderia(id),
+    FOREIGN KEY (id_sucursal) REFERENCES Sucursal(id)
+);
+
+CREATE TABLE Sucursal (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255)
+);
+
+import pandas as pd
+import mysql.connector
+
+# Función para cargar datos desde Excel y cargar en MySQL
+
+def cargar_datos_desde_excel_a_mysql(excel_file, server, database, username, password):
+    conn = None
+    try:
+        # Leer el archivo Excel
+        df = pd.read_excel(excel_file, usecols=['Descripcion', 'Costo', 'Publico'])
+
+        # Filtrar datos para solo incluir productos con costo mayor a 2000
+        df = df[df['Costo'] > 2000]
+
+        # Conectar a MySQL
+        conn = mysql.connector.connect(
+            host=server,
+            user=username,
+            password=password,
+            database=database
+        )
+
+        if conn.is_connected():
+            cursor = conn.cursor()
+
+            # Iterar sobre las filas del DataFrame y insertar en MySQL
+            for index, row in df.iterrows():
+                descripcion = row['Descripcion']
+                costo = row['Costo']
+                publico = row['Publico']
+
+                # Ejecutar la consulta SQL de inserción
+                sql = "INSERT INTO Mercaderia (descripcion, costo, publico) VALUES (%s, %s, %s)"
+                cursor.execute(sql, (descripcion, costo, publico))
+                conn.commit()
+
+            print("Datos insertados correctamente en MySQL.")
+
+    except mysql.connector.Error as error:
+        print(f"Error al conectar o insertar datos en MySQL: {error}")
+
+    except Exception as e:
+        print(f"Error inesperado: {e}")
+
+    finally:
+        if conn is not None and conn.is_connected():
+            cursor.close()
+            conn.close()
+            print("Conexión a MySQL cerrada.")
+
+# Configuración de parámetros
+excel_file = 'TUEXCEL.xlsx'
+server = 'TUSERVER'
+database = 'TUBASE'
+username = 'TUUSER'
+password = 'TUPASS'
+
+# Llamar a la función para cargar datos desde Excel a MySQL
+cargar_datos_desde_excel_a_mysql(excel_file, server, database, username, password)
+
+import pandas as pd
+import mysql.connector
+
+# Función para cargar datos desde Excel y actualizar en MySQL
+def actualizar_stock_desde_excel(excel_file, server, database, username, password):
+    conn = None
+    try:
+        # Leer el archivo Excel
+        df = pd.read_excel(excel_file, usecols=['Articulo', 'Stock'])
+
+        # Conectar a MySQL
+        conn = mysql.connector.connect(
+            host=server,
+            user=username,
+            password=password,
+            database=database
+        )
+
+        if conn.is_connected():
+            cursor = conn.cursor()
+
+            # Obtener todos los IDs y descripciones de Mercaderia
+            cursor.execute("SELECT id, descripcion FROM Mercaderia")
+            mercaderia_data = cursor.fetchall()
+            mercaderia_dict = {row[1]: row[0] for row in mercaderia_data}
+
+            # Iterar sobre las filas del DataFrame y actualizar la tabla Stock en MySQL
+            for index, row in df.iterrows():
+                descripcion = row['Articulo']
+                cantidad = row['Stock']
+
+                if descripcion in mercaderia_dict:
+                    id_mercaderia = mercaderia_dict[descripcion]
+                    id_sucursal = 5  # ID de sucursal fijo
+
+                    # Ejecutar la consulta SQL de inserción
+                    sql = "INSERT INTO Stock (id_mercaderia, id_sucursal, cantidad) VALUES (%s, %s, %s)"
+                    cursor.execute(sql, (id_mercaderia, id_sucursal, cantidad))
+                    conn.commit()
+
+            print("Stock actualizado correctamente en MySQL.")
+
+    except mysql.connector.Error as error:
+        print(f"Error al conectar o actualizar datos en MySQL: {error}")
+
+    except Exception as e:
+        print(f"Error inesperado: {e}")
+
+    finally:
+        if conn is not None and conn.is_connected():
+            cursor.close()
+            conn.close()
+            print("Conexión a MySQL cerrada.")
+
+# Configuración de parámetros
+excel_file = 'TUEXCEL.xlsx'
+server = 'TUSERVER'
+database = 'TUBASE'
+username = 'TUUSER'
+password = 'TUPASS'
+
+# Llamar a la función para actualizar stock desde Excel a MySQL
+actualizar_stock_desde_excel(excel_file, server, database, username, password)
