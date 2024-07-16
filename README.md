@@ -1,5 +1,7 @@
 # Migración de Base de Datos a MySQL
 
+Tenía una base de datos en Microsoft Access y decidí exportarla a Excel para luego utilizar Python junto con pandas para enviar los datos a mi base de datos MySQL remota.
+
 ## Creación de la Base de Datos
 
 ### Paso 1: Crear la base de datos
@@ -77,10 +79,10 @@ CREATE TABLE Ventas (
 
 ```
 
-import pandas as pd
-import mysql.connector
+## import pandas as pd
+## import mysql.connector
 
-# Función para cargar datos desde Excel y cargar en MySQL
+### Función para cargar datos desde Excel y cargar en MySQL
 
         def cargar_datos_desde_excel_a_mysql(excel_file, server, database,       username, password):
         conn = None
@@ -127,6 +129,7 @@ import mysql.connector
             conn.close()
             print("Conexión a MySQL cerrada.")
 
+            # Configuración de parámetros
     excel_file = 'TUEXCEL.xlsx'
     server = 'TUSERVER'
     database = 'TUBASE'
@@ -135,7 +138,7 @@ import mysql.connector
 
     cargar_datos_desde_excel_a_mysql(excel_file, server, database, username, password)
 
-# Función para cargar datos desde Excel y actualizar en MySQL
+### Función para cargar datos desde Excel y actualizar en MySQL
         def actualizar_stock_desde_excel(excel_file, server, database, username, password):
         conn = None
          try:
@@ -185,7 +188,8 @@ import mysql.connector
             cursor.close()
             conn.close()
             print("Conexión a MySQL cerrada.")
-
+        
+            # Configuración de parámetros
         excel_file = 'TUEXCEL.xlsx'
         server = 'TUSERVER'
         database = 'TUBASE'
