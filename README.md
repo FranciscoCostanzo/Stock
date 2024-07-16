@@ -1,8 +1,5 @@
 # Migración de Base de Datos a MySQL
 
-##
-# Migración de Base de Datos a MySQL
-
 ## Creación de la Base de Datos
 
 ### Paso 1: Crear la base de datos
@@ -30,6 +27,7 @@ CREATE TABLE Sucursal (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(255)
 );
+```
 
 import pandas as pd
 import mysql.connector
