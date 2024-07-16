@@ -5,7 +5,29 @@
 ### Paso 1: Crear la base de datos
 
 ```sql
+
 CREATE DATABASE TUBASE;
+
+CREATE TABLE Caja (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    fecha DATETIME NOT NULL,
+    saldo_inicial DECIMAL(10, 2) NOT NULL,
+    saldo_final DECIMAL(10, 2) NOT NULL,
+    id_sucursal INT,
+    CONSTRAINT fk_caja_sucursal FOREIGN KEY (id_sucursal) REFERENCES Sucursal(id)
+);
+
+CREATE TABLE Fallas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    fecha DATETIME NOT NULL,
+    id_usuario INT,
+    id_mercaderia INT,
+    id_sucursal INT,
+    cantidad INT,
+    CONSTRAINT fk_fallas_usuario FOREIGN KEY (id_usuario) REFERENCES Usuarios(id),
+    CONSTRAINT fk_fallas_mercaderia FOREIGN KEY (id_mercaderia) REFERENCES Mercaderia(id),
+    CONSTRAINT fk_fallas_sucursal FOREIGN KEY (id_sucursal) REFERENCES Sucursal(id)
+);
 
 CREATE TABLE Mercaderia (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -19,14 +41,40 @@ CREATE TABLE Stock (
     id_mercaderia INT,
     id_sucursal INT,
     cantidad INT,
-    FOREIGN KEY (id_mercaderia) REFERENCES Mercaderia(id),
-    FOREIGN KEY (id_sucursal) REFERENCES Sucursal(id)
+    CONSTRAINT fk_stock_mercaderia FOREIGN KEY (id_mercaderia) REFERENCES Mercaderia(id),
+    CONSTRAINT fk_stock_sucursal FOREIGN KEY (id_sucursal) REFERENCES Sucursal(id)
 );
 
 CREATE TABLE Sucursal (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(255)
 );
+
+CREATE TABLE Usuario_Sucursal (
+    id_usuario INT NOT NULL,
+    id_sucursal INT NOT NULL,
+    PRIMARY KEY (id_usuario, id_sucursal),
+    CONSTRAINT fk_usuario_sucursal_usuario FOREIGN KEY (id_usuario) REFERENCES Usuarios(id),
+    CONSTRAINT fk_usuario_sucursal_sucursal FOREIGN KEY (id_sucursal) REFERENCES Sucursal(id)
+);
+
+CREATE TABLE Usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    rol ENUM('admin', 'empleado') NOT NULL
+);
+
+CREATE TABLE Ventas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    fecha DATETIME NOT NULL,
+    total DECIMAL(10, 2) NOT NULL,
+    id_usuario INT,
+    id_sucursal INT,
+    CONSTRAINT fk_ventas_usuario FOREIGN KEY (id_usuario) REFERENCES Usuarios(id),
+    CONSTRAINT fk_ventas_sucursal FOREIGN KEY (id_sucursal) REFERENCES Sucursal(id)
+);
+
 ```
 
 import pandas as pd
@@ -79,18 +127,13 @@ def cargar_datos_desde_excel_a_mysql(excel_file, server, database, username, pas
             conn.close()
             print("Conexión a MySQL cerrada.")
 
-# Configuración de parámetros
 excel_file = 'TUEXCEL.xlsx'
 server = 'TUSERVER'
 database = 'TUBASE'
 username = 'TUUSER'
 password = 'TUPASS'
 
-# Llamar a la función para cargar datos desde Excel a MySQL
 cargar_datos_desde_excel_a_mysql(excel_file, server, database, username, password)
-
-import pandas as pd
-import mysql.connector
 
 # Función para cargar datos desde Excel y actualizar en MySQL
 def actualizar_stock_desde_excel(excel_file, server, database, username, password):
@@ -143,12 +186,10 @@ def actualizar_stock_desde_excel(excel_file, server, database, username, passwor
             conn.close()
             print("Conexión a MySQL cerrada.")
 
-# Configuración de parámetros
 excel_file = 'TUEXCEL.xlsx'
 server = 'TUSERVER'
 database = 'TUBASE'
 username = 'TUUSER'
 password = 'TUPASS'
 
-# Llamar a la función para actualizar stock desde Excel a MySQL
 actualizar_stock_desde_excel(excel_file, server, database, username, password)
