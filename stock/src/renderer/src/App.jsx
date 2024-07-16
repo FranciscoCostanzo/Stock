@@ -1,6 +1,8 @@
+import Login from "./modules/Auth/Login"
+
 const App = () => {
   return (
-    <div></div>
+    <Login/>
   )
 }
 
