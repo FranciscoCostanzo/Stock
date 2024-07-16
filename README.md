@@ -82,9 +82,9 @@ import mysql.connector
 
 # Función para cargar datos desde Excel y cargar en MySQL
 
-def cargar_datos_desde_excel_a_mysql(excel_file, server, database, username, password):
-    conn = None
-    try:
+        def cargar_datos_desde_excel_a_mysql(excel_file, server, database,       username, password):
+        conn = None
+        try:
         # Leer el archivo Excel
         df = pd.read_excel(excel_file, usecols=['Descripcion', 'Costo', 'Publico'])
 
@@ -127,18 +127,18 @@ def cargar_datos_desde_excel_a_mysql(excel_file, server, database, username, pas
             conn.close()
             print("Conexión a MySQL cerrada.")
 
-excel_file = 'TUEXCEL.xlsx'
-server = 'TUSERVER'
-database = 'TUBASE'
-username = 'TUUSER'
-password = 'TUPASS'
+    excel_file = 'TUEXCEL.xlsx'
+    server = 'TUSERVER'
+    database = 'TUBASE'
+    username = 'TUUSER'
+    password = 'TUPASS'
 
-cargar_datos_desde_excel_a_mysql(excel_file, server, database, username, password)
+    cargar_datos_desde_excel_a_mysql(excel_file, server, database, username, password)
 
 # Función para cargar datos desde Excel y actualizar en MySQL
-def actualizar_stock_desde_excel(excel_file, server, database, username, password):
-    conn = None
-    try:
+        def actualizar_stock_desde_excel(excel_file, server, database, username, password):
+        conn = None
+         try:
         # Leer el archivo Excel
         df = pd.read_excel(excel_file, usecols=['Articulo', 'Stock'])
 
@@ -186,10 +186,10 @@ def actualizar_stock_desde_excel(excel_file, server, database, username, passwor
             conn.close()
             print("Conexión a MySQL cerrada.")
 
-excel_file = 'TUEXCEL.xlsx'
-server = 'TUSERVER'
-database = 'TUBASE'
-username = 'TUUSER'
-password = 'TUPASS'
+        excel_file = 'TUEXCEL.xlsx'
+        server = 'TUSERVER'
+        database = 'TUBASE'
+        username = 'TUUSER'
+        password = 'TUPASS'
 
-actualizar_stock_desde_excel(excel_file, server, database, username, password)
+        actualizar_stock_desde_excel(excel_file, server, database, username, password)
