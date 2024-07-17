@@ -14,7 +14,7 @@ const Login = () => {
         },
     ];
 
-    const { formData, handleChange, handleSubmit } = Form(camposInicioSesion, "http://localhost:4000/auth", false);
+    const { formData, handleChange, handleSubmit } = Form(camposInicioSesion, "http://localhost:3000/login", false);
 
     return (
         <>

@@ -1,16 +1,14 @@
 import express from "express";
 import { PORT, corsMiddleware } from "./config/server.js";
-import poolConnection from './config/db.js';
+import routes from "./routes/endpoints.js"
 
 const app = express();
 
 // Usar CORS middleware
 app.use(corsMiddleware);
 
-// Rutas
-app.get('/', (req, res) => {
-  res.send('Hola Mundo');
-});
+// Usar rutas importadas
+app.use('/', routes);
 
 // Iniciar el servidor
 app.listen(PORT, () => {
