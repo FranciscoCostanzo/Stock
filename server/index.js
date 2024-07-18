@@ -7,6 +7,9 @@ const app = express();
 // Usar CORS middleware
 app.use(corsMiddleware);
 
+// Middleware para parsear JSON
+app.use(express.json());
+
 // Usar rutas importadas
 app.use('/', routes);
 

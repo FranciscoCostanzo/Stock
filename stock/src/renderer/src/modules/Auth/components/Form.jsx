@@ -1,11 +1,7 @@
 import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const Form = (fields, endpoint, tipoDeForm) => {
-    // const navigate = useNavigate();
-
-    // Generar el estado inicial del formulario a partir de los campos de registro
     const initialState = fields.reduce((acc, campo) => {
         return { ...acc, [campo.name]: "" };
     }, {});
@@ -23,7 +19,7 @@ const Form = (fields, endpoint, tipoDeForm) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await window.api.fetch(endpoint, {
+            const response = await fetch(endpoint, {
                 method: "POST",
                 mode: "cors",
                 headers: {
@@ -31,29 +27,19 @@ const Form = (fields, endpoint, tipoDeForm) => {
                 },
                 body: JSON.stringify(formData),
               });
-            // Verificar el status de la respuesta
-            if (!response.ok) {
-                // Si el status es 401 (Unauthorized), muestra un mensaje de error específico
-                if (response.status === 401) {
-                    throw new Error("Credenciales incorrectas");
-                }
-                // Si el status es 409 (Conflict), muestra un mensaje de error específico
-                if (response.status === 409) {
-                    throw new Error("El usuario ya existe");
-                }
-                // Si el status es otro, muestra un mensaje de error genérico
-                throw new Error("Error al enviar datos");
-            }
-            const responseData = await response.json(); // Convierte la respuesta en un objeto JSON
-            console.log(responseData); // Imprime los datos de la respuesta en la consola
 
-            // Guardar todos los datos de la respuesta en el sessionStorage
+            if (!response.ok) {
+                const errorData = await response.json();
+                const errorMessage = errorData.errors ? errorData.errors.join(", ") : errorData.error;
+
+                throw new Error(errorMessage);
+            }
+
+            const responseData = await response.json();
+            console.log(responseData);
 
             toast.success(
-                `${tipoDeForm
-                    ? "Te has registrado con éxito"
-                    : "Te has logueado con éxito"
-                }`,
+                `${tipoDeForm ? "Te has registrado con éxito" : "Te has logueado con éxito"}`,
                 {
                     position: "top-right",
                     autoClose: 5000,
@@ -66,15 +52,10 @@ const Form = (fields, endpoint, tipoDeForm) => {
                 }
             );
 
-            // navigate("/dashbord");
-            // window.location.reload();
         } catch (error) {
             console.error("Error al enviar datos:", error.message);
             toast.error(
-                `${tipoDeForm
-                    ? "Error al intentar registrarse"
-                    : `Error al intentar iniciar sesión`
-                }`,
+                `${tipoDeForm ? "Error al intentar registrarse: " + error.message : `Error al intentar iniciar sesión: ` + error.message}`,
                 {
                     position: "top-right",
                     autoClose: 5000,
