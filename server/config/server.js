@@ -1,18 +1,28 @@
-import dotenv from 'dotenv';
-import cors from 'cors';
+import cors from "cors";
+import dotenv from "dotenv";
+import jwt from 'jsonwebtoken';
+
 
 // Configurar dotenv
 dotenv.config();
 
 // Configurar CORS
 const corsOptions = {
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  origin: "http://localhost:5173", // Cambia esto al origen de tu aplicación cliente
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true // Permitir cookies
 };
 
-export const {
-  PORT = 3000
-} = process.env
-
 export const corsMiddleware = cors(corsOptions);
+
+export const authenticateToken = (req, res, next) => {
+  const token = req.cookies.access_token;
+  if (!token) return res.sendStatus(401);
+
+  jwt.verify(token, process.env.SECRET_JWT_KEY, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+};

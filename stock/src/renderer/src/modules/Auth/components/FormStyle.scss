@@ -1,5 +1,7 @@
-.form__registro {
-    margin: auto;
+.form {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 50%);
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -25,6 +27,7 @@
         a {
             color: #000;
             font-weight: 600;
+
             &:hover {
                 color: royalblue;
             }
@@ -40,7 +43,9 @@
         label {
             position: relative;
 
-            .input, select { /* Añadido select aquí para que comparta los mismos estilos */
+            .input,
+            select {
+                /* Añadido select aquí para que comparta los mismos estilos */
                 width: 100%;
                 padding: 14px 11px 22px 11px;
                 outline: 0;
@@ -61,7 +66,23 @@
                     font-size: $font-xxs;
                     cursor: text;
                     transition: 0.3s ease;
-                    font-weight: 600;
+                    font-weight: 700;
+                }
+            }
+
+            .ojo__password {
+                position: absolute;
+                right: 0;
+                transform: translate(-50%, 50%);
+
+                svg {
+                    width: 30px;
+                    height: 30px;
+                    stroke-width: 1.5;
+                    stroke-linecap: round;
+                    stroke-linejoin: round;
+                    stroke: #000;
+                    fill: none;
                 }
             }
         }
@@ -71,7 +92,7 @@
         border: none;
         outline: none;
         background-color: #000;
-        padding: 11px; 
+        padding: 11px;
         border-radius: 11px;
         color: #fff;
         font-size: 18px;
