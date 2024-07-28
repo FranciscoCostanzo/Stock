@@ -1,0 +1,18 @@
+.dashboard{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 40px;
+    .btn{
+        text-align: center;
+        text-decoration: none;
+        color: #000;
+        font-size: 24px;
+        padding: 10px;
+        border: #000 1px solid;
+        width: 100%;
+        font-weight: bold;
+        border-radius: 6px;
+    }
+}

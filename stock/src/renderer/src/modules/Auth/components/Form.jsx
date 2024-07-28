@@ -3,11 +3,11 @@ import { toast } from 'react-toastify'
 import { Link, useNavigate } from 'react-router-dom'
 
 const Form = ({ fields, endpoint, tipoDeForm }) => {
-    const navigate = useNavigate();
+    const navigate = useNavigate()
     const initialState = fields.reduce((acc, campo) => {
         return { ...acc, [campo.name]: '' }
     }, {})
-    
+
     // Añadir un campo de contraseña de confirmación si es un formulario de registro
     if (tipoDeForm) {
         initialState.confirmPassword = '' // Campo para la confirmación de contraseña
@@ -55,7 +55,7 @@ const Form = ({ fields, endpoint, tipoDeForm }) => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(formData),
-                credentials: 'include', // Incluir cookies
+                credentials: 'include' // Incluir cookies
             })
 
             if (!response.ok) {
@@ -67,6 +67,7 @@ const Form = ({ fields, endpoint, tipoDeForm }) => {
 
             const responseData = await response.json()
             console.log(responseData)
+            navigate('/dashboard')
 
             toast.success(`${tipoDeForm ? 'Te has registrado con éxito' : 'Te has logueado con éxito'}`, {
                 position: 'top-right',
@@ -97,9 +98,6 @@ const Form = ({ fields, endpoint, tipoDeForm }) => {
                 }
             )
         }
-        
-
-        navigate("/dashboard");
     }
 
     return (
@@ -162,8 +160,7 @@ const Form = ({ fields, endpoint, tipoDeForm }) => {
                                         type={vistaPassword ? 'text' : campo.type}
                                         name={campo.name}
                                         className="input"
-                                    required
-
+                                        required
                                     />
                                 </>
                             ) : (

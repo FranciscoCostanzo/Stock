@@ -118,13 +118,18 @@ export const login = async (req, res) => {
 export const checkToken = async (req, res) => {
   const token = req.cookies.access_token;
   if (!token) {
-    return res.sendStatus(401);
+    // Envía el código de estado 403 con un mensaje de error
+    return res.status(403).json({ message: "No estás autenticado" });
   }
 
   try {
     const userData = jwt.verify(token, process.env.SECRET_JWT_KEY);
-    res.json(userData);
-  } catch {
-    res.sendStatus(403);
+    // Si el token es válido, envía la información del usuario
+    return res.json(userData);
+  } catch (error) {
+    console.error('Error verificando el token:', error);
+    // Envía el código de estado 403 si el token no es válido
+    return res.status(403).json({ message: "Token no válido" });
   }
 };
+
