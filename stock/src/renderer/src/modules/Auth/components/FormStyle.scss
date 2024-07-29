@@ -78,7 +78,7 @@
                 svg {
                     width: 30px;
                     height: 30px;
-                    stroke-width: 1.5;
+                    stroke-width: 1.8;
                     stroke-linecap: round;
                     stroke-linejoin: round;
                     stroke: #000;
@@ -106,34 +106,44 @@
 }
 
 .loader {
+    position: absolute;
+    /* Necesario para usar top, left, etc. */
+    top: 50%;
+    /* Posiciona el elemento a la mitad del contenedor desde el borde superior */
+    left: 50%;
+    /* Posiciona el elemento a la mitad del contenedor desde el borde izquierdo */
+    transform: translate(-50%,
+            -50%);
+    /* Mueve el elemento hacia arriba y a la izquierda por la mitad de su propio tamaño */
     width: 48px;
     height: 48px;
-    border: 3px solid #FFF;
+    border: 1px solid #242323;
     border-radius: 50%;
     display: inline-block;
-    position: relative;
     box-sizing: border-box;
     animation: rotation 1s linear infinite;
-  } 
-  .loader::after {
-    content: '';  
+}
+
+.loader::after {
+    content: '';
     box-sizing: border-box;
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: 56px;
-    height: 56px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
-    border: 3px solid transparent;
-    border-bottom-color: #FF3D00;
-  }
-  
-  @keyframes rotation {
+    border: 2px solid transparent;
+    border-bottom-color: #000;
+}
+
+@keyframes rotation {
     0% {
-      transform: rotate(0deg);
+        transform: rotate(0deg);
     }
+
     100% {
-      transform: rotate(360deg);
+        transform: rotate(360deg);
     }
-  } 
+}

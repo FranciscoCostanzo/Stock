@@ -24,7 +24,7 @@ export const register = async (req, res) => {
     }
 
     // Hashear la contraseña
-    const hashedPassword = await bcrypt.hash(password, process.env.SALT_ROUNDS);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     // Crear el usuario en la base de datos
     const [result] = await connection.execute(

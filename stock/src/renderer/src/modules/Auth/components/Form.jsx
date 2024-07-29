@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { toast } from 'react-toastify'
 import { Link, useNavigate } from 'react-router-dom'
 
-const Form = ({ fields, endpoint, tipoDeForm }) => {
+const Form = ({ fields, endpoint, tipoDeForm, dataSucursales }) => {
     const navigate = useNavigate()
     const initialState = fields.reduce((acc, campo) => {
         return { ...acc, [campo.name]: '' }
@@ -20,6 +20,9 @@ const Form = ({ fields, endpoint, tipoDeForm }) => {
     }
 
     const [formData, setFormData] = useState(initialState)
+    if (formData.rol === 'admin') {
+        var fields = fields.filter((field) => field.label !== 'Sucursal')
+    }
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -32,7 +35,6 @@ const Form = ({ fields, endpoint, tipoDeForm }) => {
     const handleSubmit = async (e) => {
         e.preventDefault()
 
-        // Verificar si las contraseñas coinciden en el formulario de registro
         if (tipoDeForm && formData.password !== formData.confirmPassword) {
             toast.error('Las contraseñas no coinciden.', {
                 position: 'top-right',
@@ -44,24 +46,44 @@ const Form = ({ fields, endpoint, tipoDeForm }) => {
                 progress: undefined,
                 theme: 'light'
             })
-            return // Detener el envío del formulario si las contraseñas no coinciden
+            return
         }
 
         try {
+            let formDataToSend = { ...formData };
+
+            // Eliminar el campo 'Sucursal' si el rol es 'admin'
+            if (formData.rol === 'admin') {
+                const { sucursal, ...rest } = formDataToSend;
+                formDataToSend = rest;
+            } else {
+                // Verificar que dataSucursales esté definido y sea un array
+                if (Array.isArray(dataSucursales)) {
+                    // Si la sucursal es seleccionada, cambiar el nombre por el ID
+                    const selectedSucursal = dataSucursales.find(
+                        (dataSucursal) => `${dataSucursal.ciudad} - ${dataSucursal.nombre}` === formData.sucursal
+                    );
+                    if (selectedSucursal) {
+                        formDataToSend.sucursal = selectedSucursal.id;
+                    }
+                } else {
+                    console.error('dataSucursales no está definido o no es un array');
+                }
+            }
+
             const response = await fetch(endpoint, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(formData),
-                credentials: 'include' // Incluir cookies
+                body: JSON.stringify(formDataToSend),
+                credentials: 'include'
             })
 
             if (!response.ok) {
                 const errorData = await response.json()
                 const errorMessage = errorData.errors ? errorData.errors.join(', ') : errorData.error
-
                 throw new Error(errorMessage)
             }
 
@@ -138,19 +160,18 @@ const Form = ({ fields, endpoint, tipoDeForm }) => {
                                 <>
                                     <div onClick={toggleVistaPassword} className="ojo__password">
                                         {vistaPassword ? (
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                            <svg viewBox="0 0 24 24">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                                 <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
                                                 <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
                                             </svg>
                                         ) : (
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                            <svg viewBox="0 0 24 24">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                <path d="M21 9c-2.4 2.667 -5.4 4 -9 4c-3.6 0 -6.6 -1.333 -9 -4" />
-                                                <path d="M3 15l2.5 -3.8" />
-                                                <path d="M21 14.976l-2.492 -3.776" />
-                                                <path d="M9 17l.5 -4" />
-                                                <path d="M15 17l-.5 -4" />
+                                                <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                                <path d="M13.048 17.942a9.298 9.298 0 0 1 -1.048 .058c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6a17.986 17.986 0 0 1 -1.362 1.975" />
+                                                <path d="M22 22l-5 -5" />
+                                                <path d="M17 22l5 -5" />
                                             </svg>
                                         )}
                                     </div>

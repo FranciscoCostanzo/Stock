@@ -1,17 +1,18 @@
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { useContext, useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { AuthContext } from '../Context/AuthContext';
+import { AuthContext } from '../context/AuthContext';
 
 export const AuthRouter = ({ requireAuth = true }) => {
   const { user, setUser } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const verifyToken = async () => {
-      if (!requireAuth || user) {
-        // No necesita autenticación o ya hay un usuario autenticado
+      // Si no se requiere autenticación o ya hay un usuario autenticado, no hace falta verificar el token
+      if (user) {
         setLoading(false);
         return;
       }
@@ -21,10 +22,14 @@ export const AuthRouter = ({ requireAuth = true }) => {
           method: 'POST',
           credentials: 'include',
         });
+
         if (response.ok) {
           const userData = await response.json();
-          setUser(userData);
+          console.log(userData);
+          setUser(userData); // Actualiza el estado del usuario
+          navigate('/dashboard'); // Redirige a /dashboard si el token es válido
         } else {
+          // No hacer nada, ya que no está autenticado y no se requiere autenticación
           toast.error('Debes iniciar sesión para acceder a más contenido', {
             position: 'top-right',
             autoClose: 5000,
@@ -39,34 +44,22 @@ export const AuthRouter = ({ requireAuth = true }) => {
       } catch (error) {
         console.error('Error verificando token:', error);
       } finally {
-        setLoading(false);
+        setLoading(false); // Indica que la verificación está completa
       }
     };
 
     verifyToken();
-  }, [requireAuth, user, setUser]);
+  }, [requireAuth, user, setUser, navigate]);
 
   if (loading) {
     return <span className="loader"></span>; // Muestra un indicador de carga mientras se verifica el token
   }
 
   if (requireAuth && !user) {
+    // Si se requiere autenticación y no hay usuario, redirige al login
     return <Navigate to="/" />;
   }
 
-  if (!requireAuth && user) {
-    toast.error('Ya estás autenticado, si quieres usar otra cuenta cierra sesión en esta', {
-      position: 'top-right',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: false,
-      draggable: true,
-      progress: undefined,
-      theme: 'light',
-    });
-    return <Navigate to="/dashboard" />;
-  }
-
+  // Si no se requiere autenticación y no hay usuario, permite el acceso
   return <Outlet />;
 };

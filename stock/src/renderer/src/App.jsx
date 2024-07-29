@@ -6,6 +6,8 @@ import Register from './modules/Auth/Register'
 import Dashboard from './modules/Dashboard/Dashboard'
 import { AuthRouter } from './modules/Auth/components/AuthRouter'
 import Mercaderia from './modules/Mercaderia/Mercaderia'
+import Header from './modules/Header/Header'
+
 
 const App = () => {
   useEffect(() => {
@@ -26,6 +28,8 @@ const App = () => {
   }, [])
 
   return (
+    <>
+    <Header/>
     <Routes>
       <Route element={<AuthRouter requireAuth={false} />}>
         <Route path="/" element={<Login />} />
@@ -36,6 +40,7 @@ const App = () => {
         <Route path="/mercaderia" element={<Mercaderia />} />
       </Route>
     </Routes>
+    </>
   )
 }
 

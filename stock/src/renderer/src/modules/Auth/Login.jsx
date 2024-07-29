@@ -14,7 +14,9 @@ const Login = () => {
     ]
 
     return (
-        <Form endpoint="http://localhost:3000/login" fields={camposInicioSesion} tipoDeForm={false} />
+        <>
+        <Form dataSucursales={undefined} endpoint="http://localhost:3000/login" fields={camposInicioSesion} tipoDeForm={false} />
+        </>
     )
 }
 
