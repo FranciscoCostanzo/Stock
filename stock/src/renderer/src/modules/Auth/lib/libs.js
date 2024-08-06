@@ -1,5 +1,3 @@
-let todasLasSucursales = []; // Array para almacenar los datos
-
 // Función para obtener sucursales
 export const fetchSucursales = async () => {
   try {
@@ -13,7 +11,6 @@ export const fetchSucursales = async () => {
     }
 
     const data = await response.json();
-    todasLasSucursales = data; // Guardar los datos en el array
     return data;
   } catch (error) {
     console.error('Error obteniendo las sucursales:', error);

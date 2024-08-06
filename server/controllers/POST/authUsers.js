@@ -133,3 +133,17 @@ export const checkToken = async (req, res) => {
   }
 };
 
+export const logout = async (req, res) => {
+  try {
+    // Borra la cookie "access_token"
+    res.clearCookie("access_token");
+
+    // Envía una respuesta exitosa al cliente
+    return res.status(200).json({ message: "Logout exitoso" });
+  } catch (error) {
+    console.error('Error haciendo un logout:', error);
+    // Envía el código de estado 500 en caso de error
+    return res.status(500).json({ message: "No se ha podido salir de la sesión" });
+  }
+}
+
