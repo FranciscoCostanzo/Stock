@@ -1,8 +1,24 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { Link, useNavigate } from 'react-router-dom'
+import { fetchSucursales } from '../lib/libAuth'
 
 const Form = ({ fields, endpoint, tipoDeForm, dataSucursales }) => {
+    const [sucursales, setSucursales] = useState([])
+
+    useEffect(() => {
+        // Obtener sucursales del servidor
+        const loadSucursales = async () => {
+            try {
+                const data = await fetchSucursales()
+                setSucursales(data) // Guardar las sucursales completas
+            } catch (error) {
+                console.log(error.message)
+            }
+        }
+
+        loadSucursales()
+    }, [])
     const navigate = useNavigate()
     const initialState = fields.reduce((acc, campo) => {
         return { ...acc, [campo.name]: '' }
@@ -50,24 +66,24 @@ const Form = ({ fields, endpoint, tipoDeForm, dataSucursales }) => {
         }
 
         try {
-            let formDataToSend = { ...formData };
+            let formDataToSend = { ...formData }
 
             // Eliminar el campo 'Sucursal' si el rol es 'admin'
             if (formData.rol === 'admin') {
-                const { sucursal, ...rest } = formDataToSend;
-                formDataToSend = rest;
+                const { sucursal, ...rest } = formDataToSend
+                formDataToSend = rest
             } else {
-                // Verificar que dataSucursales esté definido y sea un array
-                if (Array.isArray(dataSucursales)) {
-                    // Si la sucursal es seleccionada, cambiar el nombre por el ID
-                    const selectedSucursal = dataSucursales.find(
-                        (dataSucursal) => `${dataSucursal.ciudad} - ${dataSucursal.nombre}` === formData.sucursal
-                    );
+                // Verificar que `dataSucursales` esté definido y sea un array
+                if (Array.isArray(sucursales)) {
+                    // Encontrar la sucursal seleccionada y obtener su ID
+                    const selectedSucursal = sucursales.find(
+                        (sucursal) => `${sucursal.ciudad} - ${sucursal.nombre}` === formData.sucursal
+                    )
                     if (selectedSucursal) {
-                        formDataToSend.sucursal = selectedSucursal.id;
+                        formDataToSend.sucursal = selectedSucursal.id
                     }
                 } else {
-                    console.error('dataSucursales no está definido o no es un array');
+                    console.error('Sucursales no están definidas o no son un array')
                 }
             }
 

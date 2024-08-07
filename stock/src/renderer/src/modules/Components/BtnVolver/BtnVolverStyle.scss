@@ -1,0 +1,22 @@
+.btn__volver{
+    z-index: 10;
+    position: absolute;
+    text-decoration: none;
+    left: 10px;
+    top: 10px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    color: #000;
+    font-size: 18px;
+    padding: 6px;
+    border: #000 1px solid;
+    font-weight: bold;
+    border-radius: 6px;
+    transition: 0.1s ease;
+    background-color: #fff;
+
+    &:hover {
+        scale: 1.05;
+    }
+}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import Form from './components/Form'
-import { fetchSucursales } from './lib/libs'
+import { fetchSucursales } from './lib/libAuth.js'
 
 const Register = () => {
   const [sucursales, setSucursales] = useState([])

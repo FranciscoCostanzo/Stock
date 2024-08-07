@@ -6,10 +6,10 @@ import jwt from "jsonwebtoken";
 
 // Función de registro
 export const register = async (req, res) => {
-  const { nombre, password, rol } = req.body;
+  const { nombre, password, rol, sucursal } = req.body;
   try {
     // Validar los datos recibidos contra el esquema de registro
-    registerSchema.parse({ nombre, password, rol });
+    registerSchema.parse({ nombre, password, rol, sucursal });
 
     // Verificar si el usuario ya existe
     const connection = await db.getConnection();
@@ -31,11 +31,22 @@ export const register = async (req, res) => {
       "INSERT INTO Usuarios (nombre, password, rol) VALUES (?, ?, ?)",
       [nombre, hashedPassword, rol]
     );
+    const userId = result.insertId;
+
+    // Si el rol es 'empleado' y se ha proporcionado una sucursal
+    if (rol === "empleado" && sucursal) {
+      // Insertar la relación entre el usuario y la sucursal
+      await connection.execute(
+        "INSERT INTO Usuario_Sucursal (id_usuario, id_sucursal) VALUES (?, ?)",
+        [userId, sucursal]
+      );
+    }
+
     connection.release();
 
     res.status(201).json({
       message: "Usuario creado correctamente.",
-      userId: result.insertId,
+      userId: userId,
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -86,7 +97,7 @@ export const login = async (req, res) => {
     const { rol } = user[0];
     let sucursalData = null;
 
-    if (rol !== 'admin') {
+    if (rol !== "admin") {
       // Consultar la tabla Usuario_Sucursal para obtener el ID de la sucursal
       const [userSucursal] = await connection.execute(
         "SELECT id_sucursal FROM Usuario_Sucursal WHERE id_usuario = ?",
@@ -123,7 +134,6 @@ export const login = async (req, res) => {
     // Generar el token JWT con los datos del usuario y de la sucursal (si no es admin)
     const token = jwt.sign(
       {
-        id: user[0].id,
         nombre: user[0].nombre,
         rol: user[0].rol,
         sucursal: sucursalData, // Adjuntar datos de la sucursal solo si no es admin

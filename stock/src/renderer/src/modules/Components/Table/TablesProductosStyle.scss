@@ -1,0 +1,58 @@
+// Estilos para la tabla
+table {
+    user-select: all;
+    width: 100%;
+    border-collapse: collapse; // Elimina el espacio entre bordes
+
+    // Estilos para los encabezados de la tabla
+    th {
+        border: 1px solid #000;
+        padding: 10px;
+        text-align: left;
+        background-color: #fff;
+        font-weight: bold;
+        font-size: 22px;
+    }
+
+    // Estilos para las filas de la tabla
+    tr {
+        transition: 0.2s ease;
+
+        // Estilos para las celdas de la tabla
+        td {
+            border: 1px solid #000;
+            padding: 10px;
+            font-size: 18px;
+        }
+
+        // Estilos para las filas al pasar el cursor sobre ellas
+        &:hover {
+            cursor: pointer;
+            background-color: #9e9d9d;
+        }
+    }
+
+    // Estilos para las filas alternas
+    tbody tr:nth-child(even) {
+        transition: 0.2s ease;
+
+        background-color: #e0e0e0;
+
+        &:hover {
+            cursor: pointer;
+            background-color: #9e9d9d;
+        }
+    }
+}
+
+tr:hover {
+    background-color: #000;
+}
+
+// Contenedor general para centrar la tabla y darle un ancho máximo
+.table__container {
+    width: 87%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}

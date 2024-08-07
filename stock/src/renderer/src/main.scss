@@ -1,3 +1,4 @@
+
 // Tamaño de fuentes
 $font-xxxs: 10px;
 $font-xxs: 12px;
@@ -36,7 +37,7 @@ $rds_xl: 25px;
 $rds_o: 50%;
 
 * {
-  scrollbar-gutter: stable;
+  user-select: none;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -46,7 +47,6 @@ $rds_o: 50%;
   font-variation-settings:
     "wdth" 100;
 }
-
 body {
   margin: 0;
   min-height: 100dvh;
@@ -63,5 +63,8 @@ p{
 
 @import "./modules/Auth/components/FormStyle.scss";
 @import "./modules/Header/HeaderStyle.scss";
+@import "./modules/Components/Table/TablesProductosStyle.scss";
+
+@import "./modules/Components/BtnVolver/BtnVolverStyle.scss";
 
 @import "./modules/Dashboard/DashboardStyle.scss";

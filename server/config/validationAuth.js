@@ -26,6 +26,7 @@ export const registerSchema = z.object({
   nombre: nombreSchema,
   password: passwordSchema,
   rol: rolSchema,
+  sucursal: z.number().optional()
 });
 
 // Esquema de validación para login
