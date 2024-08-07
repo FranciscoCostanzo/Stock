@@ -1,23 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 import Form from './components/Form'
 import { fetchSucursales } from './lib/libs'
 
 const Register = () => {
-  const [sucursales, setSucursales] = useState([]);
+  const [sucursales, setSucursales] = useState([])
 
   useEffect(() => {
     const loadSucursales = async () => {
       try {
-        const data = await fetchSucursales();
+        const data = await fetchSucursales()
         // Suponiendo que `data` es un array de objetos con propiedades `nombre` y `ciudad`
-        setSucursales(data.map(sucursal => `${sucursal.ciudad} - ${sucursal.nombre}`));
+        setSucursales(data.map((sucursal) => `${sucursal.ciudad} - ${sucursal.nombre}`))
       } catch (error) {
-        console.log(error.message);
+        console.log(error.message)
       }
-    };
+    }
 
-    loadSucursales();
-  }, []);
+    loadSucursales()
+  }, [])
 
   const camposRegistro = [
     {
@@ -30,7 +30,7 @@ const Register = () => {
       label: 'Sucursal',
       name: 'sucursal',
       type: 'select',
-      options: sucursales 
+      options: sucursales
     },
     {
       label: 'Nombre',
@@ -41,13 +41,16 @@ const Register = () => {
       label: 'Contraseña',
       name: 'password',
       type: 'password'
-    },
+    }
   ]
 
-  
-
   return (
-    <Form dataSucursales={sucursales} fields={camposRegistro} tipoDeForm={true} endpoint="http://localhost:3000/register" />
+    <Form
+      dataSucursales={sucursales}
+      fields={camposRegistro}
+      tipoDeForm={true}
+      endpoint="http://localhost:3000/register"
+    />
   )
 }
 

@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import Form from './components/Form'
 const Login = () => {
     const camposInicioSesion = [
@@ -15,10 +14,12 @@ const Login = () => {
     ]
 
     return (
-        <>
-        <Form dataSucursales={undefined} endpoint="http://localhost:3000/login" fields={camposInicioSesion} tipoDeForm={false} />
-        <Link to="/dashboard">Irparta</Link>
-        </>
+        <Form
+            dataSucursales={undefined}
+            fields={camposInicioSesion}
+            tipoDeForm={false}
+            endpoint="http://localhost:3000/login"
+        />
     )
 }
 

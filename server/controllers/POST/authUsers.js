@@ -57,8 +57,10 @@ export const login = async (req, res) => {
     // Validar los datos recibidos contra el esquema de login
     loginSchema.parse({ nombre, password });
 
-    // Verificar si el usuario existe
+    // Obtener la conexión a la base de datos
     const connection = await db.getConnection();
+
+    // Verificar si el usuario existe
     const [user] = await connection.execute(
       "SELECT * FROM Usuarios WHERE nombre = ?",
       [nombre]
@@ -73,19 +75,58 @@ export const login = async (req, res) => {
 
     // Comparar la contraseña proporcionada con la contraseña hasheada
     const passwordMatch = await bcrypt.compare(password, user[0].password);
-    connection.release();
-
     if (!passwordMatch) {
+      connection.release();
       return res
         .status(401)
         .json({ error: "Nombre de usuario o contraseña incorrectos." });
     }
 
+    // Verificar el rol del usuario
+    const { rol } = user[0];
+    let sucursalData = null;
+
+    if (rol !== 'admin') {
+      // Consultar la tabla Usuario_Sucursal para obtener el ID de la sucursal
+      const [userSucursal] = await connection.execute(
+        "SELECT id_sucursal FROM Usuario_Sucursal WHERE id_usuario = ?",
+        [user[0].id]
+      );
+
+      if (userSucursal.length === 0) {
+        connection.release();
+        return res
+          .status(404)
+          .json({ error: "No se encontró sucursal para el usuario." });
+      }
+
+      const sucursalId = userSucursal[0].id_sucursal; // Asegúrate de que este nombre sea correcto
+
+      // Obtener los datos de la sucursal desde la tabla Sucursal
+      const [sucursal] = await connection.execute(
+        "SELECT * FROM Sucursal WHERE id = ?",
+        [sucursalId]
+      );
+
+      if (sucursal.length === 0) {
+        connection.release();
+        return res
+          .status(404)
+          .json({ error: "No se encontró la sucursal especificada." });
+      }
+
+      sucursalData = sucursal[0];
+    }
+
+    connection.release();
+
+    // Generar el token JWT con los datos del usuario y de la sucursal (si no es admin)
     const token = jwt.sign(
       {
         id: user[0].id,
         nombre: user[0].nombre,
         rol: user[0].rol,
+        sucursal: sucursalData, // Adjuntar datos de la sucursal solo si no es admin
       },
       process.env.SECRET_JWT_KEY,
       {
@@ -127,7 +168,7 @@ export const checkToken = async (req, res) => {
     // Si el token es válido, envía la información del usuario
     return res.json(userData);
   } catch (error) {
-    console.error('Error verificando el token:', error);
+    console.error("Error verificando el token:", error);
     // Envía el código de estado 403 si el token no es válido
     return res.status(403).json({ message: "Token no válido" });
   }
@@ -141,9 +182,10 @@ export const logout = async (req, res) => {
     // Envía una respuesta exitosa al cliente
     return res.status(200).json({ message: "Logout exitoso" });
   } catch (error) {
-    console.error('Error haciendo un logout:', error);
+    console.error("Error haciendo un logout:", error);
     // Envía el código de estado 500 en caso de error
-    return res.status(500).json({ message: "No se ha podido salir de la sesión" });
+    return res
+      .status(500)
+      .json({ message: "No se ha podido salir de la sesión" });
   }
-}
-
+};

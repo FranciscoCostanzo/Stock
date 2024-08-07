@@ -25,7 +25,6 @@ export const AuthRouter = ({ requireAuth = true }) => {
 
         if (response.ok) {
           const userData = await response.json();
-          console.log(userData);
           setUser(userData); // Actualiza el estado del usuario
           navigate('/dashboard'); // Redirige a /dashboard si el token es válido
         } else {
