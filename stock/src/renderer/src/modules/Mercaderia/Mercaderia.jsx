@@ -1,37 +1,67 @@
+// Mercaderia.jsx
 import { useContext, useEffect, useState } from 'react'
 import BtnVolver from '../Components/BtnVolver/BtnVolver'
 import Table from '../Components/Table/TablesProductos'
-import { obtenerStockPorSucursal } from './lib/libMercaderia'
+import { obtenerStockPorSucursal, obtenerStockAdmin } from './lib/libMercaderia'
 import { AuthContext } from '../Auth/context/AuthContext'
+import FiltroProductos from './components/FiltroProductos'
 
 const Mercaderia = () => {
   const { user } = useContext(AuthContext)
   const [mercaderia, setMercaderia] = useState([])
+  const [filters, setFilters] = useState({})
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const loadMercaderia = async () => {
-      if (user && user.sucursal) {
-        // Asegurarse de que el usuario y la sucursal están definidos
-        try {
-          const data = await obtenerStockPorSucursal(user.sucursal.id)
-          setMercaderia(data) // Actualizar el estado con los datos obtenidos
-        } catch (error) {
-          console.log('Error al cargar mercadería:', error.message)
+      try {
+        if (user) {
+          let data
+          if (user.rol === 'admin') {
+            data = await obtenerStockAdmin()
+          } else if (user.sucursal) {
+            data = await obtenerStockPorSucursal(user.sucursal.id)
+          }
+          setMercaderia(data)
         }
+      } catch (error) {
+        console.log('Error al cargar mercadería:', error.message)
+      } finally {
+        setLoading(false)
       }
     }
 
     loadMercaderia()
-  }, [user]) // Agregar `user` como dependencia para que se ejecute cuando cambie
+  }, [user])
 
-  console.log(mercaderia)
+  const handleFilterChange = (newFilters) => {
+    setFilters(newFilters)
+  }
 
   return (
     <section style={{ position: 'relative' }}>
       <BtnVolver donde="/dashboard" />
       <article className="table__container">
-        <Table data={mercaderia} />
+        {loading ? (
+          <span className="loader"></span>
+        ) : (
+          <>
+            <FiltroProductos
+              columns={Object.keys(mercaderia[0] || {})}
+              onFilterChange={handleFilterChange}
+            />
+            <div className="table-wrapper">
+              <Table data={mercaderia} filters={filters} />
+            </div>
+          </>
+        )}
       </article>
+      {user.rol === 'admin' && (
+        <>
+          <p>Editar</p>
+          <p>Eliminar</p>
+        </>
+      )}
     </section>
   )
 }

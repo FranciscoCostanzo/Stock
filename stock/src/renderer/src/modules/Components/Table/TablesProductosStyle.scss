@@ -1,6 +1,23 @@
+.table__container {
+    width: 87%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    padding-bottom: 40px; // Separación del borde inferior
+    position: relative;
+    // Contenedor para la tabla con scrollbar
+    .table-wrapper {
+        max-height: calc(65vh - 60px); // Ajusta la altura máxima según tus necesidades
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        border-radius: 0.25rem;
+        background-color: #fff;
+        scrollbar-gutter: stable;
+    }
+}
+
 // Estilos para la tabla
 table {
-    user-select: all;
     width: 100%;
     border-collapse: collapse; // Elimina el espacio entre bordes
 
@@ -47,12 +64,4 @@ table {
 
 tr:hover {
     background-color: #000;
-}
-
-// Contenedor general para centrar la tabla y darle un ancho máximo
-.table__container {
-    width: 87%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
 }

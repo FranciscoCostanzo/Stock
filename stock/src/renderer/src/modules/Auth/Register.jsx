@@ -46,7 +46,6 @@ const Register = () => {
 
   return (
     <Form
-      dataSucursales={sucursales}
       fields={camposRegistro}
       tipoDeForm={true}
       endpoint="http://localhost:3000/register"

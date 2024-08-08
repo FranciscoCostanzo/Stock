@@ -15,6 +15,7 @@ const corsOptions = {
 
 export const corsMiddleware = cors(corsOptions);
 
+// Middleware para verificar el token
 export const authenticateToken = (req, res, next) => {
   const token = req.cookies.access_token;
   if (!token) return res.sendStatus(401);

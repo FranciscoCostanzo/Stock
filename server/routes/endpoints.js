@@ -2,7 +2,8 @@
 import { Router } from "express";
 import { checkToken, login, logout, register } from "../controllers/POST/authUsers.js";
 import { pedirSucursales } from "../controllers/GET/pedirSucursales.js";
-import { pedirStockPorSucursal } from "../controllers/GET/pedirStockPorSucursal.js";
+import { pedirStockAdmin, pedirStockPorSucursal } from "../controllers/GET/pedirStock.js";
+import { authenticateToken } from "../config/server.js";
 
 const router = Router();
 
@@ -16,6 +17,7 @@ router.post("/check-token", checkToken);
 router.get("/sucursales", pedirSucursales);
 
 // Ruta para obtener Mercaderia por Sucursal
-router.get("/mercaderia/:idSucursal", pedirStockPorSucursal)
+router.get("/mercaderia/:idSucursal", authenticateToken, pedirStockPorSucursal)
+router.get("/mercaderia", authenticateToken, pedirStockAdmin)
 
 export default router;
