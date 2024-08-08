@@ -4,7 +4,8 @@ import BtnVolver from '../Components/BtnVolver/BtnVolver'
 import Table from '../Components/Table/TablesProductos'
 import { obtenerStockPorSucursal, obtenerStockAdmin } from './lib/libMercaderia'
 import { AuthContext } from '../Auth/context/AuthContext'
-import FiltroProductos from './components/FiltroProductos'
+import FiltroProductos from './components/Filtros/FiltroProductos'
+import Tools from './components/ToolsProductos/ToolsProductos'
 
 const Mercaderia = () => {
   const { user } = useContext(AuthContext)
@@ -57,10 +58,7 @@ const Mercaderia = () => {
         )}
       </article>
       {user.rol === 'admin' && (
-        <>
-          <p>Editar</p>
-          <p>Eliminar</p>
-        </>
+        <Tools/>
       )}
     </section>
   )

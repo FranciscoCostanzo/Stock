@@ -141,114 +141,112 @@ const Form = ({ fields, endpoint, tipoDeForm, dataSucursales }) => {
     }
 
     return (
-        <>
-            <form className="form" onSubmit={handleSubmit}>
-                {tipoDeForm === true ? (
-                    <>
-                        <p className="title">Registrarse</p>
-                        <p className="message">Crea una cuenta para agregar un usuario nuevo</p>
-                    </>
-                ) : (
-                    <>
-                        <p className="title">Iniciar sesión</p>
-                        <p className="message">Ingresa con tu cuenta para continuar</p>
-                    </>
-                )}
-                {fields.map((campo, index) => (
-                    <div className="flex" key={index}>
-                        <label>
-                            {campo.type === 'select' ? (
-                                <>
-                                    <select
-                                        onChange={handleChange}
-                                        value={formData[campo.name]}
-                                        name={campo.name}
-                                        className="input"
-                                        required
-                                    >
-                                        <option value="">Seleccione una opción</option>
-                                        {campo.options.map((option, optIndex) => (
-                                            <option key={optIndex} value={option}>
-                                                {option}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </>
-                            ) : campo.type === 'password' ? (
-                                <>
-                                    <div onClick={toggleVistaPassword} className="ojo__password">
-                                        {vistaPassword ? (
-                                            <svg viewBox="0 0 24 24">
-                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                                                <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
-                                            </svg>
-                                        ) : (
-                                            <svg viewBox="0 0 24 24">
-                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                                <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                                                <path d="M13.048 17.942a9.298 9.298 0 0 1 -1.048 .058c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6a17.986 17.986 0 0 1 -1.362 1.975" />
-                                                <path d="M22 22l-5 -5" />
-                                                <path d="M17 22l5 -5" />
-                                            </svg>
-                                        )}
-                                    </div>
-                                    <input
-                                        onChange={handleChange}
-                                        value={formData[campo.name]}
-                                        type={vistaPassword ? 'text' : campo.type}
-                                        name={campo.name}
-                                        className="input"
-                                        required
-                                    />
-                                </>
-                            ) : (
+        <form className="form" onSubmit={handleSubmit}>
+            {tipoDeForm === true ? (
+                <>
+                    <p className="title">Registrarse</p>
+                    <p className="message">Crea una cuenta para agregar un usuario nuevo</p>
+                </>
+            ) : (
+                <>
+                    <p className="title">Iniciar sesión</p>
+                    <p className="message">Ingresa con tu cuenta para continuar</p>
+                </>
+            )}
+            {fields.map((campo, index) => (
+                <div className="flex" key={index}>
+                    <label>
+                        {campo.type === 'select' ? (
+                            <>
+                                <select
+                                    onChange={handleChange}
+                                    value={formData[campo.name]}
+                                    name={campo.name}
+                                    className="input"
+                                    required
+                                >
+                                    <option value="">Seleccione una opción</option>
+                                    {campo.options.map((option, optIndex) => (
+                                        <option key={optIndex} value={option}>
+                                            {option}
+                                        </option>
+                                    ))}
+                                </select>
+                            </>
+                        ) : campo.type === 'password' ? (
+                            <>
+                                <div onClick={toggleVistaPassword} className="ojo__password">
+                                    {vistaPassword ? (
+                                        <svg viewBox="0 0 24 24">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                            <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                                        </svg>
+                                    ) : (
+                                        <svg viewBox="0 0 24 24">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                            <path d="M13.048 17.942a9.298 9.298 0 0 1 -1.048 .058c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6a17.986 17.986 0 0 1 -1.362 1.975" />
+                                            <path d="M22 22l-5 -5" />
+                                            <path d="M17 22l5 -5" />
+                                        </svg>
+                                    )}
+                                </div>
                                 <input
                                     onChange={handleChange}
                                     value={formData[campo.name]}
-                                    type={campo.type}
+                                    type={vistaPassword ? 'text' : campo.type}
                                     name={campo.name}
                                     className="input"
                                     required
                                 />
-                            )}
-                            <span>{campo.label}</span>
-                        </label>
-                    </div>
-                ))}
-                {tipoDeForm && (
-                    <div className="flex">
-                        <label>
+                            </>
+                        ) : (
                             <input
                                 onChange={handleChange}
-                                value={formData.confirmPassword}
-                                type={vistaPassword ? 'text' : 'password'}
-                                name="confirmPassword"
+                                value={formData[campo.name]}
+                                type={campo.type}
+                                name={campo.name}
                                 className="input"
+                                required
                             />
-                            <span>Confirmar Contraseña</span>
-                        </label>
-                    </div>
-                )}
-                {tipoDeForm === true ? (
-                    <>
-                        <button type="submit" className="submit">
-                            Crear Cuenta
-                        </button>
-                        <p className="signin">
-                            ¿Ya tienes una cuenta? <Link to="/">Iniciar Sesión</Link>
-                        </p>
-                    </>
-                ) : (
-                    <>
-                        <button className="submit">Iniciar sesión</button>
-                        <p className="signin">
-                            ¿No tienes una cuenta? <Link to="/register">Regístrate</Link>
-                        </p>
-                    </>
-                )}
-            </form>
-        </>
+                        )}
+                        <span>{campo.label}</span>
+                    </label>
+                </div>
+            ))}
+            {tipoDeForm && (
+                <div className="flex">
+                    <label>
+                        <input
+                            onChange={handleChange}
+                            value={formData.confirmPassword}
+                            type={vistaPassword ? 'text' : 'password'}
+                            name="confirmPassword"
+                            className="input"
+                        />
+                        <span>Confirmar Contraseña</span>
+                    </label>
+                </div>
+            )}
+            {tipoDeForm === true ? (
+                <>
+                    <button type="submit" className="submit">
+                        Crear Cuenta
+                    </button>
+                    <p className="signin">
+                        ¿Ya tienes una cuenta? <Link to="/">Iniciar Sesión</Link>
+                    </p>
+                </>
+            ) : (
+                <>
+                    <button className="submit">Iniciar sesión</button>
+                    <p className="signin">
+                        ¿No tienes una cuenta? <Link to="/register">Regístrate</Link>
+                    </p>
+                </>
+            )}
+        </form>
     )
 }
 

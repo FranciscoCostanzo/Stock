@@ -1,0 +1,106 @@
+$time-hover: 0.3s ease;
+$font-s: 16px;
+$font-xxs: 12px;
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); // Color de fondo del overlay
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; // Asegúrate de que esté encima de otros elementos
+}
+
+.form {
+  position: absolute;
+  display: flex;
+  transform: translate(-50%);
+  flex-direction: column;
+  gap: 10px;
+  max-width: 400px;
+  width: 90%; // Para asegurarse de que sea responsivo
+  padding: 20px;
+  background-color: white; // Color de fondo del formulario
+  border-radius: 10px;
+}
+
+.title {
+  font-size: 40px;
+  font-weight: 600;
+  letter-spacing: -1px;
+  width: 100%;
+  text-align: center;
+}
+
+.flex {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 6.6px;
+
+  label {
+    position: relative;
+
+    .input,
+    select {
+      width: 100%;
+      padding: 14px 11px 22px 11px;
+      outline: 0;
+      border: 1px solid rgba(73, 73, 73, 0.499);
+      border-radius: 9px;
+      transition: $time-hover;
+      font-size: $font-s;
+
+      &:focus {
+        background-color: rgb(233, 230, 230);
+      }
+
+      & + span {
+        position: absolute;
+        left: 11px;
+        top: 39px;
+        color: rgb(73, 73, 73);
+        font-size: $font-xxs;
+        cursor: text;
+        transition: 0.3s ease;
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+.submit {
+  border: none;
+  outline: none;
+  background-color: #000;
+  padding: 11px;
+  border-radius: 11px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  transition: $time-hover;
+
+  &:hover {
+    background-color: #333;
+  }
+}
+
+.close__btn{
+    cursor: pointer;
+    position: absolute;
+    right: 5%;
+
+    svg {
+        width: 30px;
+        height: 30px;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke: #000;
+        fill: none;
+    }
+}

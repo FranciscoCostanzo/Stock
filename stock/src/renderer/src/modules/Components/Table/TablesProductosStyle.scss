@@ -7,10 +7,10 @@
     position: relative;
     // Contenedor para la tabla con scrollbar
     .table-wrapper {
-        max-height: calc(65vh - 60px); // Ajusta la altura máxima según tus necesidades
+        max-height: calc(60vh - 60px); // Ajusta la altura máxima según tus necesidades
         overflow-y: auto;
         border: 1px solid #ddd;
-        border-radius: 0.25rem;
+        border-radius: 6px;
         background-color: #fff;
         scrollbar-gutter: stable;
     }

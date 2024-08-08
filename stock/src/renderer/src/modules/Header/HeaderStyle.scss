@@ -45,18 +45,31 @@ header {
             font-weight: bold;
         }
 
-        .btnCerrarSesion {
+        .btn__cerrar__sesion {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
             text-align: center;
             text-decoration: none;
             color: #000;
-            font-size: 24px;
+            font-size: 20px;
             padding: 6px;
             border: #000 1px solid;
             width: 100%;
             font-weight: bold;
             border-radius: 6px;
             transition: 0.1s ease;
+            gap: 5px;
+            svg {
+                width: 30px;
+                height: 30px;
+                stroke-width: 1.8;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+                stroke: #000;
+                fill: none;
+            }
 
             &:hover {
                 scale: 1.05;

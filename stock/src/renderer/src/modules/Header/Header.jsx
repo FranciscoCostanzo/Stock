@@ -59,21 +59,27 @@ const Header = () => {
             <span>{rol}</span>
             {user.sucursal && (
               <>
-            <p>Pertenece a la sucursal:</p>
-            <span>{user.sucursal.nombre}</span>
-            <span>{user.sucursal.ciudad}</span>
-            <span>{user.sucursal.direccion}</span>
+                <p>Pertenece a la sucursal:</p>
+                <span>{user.sucursal.nombre}</span>
+                <span>{user.sucursal.ciudad}</span>
+                <span>{user.sucursal.direccion}</span>
               </>
             )}
           </article>
         )}
         <span>
-          {user.nombre} {user.sucursal && (<>- {user.sucursal.ciudad}</>)} - {rol}
+          {user.nombre} {user.sucursal && <>- {user.sucursal.ciudad}</>} - {rol}
         </span>
       </section>
       <section>
-        <p className="btnCerrarSesion" onClick={handleCerrarSesion}>
+        <p className="btn__cerrar__sesion" onClick={handleCerrarSesion}>
           Cerrar Sesion
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
+            <path d="M9 12h12l-3 -3" />
+            <path d="M18 15l3 -3" />
+          </svg>
         </p>
       </section>
     </header>
