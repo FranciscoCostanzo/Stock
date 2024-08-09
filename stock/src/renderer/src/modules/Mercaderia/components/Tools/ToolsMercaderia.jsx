@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import FormModal from '../../../Components/Forms/FormModal'
 
-const Tools = () => {
+const ToolsMercaderia = () => {
   const [abrirFormModal, setAbrirFormModal] = useState(false)
   const [fieldsForm, setFieldsForm] = useState([])
   const [tituloForm, setTituloForm] = useState('')
@@ -20,7 +20,6 @@ const Tools = () => {
           { name: 'descripcion', type: 'text', label: 'Descripción' },
           { name: 'costo', type: 'number', label: 'Precio Costo' },
           { name: 'publico', type: 'number', label: 'Precio Publico' }
-          // Agrega más campos según sea necesario
         ]
         apiEndpoint = 'http://localhost:3000/agregar-articulo'
         tituloFormulario = 'Agregar Articulo'
@@ -28,10 +27,10 @@ const Tools = () => {
         break
       case 'edit':
         fields = [
-          { name: 'id', type: 'text', label: 'ID del Artículo' },
-          { name: 'nombre', type: 'text', label: 'Nuevo Nombre' },
-          { name: 'precio', type: 'number', label: 'Nuevo Precio' }
-          // Agrega más campos según sea necesario
+          { name: 'id', type: 'text', label: 'Artículo' },
+          { name: 'nombre', type: 'text', label: 'Nueva Descripción' },
+          { name: 'precio', type: 'number', label: 'Nuevo Precio Costo' },
+          { name: 'precio', type: 'number', label: 'Nuevo Precio Publico' }
         ]
         apiEndpoint = '/api/articulos/modificar'
         tituloFormulario = 'Modificar Artículo'
@@ -40,10 +39,10 @@ const Tools = () => {
         break
       case 'delete':
         fields = [
-          { name: 'id', type: 'text', label: 'ID del Artículo' }
+          { name: 'id', type: 'text', label: 'Artículo' }
           // Tal vez solo necesites el ID para eliminar
         ]
-        apiEndpoint = '/api/articulos/eliminar'
+        apiEndpoint = 'http://localhost:3000/eliminar-articulo'
         tituloFormulario = 'Eliminar Artículo'
         messageFormulario = 'Elimina un artiuclo, tenes que poner el numero exacto'
 
@@ -85,4 +84,4 @@ const Tools = () => {
   )
 }
 
-export default Tools
+export default ToolsMercaderia

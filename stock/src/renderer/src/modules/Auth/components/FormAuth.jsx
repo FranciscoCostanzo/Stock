@@ -106,7 +106,7 @@ const Form = ({ fields, endpoint, tipoDeForm, dataSucursales }) => {
             const responseData = await response.json()
             console.log(responseData)
             if (!tipoDeForm) {
-                navigate('/dashboard')
+                navigate('/inicio')
             }
 
             toast.success(`${tipoDeForm ? 'Te has registrado con éxito' : 'Te has logueado con éxito'}`, {

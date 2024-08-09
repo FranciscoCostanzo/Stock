@@ -1,13 +1,17 @@
 import { useContext, useEffect, useState } from 'react'
 import BtnVolver from '../Components/BtnVolver/BtnVolver'
 import Table from '../Components/Table/TablesProductos'
-import { obtenerStockPorSucursal, obtenerStockAdmin } from './lib/libMercaderia'
+import {
+  obtenerMercaderiaAdmin
+} from './lib/libMercaderia'
 import { AuthContext } from '../Auth/context/AuthContext'
 import FiltroProductos from './components/Filtros/FiltroProductos'
 import ToolsMercaderia from './components/Tools/ToolsMercaderia'
 import { Link } from 'react-router-dom'
+import BtnPapelera from './components/BtnPapelera/BtnPapelera'
 
-const Stock = () => {
+
+const Mercaderia = () => {
   const { user } = useContext(AuthContext)
   const [mercaderia, setMercaderia] = useState([])
   const [filters, setFilters] = useState({})
@@ -19,9 +23,7 @@ const Stock = () => {
         if (user) {
           let data
           if (user.rol === 'admin') {
-            data = await obtenerStockAdmin()
-          } else if (user.sucursal) {
-            data = await obtenerStockPorSucursal(user.sucursal.id)
+            data = await obtenerMercaderiaAdmin()
           }
           setMercaderia(data)
         }
@@ -42,10 +44,11 @@ const Stock = () => {
   return (
     <section className='mercaderia'>
       <BtnVolver donde="/inicio" />
+      <BtnPapelera />
       {loading ? (
         <div loader="interno" className="contenedor__loader">
           <span className="loader"></span>
-          <span className='text__loader'>Cargando</span>
+          <span className="text__loader">Cargando</span>
         </div>
       ) : (
         <>
@@ -61,8 +64,8 @@ const Stock = () => {
           {user.rol === 'admin' && (
             <>
               <ToolsMercaderia />
-              <Link className="btn__pestanas__siguiente" to="/mercaderia">
-                Mercaderia
+              <Link className="btn__pestanas__siguiente" to="/stock">
+                Stock
               </Link>
             </>
           )}
@@ -72,4 +75,4 @@ const Stock = () => {
   )
 }
 
-export default Stock
+export default Mercaderia

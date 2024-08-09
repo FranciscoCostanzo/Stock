@@ -1,7 +1,7 @@
 // Función para obtener el stock por sucursal
 export const obtenerStockPorSucursal = async (idSucursal) => {
   try {
-    const response = await fetch(`http://localhost:3000/mercaderia/${idSucursal}`, {
+    const response = await fetch(`http://localhost:3000/stock/${idSucursal}`, {
       method: 'GET',
       credentials: 'include'
     })
@@ -18,8 +18,28 @@ export const obtenerStockPorSucursal = async (idSucursal) => {
   }
 }
 
-// libMercaderia.js
+// Función para obtener el stock para el admin
 export const obtenerStockAdmin = async () => {
+  try {
+    const response = await fetch(`http://localhost:3000/stock`, {
+      method: 'GET',
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al obtener el stock.');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error en la solicitud:', error);
+    throw error;
+  }
+};
+
+// Función para obtener el stock para el admin
+export const obtenerMercaderiaAdmin = async () => {
   try {
     const response = await fetch(`http://localhost:3000/mercaderia`, {
       method: 'GET',
@@ -37,3 +57,24 @@ export const obtenerStockAdmin = async () => {
     throw error;
   }
 };
+
+export const obtenerPapeleraAdmin = async () => {
+  try {
+    const response = await fetch(`http://localhost:3000/papelera`, {
+      method: 'GET',
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al obtener el stock.');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error en la solicitud:', error);
+    throw error;
+  }
+};
+
+

@@ -7,6 +7,8 @@ import Dashboard from './modules/Dashboard/Dashboard'
 import { AuthRouter } from './modules/Auth/components/AuthRouter'
 import Stock from './modules/Mercaderia/Stock'
 import Header from './modules/Header/Header'
+import Mercaderia from './modules/Mercaderia/Mercaderia'
+import Papelera from './modules/Mercaderia/Papelera'
 
 
 const App = () => {
@@ -36,8 +38,10 @@ const App = () => {
         <Route path="/register" element={<Register />} />
       </Route>
       <Route element={<AuthRouter />}>
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/inicio" element={<Dashboard />} />
         <Route path="/stock" element={<Stock />} />
+        <Route path="/mercaderia" element={<Mercaderia />} />
+        <Route path="/papelera" element={<Papelera />} />
       </Route>
     </Routes>
     </>

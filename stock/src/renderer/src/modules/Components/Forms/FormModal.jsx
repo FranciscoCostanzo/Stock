@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { toast } from 'react-toastify';
 
 
+
 const FormModal = ({ fieldsForm, endpoint, onClose, tituloForm, messageForm }) => {
   const initialState = fieldsForm.reduce((acc, field) => {
     return { ...acc, [field.name]: "" };
@@ -50,6 +51,7 @@ const FormModal = ({ fieldsForm, endpoint, onClose, tituloForm, messageForm }) =
 
       // Cerrar el modal después de éxito
       onClose();
+      window.location.reload()
     } catch (error) {
       console.error("Error al enviar el formulario:", error);
 

@@ -1,9 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
-import './main.scss'
 import { BrowserRouter } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
+import './main.scss'
 import 'react-toastify/dist/ReactToastify.css'
 import { AuthProvider } from './modules/Auth/context/AuthContext.jsx'
 

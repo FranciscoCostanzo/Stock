@@ -1,6 +1,3 @@
-// TablesProductos.jsx
-import React from 'react';
-
 // Función para comparar dos valores de manera insensible a mayúsculas/minúsculas
 const matchesFilter = (value, filter) => {
   if (!filter) return true; // Si no hay filtro, siempre devolver verdadero
