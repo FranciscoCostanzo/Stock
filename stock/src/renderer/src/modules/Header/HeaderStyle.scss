@@ -5,6 +5,20 @@ header {
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    position: relative;
+
+    h1{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 10px;
+        border: 1px #000 solid;
+        padding: 6px 12px;
+        font-size: 40px;
+        color: #fff;
+        background-color: #000;
+    }
 
     section {
         position: relative;

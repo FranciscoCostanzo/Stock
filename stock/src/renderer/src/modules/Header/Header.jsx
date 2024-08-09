@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { AuthContext } from '../Auth/context/AuthContext'
 import { useContext, useState } from 'react'
 
@@ -6,6 +6,9 @@ const Header = () => {
   const { user, setUser } = useContext(AuthContext)
   const [btnUser, setBtnUser] = useState(false)
   const navigate = useNavigate()
+  const location = useLocation()
+  const currentPath = location.pathname
+  const routeName = currentPath === '/' ? 'Inicio' : currentPath.replace('/', '').replace('-', ' ')
 
   const handleCerrarSesion = async () => {
     try {
@@ -71,6 +74,7 @@ const Header = () => {
           {user.nombre} {user.sucursal && <>- {user.sucursal.ciudad}</>} - {rol}
         </span>
       </section>
+      <h1>{capitalizeFirstLetter(routeName)}</h1>
       <section>
         <p className="btn__cerrar__sesion" onClick={handleCerrarSesion}>
           Cerrar Sesion

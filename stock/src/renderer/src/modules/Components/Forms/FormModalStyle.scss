@@ -33,7 +33,10 @@ $font-xxs: 12px;
   font-weight: 600;
   letter-spacing: -1px;
   width: 100%;
-  text-align: center;
+}
+
+.message {
+  font-size: 16px;
 }
 
 .flex {
@@ -59,7 +62,7 @@ $font-xxs: 12px;
         background-color: rgb(233, 230, 230);
       }
 
-      & + span {
+      &+span {
         position: absolute;
         left: 11px;
         top: 39px;
@@ -89,18 +92,18 @@ $font-xxs: 12px;
   }
 }
 
-.close__btn{
-    cursor: pointer;
-    position: absolute;
-    right: 5%;
+.close__btn {
+  cursor: pointer;
+  position: absolute;
+  right: 5%;
 
-    svg {
-        width: 30px;
-        height: 30px;
-        stroke-width: 1.8;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        stroke: #000;
-        fill: none;
-    }
+  svg {
+    width: 30px;
+    height: 30px;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke: #000;
+    fill: none;
+  }
 }

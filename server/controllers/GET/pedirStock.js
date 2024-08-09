@@ -50,7 +50,7 @@ Mercaderia.id AS Articulo,
   Mercaderia.costo AS Costo,
   Mercaderia.publico AS Publico,
   Stock.cantidad AS Stock,
-  Sucursal.ciudad AS Ciudad
+  Sucursal.ciudad AS Sucursal
 FROM 
   Stock
 INNER JOIN 

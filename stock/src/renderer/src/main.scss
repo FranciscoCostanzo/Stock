@@ -1,4 +1,3 @@
-
 // Tamaño de fuentes
 $font-xxxs: 10px;
 $font-xxs: 12px;
@@ -25,8 +24,8 @@ $gap-xl: 35px;
 // colores
 
 // transiciones
-$time-hover: all .3s ease;
-$time-normal: all .5s ease;
+$time-hover: all 0.3s ease;
+$time-normal: all 0.5s ease;
 
 // Bordes
 $rds_xs: 5px;
@@ -41,76 +40,114 @@ $rds_o: 50%;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Advent Pro", sans-serif;
+  font-family: 'Advent Pro', sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
-  font-variation-settings:
-    "wdth" 100;
+  font-variation-settings: 'wdth' 100;
 }
+
 body {
   margin: 0;
   min-height: 100dvh;
   width: 100%;
 }
 
-h1,h2,h3,h4,h5,h6{
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   text-wrap: balance;
 }
 
-p{
+p {
   text-wrap: pretty;
 }
 
-.loader {
+.contenedor__loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   position: absolute;
-  /* Necesario para usar top, left, etc. */
+  gap: 20px;
   top: 50%;
-  /* Posiciona el elemento a la mitad del contenedor desde el borde superior */
   left: 50%;
-  /* Posiciona el elemento a la mitad del contenedor desde el borde izquierdo */
-  transform: translate(-50%,
-          -50%);
-  /* Mueve el elemento hacia arriba y a la izquierda por la mitad de su propio tamaño */
-  width: 48px;
-  height: 48px;
-  border: 1px solid #242323;
-  border-radius: 50%;
-  display: inline-block;
-  box-sizing: border-box;
-  animation: rotation 1s linear infinite;
+  transform: translate(-50%, -50%);
+  .loader {
+    width: 48px;
+    height: 48px;
+    border: 1px solid #242323;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+  .loader::after {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-bottom-color: #000;
+  }
+
+  .text__loader{
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 8px;
+    border: 1px solid;
+    padding: 4px;
+  }
+
 }
 
-.loader::after {
-  content: '';
-  box-sizing: border-box;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  border: 2px solid transparent;
-  border-bottom-color: #000;
+[loader="interno"]{
+  top: 150px;
 }
+
 
 @keyframes rotation {
   0% {
-      transform: rotate(0deg);
+    transform: rotate(0deg);
   }
 
   100% {
-      transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
-@import "./modules/Auth/components/FormStyle.scss";
-@import "./modules/Header/HeaderStyle.scss";
-@import "./modules/Components/Table/TablesProductosStyle.scss";
-@import "./modules/Components/Forms/FormModalStyle.scss";
+/* Para navegadores WebKit (Chrome, Safari, etc.) */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    margin: 0;
+}
 
-@import "./modules/Components/BtnVolver/BtnVolverStyle.scss";
+/* Para Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
 
-@import "./modules/Dashboard/DashboardStyle.scss";
-@import "./modules/Mercaderia/components/Filtros/FiltroProductosStyle.scss";
-@import "./modules/Mercaderia/components/ToolsProductos/ToolsProductosStyle.scss";
+/* Para Edge y otros navegadores */
+input[type=number]::-ms-clear {
+    display: none;
+}
+
+
+@import './modules/Auth/components/FormStyle.scss';
+@import './modules/Header/HeaderStyle.scss';
+@import './modules/Components/Table/TablesProductosStyle.scss';
+@import './modules/Components/Forms/FormModalStyle.scss';
+
+@import './modules/Components/BtnVolver/BtnVolverStyle.scss';
+
+@import './modules/Dashboard/DashboardStyle.scss';
+@import './modules/Mercaderia/components/Filtros/FiltroProductosStyle.scss';
+@import './modules/Mercaderia/components/ToolsProductos/ToolsProductosStyle.scss';

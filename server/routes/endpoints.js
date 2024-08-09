@@ -4,6 +4,7 @@ import { checkToken, login, logout, register } from "../controllers/POST/authUse
 import { pedirSucursales } from "../controllers/GET/pedirSucursales.js";
 import { pedirStockAdmin, pedirStockPorSucursal } from "../controllers/GET/pedirStock.js";
 import { authenticateToken } from "../config/server.js";
+import { agregarArticulo } from "../controllers/POST/mercaderiaTools.js";
 
 const router = Router();
 
@@ -19,5 +20,10 @@ router.get("/sucursales", pedirSucursales);
 // Ruta para obtener Mercaderia por Sucursal
 router.get("/mercaderia/:idSucursal", authenticateToken, pedirStockPorSucursal)
 router.get("/mercaderia", authenticateToken, pedirStockAdmin)
+
+// Ruta para agregar un articulo
+router.post("/agregar-articulo", authenticateToken, agregarArticulo)
+
+
 
 export default router;

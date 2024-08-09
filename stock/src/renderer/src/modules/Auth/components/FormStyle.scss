@@ -16,23 +16,27 @@
         width: 100%;
     }
 
-    .message,
-    .signin {
+    .message {
         font-size: 16px;
     }
 
-    .signin {
-        text-align: center;
+    // .message,
+    // .signin {
+    //     font-size: 16px;
+    // }
 
-        a {
-            color: #000;
-            font-weight: 600;
+    // .signin {
+    //     text-align: center;
 
-            &:hover {
-                color: royalblue;
-            }
-        }
-    }
+    //     a {
+    //         color: #000;
+    //         font-weight: 600;
+
+    //         &:hover {
+    //             color: royalblue;
+    //         }
+    //     }
+    // }
 
     .flex {
         display: flex;

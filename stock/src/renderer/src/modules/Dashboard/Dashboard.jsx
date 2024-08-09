@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 
 const Dashbord = () => {
   const btns = [
-    { btn: 'Mercaderia', to: '/mercaderia' },
+    { btn: 'Mercaderia', to: '/stock' },
     { btn: 'Ventas' },
     { btn: 'Fallas' },
     { btn: 'Pedidos' },

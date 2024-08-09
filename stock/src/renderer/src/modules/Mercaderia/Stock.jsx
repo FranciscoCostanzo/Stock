@@ -42,11 +42,14 @@ const Mercaderia = () => {
   return (
     <section style={{ position: 'relative' }}>
       <BtnVolver donde="/dashboard" />
-      <article className="table__container">
-        {loading ? (
+      {loading ? (
+        <div loader="interno" className="contenedor__loader">
           <span className="loader"></span>
-        ) : (
-          <>
+          <span className='text__loader'>Cargando</span>
+        </div>
+      ) : (
+        <>
+          <article className="table__container">
             <FiltroProductos
               columns={Object.keys(mercaderia[0] || {})}
               onFilterChange={handleFilterChange}
@@ -54,11 +57,9 @@ const Mercaderia = () => {
             <div className="table-wrapper">
               <Table data={mercaderia} filters={filters} />
             </div>
-          </>
-        )}
-      </article>
-      {user.rol === 'admin' && (
-        <Tools/>
+          </article>
+          {user.rol === 'admin' && <Tools />}
+        </>
       )}
     </section>
   )

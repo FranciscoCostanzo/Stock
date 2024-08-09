@@ -5,7 +5,7 @@ import Login from './modules/Auth/Login'
 import Register from './modules/Auth/Register'
 import Dashboard from './modules/Dashboard/Dashboard'
 import { AuthRouter } from './modules/Auth/components/AuthRouter'
-import Mercaderia from './modules/Mercaderia/Mercaderia'
+import Stock from './modules/Mercaderia/Stock'
 import Header from './modules/Header/Header'
 
 
@@ -37,7 +37,7 @@ const App = () => {
       </Route>
       <Route element={<AuthRouter />}>
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/mercaderia" element={<Mercaderia />} />
+        <Route path="/stock" element={<Stock />} />
       </Route>
     </Routes>
     </>

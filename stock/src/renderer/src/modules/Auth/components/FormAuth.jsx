@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { fetchSucursales } from '../lib/libAuth'
 
 const Form = ({ fields, endpoint, tipoDeForm, dataSucursales }) => {
@@ -234,16 +234,16 @@ const Form = ({ fields, endpoint, tipoDeForm, dataSucursales }) => {
                     <button type="submit" className="submit">
                         Crear Cuenta
                     </button>
-                    <p className="signin">
+                    {/* <p className="signin">
                         ¿Ya tienes una cuenta? <Link to="/">Iniciar Sesión</Link>
-                    </p>
+                    </p> */}
                 </>
             ) : (
                 <>
                     <button className="submit">Iniciar sesión</button>
-                    <p className="signin">
+                    {/* <p className="signin">
                         ¿No tienes una cuenta? <Link to="/register">Regístrate</Link>
-                    </p>
+                    </p> */}
                 </>
             )}
         </form>
