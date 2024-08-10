@@ -34,7 +34,6 @@ const Dashbord = () => {
           ))}
         </>
       )}
-      <AuthTimeStampAviso/>
     </section>
   )
 }

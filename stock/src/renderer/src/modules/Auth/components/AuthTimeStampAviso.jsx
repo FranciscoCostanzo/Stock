@@ -41,14 +41,11 @@ const AuthTimeStampAviso = () => {
   return (
     <div>
       {sessionExpired ? (
-        <div style={{ color: 'red' }}>
-          <p>Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.</p>
-        </div>
+        <span className='aviso__time__stamp'>Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.
+        </span>
       ) : (
         timeRemaining !== null && (
-          <div className='counter__time__stamp'>
-            <p>Tu sesión expirará en <strong>{formatTime(timeRemaining)}</strong>.</p>
-          </div>
+          <span>{formatTime(timeRemaining)}</span>
         )
       )}
     </div>

@@ -91,11 +91,14 @@ header {
         }
 
         .modal__user {
+            display: flex;
+            align-items: flex-start;
             z-index: 100;
             background-color: #fff;
             border-radius: 8px;
             border: 1px solid;
             padding: 8px;
+            width: 110%;
             position: absolute;
             top: 100%;
             display: flex;
@@ -108,7 +111,7 @@ header {
             span {
                 font-size: 20px;
                 border-bottom: 1px solid;
-                padding: 4px;
+                padding: 2px 6px;
             }
         }
     }

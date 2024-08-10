@@ -40,15 +40,15 @@ const Stock = () => {
   }
 
   return (
-    <section className='mercaderia'>
-      <BtnVolver donde="/inicio" />
+    <section className="mercaderia">
       {loading ? (
         <div loader="interno" className="contenedor__loader">
           <span className="loader"></span>
-          <span className='text__loader'>Cargando</span>
+          <span className="text__loader">Cargando</span>
         </div>
       ) : (
         <>
+          <BtnVolver donde="/mercaderia" />
           <article className="table__container">
             <FiltroProductos
               columns={Object.keys(mercaderia[0] || {})}
@@ -58,14 +58,7 @@ const Stock = () => {
               <Table data={mercaderia} filters={filters} />
             </div>
           </article>
-          {user.rol === 'admin' && (
-            <>
-              <ToolsMercaderia />
-              <Link className="btn__pestanas__siguiente" to="/mercaderia">
-                Mercaderia
-              </Link>
-            </>
-          )}
+          {user.rol === 'admin' && <ToolsMercaderia />}
         </>
       )}
     </section>

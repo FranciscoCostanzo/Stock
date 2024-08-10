@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { AuthContext } from '../Auth/context/AuthContext'
 import { useContext, useState } from 'react'
+import AuthTimeStampAviso from '../Auth/components/AuthTimeStampAviso'
 
 const Header = () => {
   const { user, setUser } = useContext(AuthContext)
@@ -59,6 +60,7 @@ const Header = () => {
           <article className="modal__user">
             <p>Usuario:</p>
             <span>{user.nombre}</span>
+            <p>Rol:</p>
             <span>{rol}</span>
             {user.sucursal && (
               <>
@@ -68,6 +70,8 @@ const Header = () => {
                 <span>{user.sucursal.direccion}</span>
               </>
             )}
+            <p>Tu sesión expirará en:</p>
+            <AuthTimeStampAviso />
           </article>
         )}
         <span>
