@@ -91,7 +91,7 @@ const FormModal = ({ fieldsForm, endpoint, onClose, tituloForm, messageForm }) =
 
   return (
     <div className="overlay">
-      <form className="form" onSubmit={handleSubmit}>
+      <form className="formModal" onSubmit={handleSubmit}>
         <p className="title">{tituloForm}</p>
         <p className="message">{messageForm}</p>
 

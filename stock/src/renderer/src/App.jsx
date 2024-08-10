@@ -9,6 +9,7 @@ import Stock from './modules/Mercaderia/Stock'
 import Header from './modules/Header/Header'
 import Mercaderia from './modules/Mercaderia/Mercaderia'
 import Papelera from './modules/Mercaderia/Papelera'
+import AuthTimeStampAviso from './modules/Auth/components/AuthTimeStampAviso'
 
 
 const App = () => {

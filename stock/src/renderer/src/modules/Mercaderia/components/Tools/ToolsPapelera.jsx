@@ -17,35 +17,35 @@ const ToolsMercaderia = () => {
         switch (action) {
             case 'vaciarPapelera':
                 fields = [
-                    { name: 'ok', type: 'text', label: 'Confirmación' }
+                    { name: 'OKV', type: 'text', label: 'Confirmación' }
                 ];
-                apiEndpoint = 'http://localhost:3000/';
+                apiEndpoint = 'http://localhost:3000/vaciar-papelera';
                 tituloFormulario = 'Vaciar Papelera';
-                messageFormulario = 'Confirmar escribiendo "OKV" para poder vaciar la papelera';
+                messageFormulario = 'Confirmar escribiendo "OKV" para poder vaciar la papelera, todos los artículo se eliminaran definitivamente';
                 break;
-            case 'borrarArticuloDefinitivo':
+            case 'borrarArticuloEspecifico':
                 fields = [
                     { name: 'id', type: 'text', label: 'Artículo' },
-                    { name: 'ok', type: 'text', label: 'Confirmación' }
+                    { name: 'OKVE', type: 'text', label: 'Confirmación' }
                 ];
-                apiEndpoint = 'http://localhost:3000/';
-                tituloFormulario = 'Borrar Artículo Definitivo';
+                apiEndpoint = 'http://localhost:3000/eliminar-especifico-papelera';
+                tituloFormulario = 'Borrar Artículo Específico';
                 messageFormulario = 'Escribe el artículo en específico que quieras eliminar definitivamente y luego escribe "OKVE" en el campo de confirmación';
                 break;
             case 'restablecerTodo':
                 fields = [
                     { name: 'OKR', type: 'text', label: 'Confirmación' }
                 ];
-                apiEndpoint = 'http://localhost:3000/restablecer-todos-articulos';
+                apiEndpoint = 'http://localhost:3000/restablecer-todos-articulos-papelera';
                 tituloFormulario = 'Restablecer Todos los Artículos';
                 messageFormulario = 'Confirmar escribiendo "OKR" para restablecer todos los artículos';
                 break;
             case 'restablecerArticulo':
                 fields = [
                     { name: 'id', type: 'text', label: 'Artículo' },
-                    { name: 'ok', type: 'text', label: 'Confirmación' }
+                    { name: 'OKRE', type: 'text', label: 'Confirmación' }
                 ];
-                apiEndpoint = 'http://localhost:3000/';
+                apiEndpoint = 'http://localhost:3000/restablecer-especifico-papelera';
                 tituloFormulario = 'Restablecer Artículo';
                 messageFormulario = 'Escribe el artículo en específico que quieras restablecer y luego escribe "OKRE" en el campo de confirmación';
                 break;
@@ -71,7 +71,7 @@ const ToolsMercaderia = () => {
         <>
             <article className="tools__productos">
                 <p onClick={() => handleAbrirFormModal('vaciarPapelera')}>Vaciar Papelera</p>
-                <p onClick={() => handleAbrirFormModal('borrarArticuloDefinitivo')}>Borrar Artículo Especifico</p>
+                <p onClick={() => handleAbrirFormModal('borrarArticuloEspecifico')}>Borrar Artículo Especifico</p>
                 <p onClick={() => handleAbrirFormModal('restablecerTodo')}>Restablecer Papelera</p>
                 <p onClick={() => handleAbrirFormModal('restablecerArticulo')}>Restablecer Artículo Especifico</p>
             </article>

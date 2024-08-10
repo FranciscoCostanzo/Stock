@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../Auth/context/AuthContext'
+import AuthTimeStampAviso from '../Auth/components/AuthTimeStampAviso'
 
 const Dashbord = () => {
   const { user } = useContext(AuthContext)
@@ -33,6 +34,7 @@ const Dashbord = () => {
           ))}
         </>
       )}
+      <AuthTimeStampAviso/>
     </section>
   )
 }

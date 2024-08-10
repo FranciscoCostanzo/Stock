@@ -144,10 +144,13 @@ input[type=number]::-ms-clear {
 @import './modules/Auth/components/FormStyle.scss';
 @import './modules/Header/HeaderStyle.scss';
 @import './modules/Components/Table/TablesProductosStyle.scss';
+
 @import './modules/Components/Forms/FormModalStyle.scss';
+
 @import './modules/Components/BtnVolver/BtnVolverStyle.scss';
 @import './modules/Dashboard/DashboardStyle.scss';
 @import './modules/Mercaderia/components/Filtros/FiltroProductosStyle.scss';
 @import './modules/Mercaderia/components/Tools/ToolsProductosStyle.scss';
 @import './modules/Mercaderia/components/BtnPapelera/BtnPapelera.scss';
 @import './modules/Mercaderia/MercaderiaStyle.scss';
+@import './modules/Auth/components/AuthTimeStampAvisoStyle.scss';

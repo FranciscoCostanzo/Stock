@@ -1,15 +1,12 @@
 import { useContext, useEffect, useState } from 'react'
 import BtnVolver from '../Components/BtnVolver/BtnVolver'
 import Table from '../Components/Table/TablesProductos'
-import {
-  obtenerMercaderiaAdmin
-} from './lib/libMercaderia'
+import { obtenerMercaderiaAdmin } from './lib/libMercaderia'
 import { AuthContext } from '../Auth/context/AuthContext'
 import FiltroProductos from './components/Filtros/FiltroProductos'
 import ToolsMercaderia from './components/Tools/ToolsMercaderia'
 import { Link } from 'react-router-dom'
 import BtnPapelera from './components/BtnPapelera/BtnPapelera'
-
 
 const Mercaderia = () => {
   const { user } = useContext(AuthContext)
@@ -42,7 +39,7 @@ const Mercaderia = () => {
   }
 
   return (
-    <section className='mercaderia'>
+    <section className="mercaderia">
       <BtnVolver donde="/inicio" />
       <BtnPapelera />
       {loading ? (

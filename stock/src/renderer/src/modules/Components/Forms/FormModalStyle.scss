@@ -15,9 +15,10 @@ $font-xxs: 12px;
   z-index: 1000; // Asegúrate de que esté encima de otros elementos
 }
 
-.form {
+.formModal {
   position: absolute;
   display: flex;
+  left: 50%;
   transform: translate(-50%);
   flex-direction: column;
   gap: 10px;
@@ -26,14 +27,14 @@ $font-xxs: 12px;
   padding: 20px;
   background-color: white; // Color de fondo del formulario
   border-radius: 10px;
+  .title {
+    font-size: 37px;
+    font-weight: 600;
+    letter-spacing: -1px;
+    width: 100%;
+  }
 }
 
-.title {
-  font-size: 40px;
-  font-weight: 600;
-  letter-spacing: -1px;
-  width: 100%;
-}
 
 .message {
   font-size: 16px;
