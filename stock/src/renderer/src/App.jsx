@@ -9,10 +9,8 @@ import Stock from './modules/Mercaderia/Stock'
 import Header from './modules/Header/Header'
 import Mercaderia from './modules/Mercaderia/Mercaderia'
 import Papelera from './modules/Mercaderia/Papelera'
-import AuthTimeStampAviso from './modules/Auth/components/AuthTimeStampAviso'
 import Ventas from './modules/Ventas/Ventas'
 import Inversion from './modules/Mercaderia/Inversion'
-
 
 const App = () => {
   useEffect(() => {
@@ -38,15 +36,18 @@ const App = () => {
     <Routes>
       <Route element={<AuthRouter requireAuth={false} />}>
         <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
       </Route>
       <Route element={<AuthRouter />}>
         <Route path="/inicio" element={<Dashboard />} />
-        <Route path="/stock" element={<Stock />} />
+
         <Route path="/mercaderia" element={<Mercaderia />} />
+        <Route path="/stock" element={<Stock />} />
         <Route path="/papelera" element={<Papelera />} />
         <Route path="/inversion" element={<Inversion />} />
+
         <Route path="/ventas" element={<Ventas />} />
+
+        <Route path="/register" element={<Register />} />
       </Route>
     </Routes>
     </>

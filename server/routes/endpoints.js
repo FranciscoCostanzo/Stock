@@ -24,6 +24,7 @@ import {
     restablecerTodosArticulos,
     vaciarPapelera,
 } from "../controllers/POST/mercaderiaTools.js";
+import { pedirArticuloEmpleado } from "../controllers/POST/ventasTools.js";
 
 const router = Router();
 
@@ -63,5 +64,8 @@ router.post(
 router.post("/restablecer-especifico-papelera", authenticateToken, restablecerEspecificoPapelera);
 router.post("/vaciar-papelera", authenticateToken, vaciarPapelera);
 router.post("/eliminar-especifico-papelera", authenticateToken, eliminarEspecificoPapelera);
+
+//rutas para las ventas
+router.post("/articulo-empleado", authenticateToken, pedirArticuloEmpleado)
 
 export default router;

@@ -68,18 +68,29 @@ CREATE TABLE Usuarios (
 );
 
 CREATE TABLE Ventas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    fecha DATETIME NOT NULL,
-    total DECIMAL(10, 2) NOT NULL,
+    id_venta INT NOT NULL,
+    fecha_venta DATE NOT NULL,
+    hora_venta TIME NOT NULL,
     id_usuario INT,
     id_sucursal INT,
-    CONSTRAINT fk_ventas_usuario FOREIGN KEY (id_usuario) REFERENCES Usuarios(id),
-    CONSTRAINT fk_ventas_sucursal FOREIGN KEY (id_sucursal) REFERENCES Sucursal(id)
+    id_mercaderia INT,
+    cantidad INT NOT NULL,
+    metodo_de_pago ENUM('efectivo', 'tarjeta') NOT NULL,
+    nombre_cliente VARCHAR(100) NOT NULL,
+    apellido_cliente VARCHAR(100) NOT NULL,
+    dni_cliente VARCHAR(20) NOT NULL,
+    cuotas INT,
+    total_venta DECIMAL(10, 2) NOT NULL,
+    PRIMARY KEY (id_venta, id_mercaderia, id_sucursal),
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id),
+    FOREIGN KEY (id_sucursal) REFERENCES Sucursal(id),
+    FOREIGN KEY (id_mercaderia) REFERENCES Mercaderia(id)
 );
 
 ```
 
 ## import pandas as pd
+
 ## import mysql.connector
 
 ### Función para cargar datos desde Excel y cargar en MySQL
@@ -139,6 +150,7 @@ CREATE TABLE Ventas (
     cargar_datos_desde_excel_a_mysql(excel_file, server, database, username, password)
 
 ### Función para cargar datos desde Excel y actualizar en MySQL
+
         def actualizar_stock_desde_excel(excel_file, server, database, username, password):
         conn = None
          try:
@@ -188,7 +200,7 @@ CREATE TABLE Ventas (
             cursor.close()
             conn.close()
             print("Conexión a MySQL cerrada.")
-        
+
             # Configuración de parámetros
         excel_file = 'TUEXCEL.xlsx'
         server = 'TUSERVER'

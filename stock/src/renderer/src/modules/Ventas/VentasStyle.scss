@@ -1,0 +1,193 @@
+.ventas {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+
+    .contenedor__form__ventas {
+        max-width: 1200px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        height: 700px; // Ajusta la altura máxima según tus necesidades
+        width: 90%; // Para asegurarse de que sea responsivo
+        padding: 20px;
+        border-radius: 10px;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        border: 1px solid #ddd;
+        background-color: #f9f9f9;
+        border-radius: 16px;
+
+        .contenedor__busqueda{
+        position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            flex-direction: row;
+            width: 100%;
+            gap: 60px;
+
+            .busqueda{
+                display: flex;
+                gap: 20px;
+                align-items: center;
+                justify-content: center;
+                .btn__consultar__precio{
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-start;
+                    gap: 5px;
+                    z-index: 10;
+                    text-decoration: none;
+                    cursor: pointer;
+                    text-align: center;
+                    text-decoration: none;
+                    color: #000;
+                    font-size: 18px;
+                    padding: 4px 10px;
+                    border: #000 1px solid;
+                    font-weight: bold;
+                    border-radius: 6px;
+                    transition: 0.1s ease;
+                    background-color: #fff;
+                    
+                
+                    svg {
+                        width: 30px;
+                        height: 30px;
+                        stroke-width: 1.8;
+                        stroke-linecap: round;
+                        stroke-linejoin: round;
+                        stroke: #000;
+                        fill: none;
+                    }
+                
+                    &:hover {
+                        scale: 1.05;
+                    }
+                }
+    
+                .flex {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 6.6px;
+                    width: 100px;
+                    label {
+                        position: relative;
+        
+                        .input,
+                        select {
+                            width: 100%;
+                            padding: 14px 11px 22px 11px;
+                            outline: 0;
+                            border: 1px solid rgba(73, 73, 73, 0.499);
+                            border-radius: 9px;
+                            transition: $time-hover;
+                            font-size: $font-s;
+        
+                            &:focus {
+                                background-color: rgb(233, 230, 230);
+                            }
+        
+                            &+span {
+                                position: absolute;
+                                left: 11px;
+                                top: 39px;
+                                color: rgb(73, 73, 73);
+                                font-size: $font-xxs;
+                                cursor: text;
+                                transition: 0.3s ease;
+                                font-weight: 700;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .resultado{
+
+                p{
+                    font-size: 20px;
+                }
+            }
+            .btn__cargar{
+                position: absolute;
+                right: 0;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 5px;
+                z-index: 10;
+                text-decoration: none;
+                cursor: pointer;
+                text-align: center;
+                text-decoration: none;
+                color: #000;
+                font-size: 18px;
+                padding: 4px 10px;
+                border: #000 1px solid;
+                font-weight: bold;
+                border-radius: 6px;
+                transition: 0.1s ease;
+                background-color: #fff;
+                
+            
+                svg {
+                    width: 30px;
+                    height: 30px;
+                    stroke-width: 1.8;
+                    stroke-linecap: round;
+                    stroke-linejoin: round;
+                    stroke: #000;
+                    fill: none;
+                }
+            
+                &:hover {
+                    scale: 1.05;
+                }
+            }
+            .btn__descargar{
+                position: absolute;
+                right: 15%;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 5px;
+                z-index: 10;
+                text-decoration: none;
+                cursor: pointer;
+                text-align: center;
+                text-decoration: none;
+                color: #000;
+                font-size: 18px;
+                padding: 4px 10px;
+                border: #000 1px solid;
+                font-weight: bold;
+                border-radius: 6px;
+                transition: 0.1s ease;
+                background-color: #fff;
+                
+            
+                svg {
+                    width: 30px;
+                    height: 30px;
+                    stroke-width: 1.8;
+                    stroke-linecap: round;
+                    stroke-linejoin: round;
+                    stroke: #000;
+                    fill: none;
+                }
+            
+                &:hover {
+                    scale: 1.05;
+                }
+            }
+
+
+        }
+
+    }
+}

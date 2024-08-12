@@ -1,7 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { AuthContext } from '../Auth/context/AuthContext'
 import { useContext, useState } from 'react'
-import AuthTimeStampAviso from '../Auth/components/AuthTimeStampAviso'
+import AuthTimeStampAviso from './components/AuthTimeStampAviso'
 
 const Header = () => {
   const { user, setUser } = useContext(AuthContext)
