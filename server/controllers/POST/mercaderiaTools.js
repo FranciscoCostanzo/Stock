@@ -1,12 +1,26 @@
 import db from "../../config/db.js";
 
+// Papelera TOOLS
 export const agregarArticulo = async (req, res) => {
-  const { descripcion, costo, publico } = req.body;
+  let { descripcion, costo, publico } = req.body;
 
   try {
-    // Validar los datos recibidos
+    // Validar que todos los campos estén presentes
     if (!descripcion || costo === undefined || publico === undefined) {
-      return res.status(400).json({ error: "Todos los campos son requeridos" });
+      return res.status(400).json({ error: "Todos los campos son requeridos." });
+    }
+
+    // Eliminar espacios al principio y al final de las cadenas de texto
+    descripcion = descripcion.trim();
+
+    // Verificar si algún campo de texto está vacío después de eliminar espacios
+    if (descripcion === "") {
+      return res.status(400).json({ error: "La descripción no puede estar vacía." });
+    }
+
+    // Verificar si los valores numéricos son válidos
+    if (isNaN(costo) || isNaN(publico) || costo === "" || publico === "") {
+      return res.status(400).json({ error: "Costo y público deben ser números válidos." });
     }
 
     // Obtener una conexión a la base de datos
@@ -46,6 +60,78 @@ export const agregarArticulo = async (req, res) => {
     console.error("Error al agregar producto:", error);
     res.status(500).json({
       error: "Error al agregar producto. Verifica los datos enviados.",
+    });
+  }
+};
+
+export const modificarArticulo = async (req, res) => {
+  const { id, descripcion, costo, publico } = req.body;
+
+  try {
+    // Validar que el ID esté presente
+    if (!id) {
+      return res.status(400).json({ error: "El ID del artículo es requerido." });
+    }
+
+    // Obtener una conexión a la base de datos
+    const connection = await db.getConnection();
+
+    // Verificar si el artículo con el ID dado existe
+    const [existingProduct] = await connection.execute(
+      "SELECT * FROM Mercaderia WHERE id = ?",
+      [id]
+    );
+
+    if (existingProduct.length === 0) {
+      connection.release();
+      return res.status(404).json({ error: "El artículo no existe." });
+    }
+
+    // Preparar un array con los campos a actualizar y sus valores
+    const updateFields = [];
+    const updateValues = [];
+
+    if (descripcion && descripcion.trim() !== "") {
+      updateFields.push("descripcion = ?");
+      updateValues.push(descripcion.trim());
+    }
+
+    if (costo !== undefined && costo !== null && !isNaN(costo) && costo !== "") {
+      updateFields.push("costo = ?");
+      updateValues.push(costo);
+    }
+
+    if (publico !== undefined && publico !== null && !isNaN(publico) && publico !== "") {
+      updateFields.push("publico = ?");
+      updateValues.push(publico);
+    }
+
+    // Verificar si hay campos para actualizar
+    if (updateFields.length === 0) {
+      connection.release();
+      return res.status(400).json({
+        error: "No se ha proporcionado ningún dato válido para actualizar.",
+      });
+    }
+
+    // Realizar la actualización en la base de datos
+    await connection.execute(
+      `UPDATE Mercaderia SET ${updateFields.join(", ")} WHERE id = ?`,
+      [...updateValues, id]
+    );
+
+    // Liberar la conexión a la base de datos
+    connection.release();
+
+    // Enviar una respuesta exitosa
+    res.status(200).json({
+      message: "Artículo actualizado correctamente.",
+      updatedFields: updateFields.map((field) => field.split(" = ")[0]),
+    });
+  } catch (error) {
+    console.error("Error al actualizar el artículo:", error);
+    res.status(500).json({
+      error: "Error al actualizar el artículo. Verifica los datos enviados.",
     });
   }
 };
@@ -101,6 +187,7 @@ export const eliminarArticulo = async (req, res) => {
   }
 };
 
+// Papelera TOOLS
 export const restablecerTodosArticulos = async (req, res) => {
   const { OKR } = req.body; // Obtener la confirmación del cuerpo de la solicitud
 

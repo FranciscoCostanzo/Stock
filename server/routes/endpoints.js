@@ -18,6 +18,7 @@ import {
     agregarArticulo,
     eliminarArticulo,
     eliminarEspecificoPapelera,
+    modificarArticulo,
     restablecerEspecificoPapelera,
     restablecerTodosArticulos,
     vaciarPapelera,
@@ -45,9 +46,12 @@ router.get("/mercaderia", authenticateToken, pedirMercaderiaAdmin);
 router.get("/papelera", authenticateToken, pedirPapeleraAdmin);
 
 // Rutas POST de los productos
-// Ruta para agregar un articulo
+// Ruta para la tabla Mercaderia
 router.post("/agregar-articulo", authenticateToken, agregarArticulo);
 router.post("/eliminar-articulo", authenticateToken, eliminarArticulo);
+router.post("/modificar-articulo", authenticateToken, modificarArticulo);
+
+// Rutas para la pepelera
 router.post(
     "/restablecer-todos-articulos-papelera",
     authenticateToken,

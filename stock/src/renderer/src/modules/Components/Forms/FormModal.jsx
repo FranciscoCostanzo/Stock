@@ -105,7 +105,6 @@ const FormModal = ({ fieldsForm, endpoint, onClose, tituloForm, messageForm }) =
                 type={field.type}
                 name={field.name}
                 className="input"
-                required
               />
               <span>{field.label}</span>
             </label>

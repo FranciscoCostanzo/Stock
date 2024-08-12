@@ -29,11 +29,11 @@ const ToolsMercaderia = () => {
       case 'edit':
         fields = [
           { name: 'id', type: 'text', label: 'ID del artículo que quieres modificar' },
-          { name: 'nombre', type: 'text', label: 'Nueva Descripción' },
+          { name: 'descripcion', type: 'text', label: 'Nueva Descripción' },
           { name: 'costo', type: 'number', label: 'Nuevo Precio de Costo' },
           { name: 'publico', type: 'number', label: 'Nuevo Precio Público' }
         ]
-        apiEndpoint = '/api/articulos/modificar'
+        apiEndpoint = 'http://localhost:3000/modificar-articulo'
         tituloFormulario = 'Modificar Artículo'
         messageFormulario =
           'Modifica una parte del artículo. Debes especificar el artículo que deseas modificar.'
