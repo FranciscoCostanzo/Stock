@@ -65,12 +65,11 @@ const Header = () => {
             {user.sucursal && (
               <>
                 <p>Pertenece a la sucursal:</p>
-                <span>{user.sucursal.nombre}</span>
-                <span>{user.sucursal.ciudad}</span>
-                <span>{user.sucursal.direccion}</span>
+                <span>
+                  {user.sucursal.nombre} / {user.sucursal.ciudad} / {user.sucursal.direccion}
+                </span>
               </>
             )}
-            <p>Tu sesión expirará en:</p>
             <AuthTimeStampAviso />
           </article>
         )}

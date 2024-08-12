@@ -4,7 +4,6 @@ import Table from '../Components/Table/TablesProductos'
 import { obtenerStockPorSucursal, obtenerStockAdmin } from './lib/libMercaderia'
 import { AuthContext } from '../Auth/context/AuthContext'
 import FiltroProductos from './components/Filtros/FiltroProductos'
-import ToolsMercaderia from './components/Tools/ToolsMercaderia'
 
 const Stock = () => {
   const { user } = useContext(AuthContext)
@@ -47,7 +46,7 @@ const Stock = () => {
         </div>
       ) : (
         <>
-          <BtnVolver donde="/mercaderia" />
+          {user.rol === 'admin' ? <BtnVolver donde="/mercaderia" /> : <BtnVolver donde="/inicio" />}
           <article className="table__container">
             <FiltroProductos
               columns={Object.keys(mercaderia[0] || {})}
@@ -57,7 +56,6 @@ const Stock = () => {
               <Table data={mercaderia} filters={filters} />
             </div>
           </article>
-          {user.rol === 'admin' && <ToolsMercaderia />}
         </>
       )}
     </section>

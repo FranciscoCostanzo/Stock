@@ -1,3 +1,27 @@
 .aviso__time__stamp{
     position: absolute;
+    z-index: 1000;
+    width: 100vmax;
+    height: 100vmax;
+    left: -8.5%;
+    top: -60%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+
+    .aviso{
+        text-align: center;
+        position: relative;
+        top: -25%;
+        width: 400px;
+        display: flex;
+        gap: 10px;
+        padding: 20px;
+        background-color: white; // Color de fondo del formulario
+        border-radius: 10px;
+        font-weight: bold;
+    }
+
 }
