@@ -10,6 +10,8 @@ import Header from './modules/Header/Header'
 import Mercaderia from './modules/Mercaderia/Mercaderia'
 import Papelera from './modules/Mercaderia/Papelera'
 import AuthTimeStampAviso from './modules/Auth/components/AuthTimeStampAviso'
+import Ventas from './modules/Ventas/Ventas'
+import Inversion from './modules/Mercaderia/Inversion'
 
 
 const App = () => {
@@ -43,6 +45,8 @@ const App = () => {
         <Route path="/stock" element={<Stock />} />
         <Route path="/mercaderia" element={<Mercaderia />} />
         <Route path="/papelera" element={<Papelera />} />
+        <Route path="/inversion" element={<Inversion />} />
+        <Route path="/ventas" element={<Ventas />} />
       </Route>
     </Routes>
     </>

@@ -1,13 +1,12 @@
 import { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../Auth/context/AuthContext'
-import AuthTimeStampAviso from '../Auth/components/AuthTimeStampAviso'
 
 const Dashbord = () => {
   const { user } = useContext(AuthContext)
   const btns = [
     { btn: 'Mercaderia', to: '/stock', toAdmin: '/mercaderia' },
-    { btn: 'Ventas' },
+    { btn: 'Ventas', to: "/ventas", toAdmin: "/ventas" },
     { btn: 'Fallas' },
     { btn: 'Pedidos' },
     { btn: 'Configuracion' },

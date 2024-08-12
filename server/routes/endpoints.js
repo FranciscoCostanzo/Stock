@@ -8,6 +8,7 @@ import {
 } from "../controllers/POST/authUsers.js";
 import { pedirSucursales } from "../controllers/GET/pedirSucursales.js";
 import {
+    pedirInversionAdmin,
     pedirMercaderiaAdmin,
     pedirPapeleraAdmin,
     pedirStockAdmin,
@@ -44,6 +45,8 @@ router.get("/stock", authenticateToken, pedirStockAdmin);
 router.get("/mercaderia", authenticateToken, pedirMercaderiaAdmin);
 // Ruta para obtener Papelera para el admin
 router.get("/papelera", authenticateToken, pedirPapeleraAdmin);
+// Ruta para obtener la inversion y el retorno del stock para el admin
+router.get("/inversion", authenticateToken, pedirInversionAdmin);
 
 // Rutas POST de los productos
 // Ruta para la tabla Mercaderia

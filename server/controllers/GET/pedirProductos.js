@@ -106,3 +106,34 @@ export const pedirPapeleraAdmin = async (req, res) => {
   }
 };
 
+export const pedirInversionAdmin = async (req, res) => {
+  try {
+    // Consulta para obtener el stock total, inversión y retorno para cada producto
+    const [results] = await db.query(`
+      SELECT 
+        Mercaderia.id AS Articulo,
+        Mercaderia.descripcion AS Descripcion,
+        Mercaderia.costo AS Costo,
+        Mercaderia.publico AS Publico,
+        SUM(Stock.cantidad) AS StockTotal, 
+        SUM(Stock.cantidad * Mercaderia.costo) AS Inversion,
+        SUM(Stock.cantidad * Mercaderia.publico) AS Retorno
+      FROM 
+        Stock
+      INNER JOIN 
+        Mercaderia ON Stock.id_mercaderia = Mercaderia.id
+      WHERE 
+        Stock.borrado = 0
+      GROUP BY 
+        Mercaderia.id, Mercaderia.descripcion, Mercaderia.costo, Mercaderia.publico
+    `);
+
+    res.json(results);
+  } catch (error) {
+    console.error("Error al obtener la inversión:", error);
+    res.status(500).json({ message: "Error al obtener la inversión." });
+  }
+};
+
+
+

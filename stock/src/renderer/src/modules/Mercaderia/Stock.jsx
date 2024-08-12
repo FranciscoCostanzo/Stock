@@ -5,7 +5,6 @@ import { obtenerStockPorSucursal, obtenerStockAdmin } from './lib/libMercaderia'
 import { AuthContext } from '../Auth/context/AuthContext'
 import FiltroProductos from './components/Filtros/FiltroProductos'
 import ToolsMercaderia from './components/Tools/ToolsMercaderia'
-import { Link } from 'react-router-dom'
 
 const Stock = () => {
   const { user } = useContext(AuthContext)

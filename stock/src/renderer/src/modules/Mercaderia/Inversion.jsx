@@ -1,14 +1,11 @@
 import { useContext, useEffect, useState } from 'react'
 import BtnVolver from '../Components/BtnVolver/BtnVolver'
 import Table from '../Components/Table/TablesProductos'
-import { obtenerMercaderiaAdmin } from './lib/libMercaderia'
+import { obtenerInversionAdmin } from './lib/libMercaderia'
 import { AuthContext } from '../Auth/context/AuthContext'
 import FiltroProductos from './components/Filtros/FiltroProductos'
-import ToolsMercaderia from './components/Tools/ToolsMercaderia'
-import { Link } from 'react-router-dom'
-import BtnPapelera from './components/BtnPapelera/BtnPapelera'
 
-const Mercaderia = () => {
+const Inversion = () => {
   const { user } = useContext(AuthContext)
   const [mercaderia, setMercaderia] = useState([])
   const [filters, setFilters] = useState({})
@@ -20,7 +17,7 @@ const Mercaderia = () => {
         if (user) {
           let data
           if (user.rol === 'admin') {
-            data = await obtenerMercaderiaAdmin()
+            data = await obtenerInversionAdmin()
           }
           setMercaderia(data)
         }
@@ -38,6 +35,11 @@ const Mercaderia = () => {
     setFilters(newFilters)
   }
 
+  if (mercaderia.length > 0) {
+    const totalInversion = mercaderia.reduce((acc, item) => acc + item.Inversion, 0);
+    console.log("Inversión total:", mercaderia.Inversion);
+  }
+
   return (
     <section className="mercaderia">
       {loading ? (
@@ -47,8 +49,7 @@ const Mercaderia = () => {
         </div>
       ) : (
         <>
-          <BtnVolver donde="/inicio" />
-          <BtnPapelera />
+          <BtnVolver donde="/mercaderia" />
           <article className="table__container">
             <FiltroProductos
               columns={Object.keys(mercaderia[0] || {})}
@@ -58,36 +59,10 @@ const Mercaderia = () => {
               <Table data={mercaderia} filters={filters} />
             </div>
           </article>
-          {user.rol === 'admin' && (
-            <>
-              <ToolsMercaderia />
-              <article className="contenedor__btns__sigpestanas">
-
-              <Link className="btn__pestanas__siguiente" to="/stock">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                  <path d="M11 14l4 -4l-4 -4" />
-                  <path d="M16 14l4 -4l-4 -4" />
-                  <path d="M15 10h-7a4 4 0 1 0 0 8h1" />
-                </svg>
-                Stock
-              </Link>
-              <Link className="btn__pestanas__siguiente" to="/inversion">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                  <path d="M11 14l4 -4l-4 -4" />
-                  <path d="M16 14l4 -4l-4 -4" />
-                  <path d="M15 10h-7a4 4 0 1 0 0 8h1" />
-                </svg>
-                Inversion
-              </Link>
-              </article>
-            </>
-          )}
         </>
       )}
     </section>
   )
 }
 
-export default Mercaderia
+export default Inversion
