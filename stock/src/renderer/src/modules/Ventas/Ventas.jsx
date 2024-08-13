@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import BtnVolver from '../Components/BtnVolver/BtnVolver'
 import FormVentas from './components/FormVentas'
-import TablesProductos from '../Components/Table/TablesProductos'
 const Ventas = () => {
   const fieldsVentasEmpleado = [
     {

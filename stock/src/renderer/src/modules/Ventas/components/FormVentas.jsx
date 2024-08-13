@@ -107,7 +107,7 @@ const FormVentas = ({ fields }) => {
           // Si existe, incrementa la cantidad
           return prevCargas.map((articulo) =>
             articulo.id_mercaderia === dataArticulo.id_mercaderia &&
-            articulo.Descripcion === dataArticulo.Descripcion
+              articulo.Descripcion === dataArticulo.Descripcion
               ? { ...articulo, Cantidad: articulo.Cantidad + 1 }
               : articulo
           )
@@ -116,13 +116,34 @@ const FormVentas = ({ fields }) => {
           return [...prevCargas, { ...dataArticulo, Cantidad: 1 }]
         }
       })
-      setDataArticulo(null) // Resetea el dataArticulo después de cargarlo
     } else {
       console.error('No hay datos de artículo para cargar.')
     }
   }
+  const handleDescargarArticulo = () => {
+    setCargasVentas((prevCargas) => {
+      if (prevCargas.length === 0) {
+        console.error('No hay artículos para eliminar.')
+        return prevCargas
+      }
 
-  console.log(cargasVentas.length)
+      // Encuentra el índice del último artículo agregado
+      const lastArticuloIndex = prevCargas.length - 1
+
+      const lastArticulo = prevCargas[lastArticuloIndex]
+
+      // Si la cantidad es mayor que 1, simplemente resta uno
+      if (lastArticulo.Cantidad > 1) {
+        return prevCargas.map((articulo, index) =>
+          index === lastArticuloIndex ? { ...articulo, Cantidad: articulo.Cantidad - 1 } : articulo
+        )
+      } else {
+        // Si la cantidad es 1, elimina el artículo de la lista
+        return prevCargas.filter((_, index) => index !== lastArticuloIndex)
+      }
+    })
+  }
+
   return (
     <>
       <div className="contenedor__busqueda">
@@ -165,22 +186,42 @@ const FormVentas = ({ fields }) => {
           Cargar Artículo
         </p>
         {cargasVentas.length > 0 && (
-        <p onClick={handleCargarArticulo} className="btn__descargar">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
-            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
-            <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
-            <path d="M12 9l0 3" />
-            <path d="M12 15l.01 0" />
-          </svg>
-          Anular Ultimo Artículo
-        </p>
+          <p onClick={handleDescargarArticulo} className="btn__descargar">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
+              <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
+              <path d="M12 9l0 3" />
+              <path d="M12 15l.01 0" />
+            </svg>
+            Anular Ultimo Artículo
+          </p>
         )}
       </div>
-      <TablesProductos ventas={true} data={cargasVentas} />
+      <div className="pasarela__de__pago">
+
+        {cargasVentas.length > 0 && (
+          <p onClick={handleCargarArticulo} className="btn__finalizar">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M12 19h-6a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v4.5" />
+              <path d="M3 10h18" />
+              <path d="M16 19h6" />
+              <path d="M19 16l3 3l-3 3" />
+              <path d="M7.005 15h.005" />
+              <path d="M11 15h2" />
+            </svg>
+            Finalizar
+          </p>
+        )}
+      </div>
+      <section className='table__container'>
+        <div className="table-wrapper">
+          <TablesProductos ventas={true} data={cargasVentas} />
+
+        </div>
+
+      </section>
     </>
   )
 }

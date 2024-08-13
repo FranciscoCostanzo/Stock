@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react'
 import BtnVolver from '../Components/BtnVolver/BtnVolver'
-import Table from '../Components/Table/TablesProductos'
+import TablesProductos from '../Components/Table/TablesProductos'
 import { obtenerMercaderiaAdmin } from './lib/libMercaderia'
 import { AuthContext } from '../Auth/context/AuthContext'
 import FiltroProductos from './components/Filtros/FiltroProductos'
@@ -55,7 +55,7 @@ const Mercaderia = () => {
               onFilterChange={handleFilterChange}
             />
             <div className="table-wrapper">
-              <Table data={mercaderia} filters={filters} />
+              <TablesProductos data={mercaderia} filters={filters} />
             </div>
           </article>
           {user.rol === 'admin' && (
