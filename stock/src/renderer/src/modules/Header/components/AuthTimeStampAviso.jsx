@@ -23,7 +23,7 @@ const AuthTimeStampAviso = () => {
           if (newTimeLeft <= 0) {
             setSessionExpired(true)
             clearInterval(interval)
-            setUser(null)
+            setUser([])
           } else {
             setTimeRemaining(newTimeLeft)
           }

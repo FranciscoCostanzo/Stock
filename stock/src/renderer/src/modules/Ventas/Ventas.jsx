@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import BtnVolver from '../Components/BtnVolver/BtnVolver'
+import BtnVolver from '../Components/Btns/BtnVolver/BtnVolver'
 import FormVentas from './components/FormVentas'
 const Ventas = () => {
   const fieldsVentasEmpleado = [

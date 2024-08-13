@@ -148,7 +148,6 @@ input[type=number]::-ms-clear {
 
 @import './modules/Components/Forms/FormModalStyle.scss';
 
-@import './modules/Components/BtnVolver/BtnVolverStyle.scss';
 @import './modules/Dashboard/DashboardStyle.scss';
 @import './modules/Mercaderia/components/Filtros/FiltroProductosStyle.scss';
 @import './modules/Mercaderia/components/Tools/ToolsProductosStyle.scss';
@@ -156,3 +155,6 @@ input[type=number]::-ms-clear {
 @import './modules/Mercaderia/MercaderiaStyle.scss';
 @import './modules/Header/components/AuthTimeStampAvisoStyle.scss';
 @import './modules/Ventas/VentasStyle.scss';
+
+@import './modules/Components/Btns/BtnVolver/BtnVolverStyle.scss';
+@import './modules/Components/Btns/BtnGeneralStyle.scss';

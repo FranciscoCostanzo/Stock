@@ -15,7 +15,7 @@
         scrollbar-gutter: stable;
     }
     .table-wrapper[tipoDeTabla="ventas"]{
-        max-height: 100px;
+        max-height: calc(44vh - 60px); // Ajusta la altura máxima según tus necesidades
     }
 }
 
@@ -36,38 +36,16 @@ table {
 
     // Estilos para las filas de la tabla
     tr {
-        transition: 0.2s ease;
-
         // Estilos para las celdas de la tabla
         td {
             border: 1px solid #000;
             padding: 10px;
             font-size: 18px;
         }
-
-        // Estilos para las filas al pasar el cursor sobre ellas
-        &:hover {
-            cursor: pointer;
-            background-color: #9e9d9d;
-        }
     }
 
     // Estilos para las filas alternas
     tbody tr:nth-child(even) {
-        transition: 0.2s ease;
-
         background-color: #e0e0e0;
-
-        &:hover {
-            cursor: pointer;
-            background-color: #9e9d9d;
-        }
     }
-}
-
-
-
-
-tr:hover {
-    background-color: #000;
 }

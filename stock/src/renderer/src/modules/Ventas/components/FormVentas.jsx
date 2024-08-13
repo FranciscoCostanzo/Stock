@@ -1,7 +1,8 @@
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { obtenerArticuloEmpleado } from '../lib/libVentas'
 import { AuthContext } from '../../Auth/context/AuthContext'
 import TablesProductos from '../../Components/Table/TablesProductos'
+import BtnGeneral from '../../Components/Btns/BtnGeneral'
 
 const FormVentas = ({ fields }) => {
   const [cargasVentas, setCargasVentas] = useState([])
@@ -143,6 +144,19 @@ const FormVentas = ({ fields }) => {
       }
     })
   }
+  const handleDescargarTodo = () => {
+    if (cargasVentas.length > 0) {
+      setCargasVentas([])
+    }
+  }
+
+  const [totalVenta, useTotalVenta] = useState(0)
+  useEffect(() => {
+    const sumaTotal = cargasVentas.reduce((accumulator, carga) => {
+      return accumulator + parseFloat(carga.Precio) * carga.Cantidad
+    }, 0)
+    useTotalVenta(sumaTotal)
+  }, [cargasVentas, useTotalVenta])
 
   return (
     <>
@@ -160,67 +174,81 @@ const FormVentas = ({ fields }) => {
               <span>Artículo</span>
             </label>
           </div>
-          <p className="btn__consultar__precio" onClick={handlePedirPrecioArticulo}>
+          <BtnGeneral tocar={handlePedirPrecioArticulo}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
               <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
               <path d="M21 21l-6 -6" />
             </svg>
             Consultar Precio
-          </p>
+          </BtnGeneral>
         </section>
         <section className="resultado">
           <p>
-            Descripción: <strong>{dataArticulo && <>{dataArticulo.Descripcion}</>}</strong>{' '}
+            Descripción: <strong>{dataArticulo && <>{dataArticulo.Descripcion}</>}</strong>
           </p>
           <p>
-            Precio de venta: <strong>{dataArticulo && <>${dataArticulo.Precio}</>}</strong>{' '}
+            Precio de venta: <strong>{dataArticulo && <>${dataArticulo.Precio}</>}</strong>
           </p>
         </section>
-        <p onClick={handleCargarArticulo} className="btn__cargar">
+        <BtnGeneral tocar={handleCargarArticulo} claseBtn="btn__cargar">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
             <path d="M18 4h-6a3 3 0 0 0 -3 3v7" />
             <path d="M13 10l-4 4l-4 -4m8 5l-4 4l-4 -4" />
           </svg>
           Cargar Artículo
-        </p>
+        </BtnGeneral>
         {cargasVentas.length > 0 && (
-          <p onClick={handleDescargarArticulo} className="btn__descargar">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-              <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
-              <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
-              <path d="M12 9l0 3" />
-              <path d="M12 15l.01 0" />
-            </svg>
-            Anular Ultimo Artículo
-          </p>
+          <>
+            <BtnGeneral claseBtn="btn__descargar" tocar={handleDescargarArticulo}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
+                <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
+                <path d="M12 9l0 3" />
+                <path d="M12 15l.01 0" />
+              </svg>
+              Anular Ultimo Artículo
+            </BtnGeneral>
+            <BtnGeneral claseBtn="__todo" tocar={handleDescargarTodo}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M4 7l16 0" />
+                <path d="M10 11l0 6" />
+                <path d="M14 11l0 6" />
+                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+              </svg>
+              Anular Todo
+            </BtnGeneral>
+          </>
         )}
       </div>
       <div className="pasarela__de__pago">
-
         {cargasVentas.length > 0 && (
-          <p onClick={handleCargarArticulo} className="btn__finalizar">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-              <path d="M12 19h-6a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v4.5" />
-              <path d="M3 10h18" />
-              <path d="M16 19h6" />
-              <path d="M19 16l3 3l-3 3" />
-              <path d="M7.005 15h.005" />
-              <path d="M11 15h2" />
-            </svg>
-            Finalizar
-          </p>
+          <>
+            <p onClick={handleCargarArticulo} className="btn__finalizar">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M12 19h-6a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v4.5" />
+                <path d="M3 10h18" />
+                <path d="M16 19h6" />
+                <path d="M19 16l3 3l-3 3" />
+                <path d="M7.005 15h.005" />
+                <path d="M11 15h2" />
+              </svg>
+              Finalizar
+            </p>
+
+            <p className="totalVenta">Total: ${totalVenta}</p>
+          </>
         )}
       </div>
-      <section className='table__container'>
-        <div className="table-wrapper">
+      <section className="table__container">
+        <div tipoDeTabla="ventas" className="table-wrapper">
           <TablesProductos ventas={true} data={cargasVentas} />
-
         </div>
-
       </section>
     </>
   )

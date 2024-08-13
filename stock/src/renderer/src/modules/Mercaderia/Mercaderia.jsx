@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
-import BtnVolver from '../Components/BtnVolver/BtnVolver'
+import BtnVolver from '../Components/Btns/BtnVolver/BtnVolver'
 import TablesProductos from '../Components/Table/TablesProductos'
 import { obtenerMercaderiaAdmin } from './lib/libMercaderia'
 import { AuthContext } from '../Auth/context/AuthContext'
