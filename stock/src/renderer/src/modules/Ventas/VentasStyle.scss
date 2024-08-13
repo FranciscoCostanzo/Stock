@@ -81,8 +81,9 @@
 
                 align-items: flex-start;
                 justify-content: center;
-width: 300px;
-height: 80px;
+                width: 300px;
+                height: 80px;
+
                 p {
                     font-size: 20px;
                 }
@@ -116,7 +117,7 @@ height: 80px;
             }
         }
 
-        .pasarela__de__pago{
+        .pasarela__de__pago {
             width: 100%;
             position: absolute;
             bottom: 0;
@@ -128,7 +129,7 @@ height: 80px;
             padding: 20px;
             height: 100px;
 
-            .totalVenta{
+            .totalVenta {
                 width: 130px;
                 font-size: 20px;
                 font-weight: bold;
@@ -152,8 +153,7 @@ height: 80px;
                 border-radius: 6px;
                 transition: 0.1s ease;
                 background-color: #3eb001;
-    
-    
+
                 svg {
                     width: 30px;
                     height: 30px;
@@ -163,7 +163,7 @@ height: 80px;
                     stroke: #ffffff;
                     fill: none;
                 }
-    
+
                 &:hover {
                     scale: 1.05;
                 }

@@ -5,6 +5,15 @@ import TablesProductos from '../../Components/Table/TablesProductos'
 import BtnGeneral from '../../Components/Btns/BtnGeneral'
 
 const FormVentas = ({ fields }) => {
+  const [formaDePago, setFormaDePago] = useState('')
+  const [entrega, setEntrega] = useState(0)
+  const [cambio, setCambio] = useState(0)
+
+  const handleFormaDePagoChange = (e) => {
+    setFormaDePago(e.target.value)
+  }
+
+
   const [cargasVentas, setCargasVentas] = useState([])
 
   const initialState = fields.reduce((acc, campo) => {
@@ -158,10 +167,39 @@ const FormVentas = ({ fields }) => {
     useTotalVenta(sumaTotal)
   }, [cargasVentas, useTotalVenta])
 
+  const [finalizado, setFinalizado] = useState(false)
+
+  const handleFinalizarPago = () => {
+    setFinalizado(true)
+  }
+
+  const optionsFormaDePago = ["Efectivo", "Tarjeta"]
+  const optionsTarjeta = ["Visa", "MasterCard", "Mercado Pago", "Cuenta DNI",]
+
+  const handleEntregaChange = (e) => {
+    let valor = parseFloat(e.target.value);
+
+    // Si el valor no es un número válido o es negativo
+    if (isNaN(valor) || valor <= 0) {
+      setCambio(`Debe ingresar un valor válido mayor a 0`);
+      setEntrega(0);
+    } else if (valor < totalVenta) {
+      // Si el valor es menor que el total de la venta
+      setCambio(`No se puede entregar menos que ${totalVenta}`);
+      setEntrega(valor);
+    } else {
+      // Si el valor es válido y mayor o igual al total de la venta
+      setEntrega(valor);
+      setCambio(valor - totalVenta);
+    }
+  }
+
+
+
   return (
     <>
       <div className="contenedor__busqueda">
-        <section className="busqueda">
+        <article className="busqueda">
           <div className="flex">
             <label>
               <input
@@ -182,15 +220,15 @@ const FormVentas = ({ fields }) => {
             </svg>
             Consultar Precio
           </BtnGeneral>
-        </section>
-        <section className="resultado">
+        </article>
+        <article className="resultado">
           <p>
             Descripción: <strong>{dataArticulo && <>{dataArticulo.Descripcion}</>}</strong>
           </p>
           <p>
             Precio de venta: <strong>{dataArticulo && <>${dataArticulo.Precio}</>}</strong>
           </p>
-        </section>
+        </article>
         <BtnGeneral tocar={handleCargarArticulo} claseBtn="btn__cargar">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -225,10 +263,15 @@ const FormVentas = ({ fields }) => {
           </>
         )}
       </div>
+      <div className="table__container">
+        <div tipoDeTabla="ventas" className="table-wrapper">
+          <TablesProductos ventas={true} data={cargasVentas} />
+        </div>
+      </div>
       <div className="pasarela__de__pago">
         {cargasVentas.length > 0 && (
           <>
-            <p onClick={handleCargarArticulo} className="btn__finalizar">
+            <p onClick={handleFinalizarPago} className="btn__finalizar">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <path d="M12 19h-6a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v4.5" />
@@ -240,16 +283,69 @@ const FormVentas = ({ fields }) => {
               </svg>
               Finalizar
             </p>
+            {finalizado && (
+              <article className='pasarela'>
+                <div className="forma__de__pago">
+                  <div className="flex">
+                    <label>
+                      <select
+                        onChange={handleFormaDePagoChange}
+                        value={formaDePago}
+                        className="input"
+                        required
+                      >
+                        <option value="">Seleccione una opción</option>
+                        {optionsFormaDePago.map((option, optIndex) => (
+                          <option key={optIndex} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                      <span>Forma de pago</span>
+                    </label>
+                  </div>
+                  {formaDePago === 'Efectivo' && (
+                    <>
+                      <div className="flex">
+                        <label>
+                          <input
+                            onChange={handleEntregaChange}
+                            type="number"
+                            name="id_mercaderia"
+                            className="input"
+                          />
+                          <span>Entrega</span>
+                        </label>
+                      </div>
+                      <p>Cambio: {cambio}</p>
+                    </>
+                  )}
+                  {formaDePago === 'Tarjeta' && (<>
+                    <div className="flex">
+                      <label>
+                        <select
+                          className="input"
+                          required
+                        >
+                          <option value="">Seleccione una opción</option>
+                          {optionsTarjeta.map((option, optIndex) => (
+                            <option key={optIndex} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+                        <span>Tarjeta</span>
+                      </label>
+                    </div>
+                  </>)}
+                </div>
+              </article>
+            )}
 
             <p className="totalVenta">Total: ${totalVenta}</p>
           </>
         )}
       </div>
-      <section className="table__container">
-        <div tipoDeTabla="ventas" className="table-wrapper">
-          <TablesProductos ventas={true} data={cargasVentas} />
-        </div>
-      </section>
     </>
   )
 }
