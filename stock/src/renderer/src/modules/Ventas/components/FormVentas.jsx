@@ -83,7 +83,6 @@ const FormVentas = ({ fields }) => {
     try {
       const data = await obtenerArticuloEmpleado(articuloTrimmed, user.sucursal.id)
       setDataArticulo(data) // Actualiza con los datos obtenidos
-      console.log(data)
     } catch (error) {
       console.error(error)
       setDataArticulo(null) // Restablece a null si hay un error
@@ -96,7 +95,6 @@ const FormVentas = ({ fields }) => {
 
   const handleCargarArticulo = () => {
     if (dataArticulo) {
-      console.log(dataArticulo)
       setCargasVentas((prevCargas) => {
         // Verificar si ya existe un artículo con el mismo id_mercaderia y Descripcion
         const articuloExistente = prevCargas.find(
@@ -155,7 +153,7 @@ const FormVentas = ({ fields }) => {
             Descripción: <strong>{dataArticulo && <>{dataArticulo.Descripcion}</>}</strong>{' '}
           </p>
           <p>
-            Precio de venta: <strong>${dataArticulo && <>{dataArticulo.Precio}</>}</strong>{' '}
+            Precio de venta: <strong>{dataArticulo && <>${dataArticulo.Precio}</>}</strong>{' '}
           </p>
         </section>
         <p onClick={handleCargarArticulo} className="btn__cargar">
@@ -166,6 +164,7 @@ const FormVentas = ({ fields }) => {
           </svg>
           Cargar Artículo
         </p>
+        {cargasVentas.length > 0 && (
         <p onClick={handleCargarArticulo} className="btn__descargar">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -179,8 +178,9 @@ const FormVentas = ({ fields }) => {
           </svg>
           Anular Ultimo Artículo
         </p>
+        )}
       </div>
-      <TablesProductos data={cargasVentas} />
+      <TablesProductos ventas={true} data={cargasVentas} />
     </>
   )
 }
