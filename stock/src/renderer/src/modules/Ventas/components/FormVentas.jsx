@@ -5,21 +5,50 @@ import TablesProductos from '../../Components/Table/TablesProductos'
 import BtnGeneral from '../../Components/Btns/BtnGeneral'
 
 const FormVentas = ({ fields }) => {
-  const [formaDePago, setFormaDePago] = useState('')
+  const [tipoDeTarjeta, setTipoDeTarjeta] = useState('')
   const [entrega, setEntrega] = useState(0)
   const [cambio, setCambio] = useState(0)
+  const [adelanto, setAdelanto] = useState(0)
+  const [resto, setResto] = useState(0)
+  const [interes, setInteres] = useState(0)
+  const [cuotas, setCuotas] = useState(0)
+  const [totalFinal, setTotalFinal] = useState(0)
+  const [articuloAComprar, setArticuloAComprar] = useState('') // Inicializado como string vacío
+  const { user } = useContext(AuthContext)
+  const [dataArticulo, setDataArticulo] = useState(null) // Inicializa como null para indicar que no hay datos
+  const [cargasVentas, setCargasVentas] = useState([])
+  const [totalVenta, useTotalVenta] = useState(0)
+  const [finalizado, setFinalizado] = useState(false)
 
-  const handleFormaDePagoChange = (e) => {
-    setFormaDePago(e.target.value)
+
+  const handleResetChange = () => {
+    setAdelanto(0)
+    setResto(0)
+    setTipoDeTarjeta('')
+    setEntrega(0)
+    setCambio(0)
+  }
+  const handleTipoDeTarjetaChange = (e) => {
+    setTipoDeTarjeta(e.target.value)
+  }
+  const handleCuotasChange = (e) => {
+    setCuotas(e.target.value)
   }
 
+  const [formData, setFormData] = useState({
+    metodo_de_pago: '',
+    total_venta: 0 // Inicializa total_venta sin lógica dependiente
+  });
+  
+  useEffect(() => {
+    const total = formData.metodo_de_pago === "Efectivo" ? totalVenta : totalFinal;
+    setFormData((prevData) => ({
+      ...prevData,
+      total_venta: total
+    }));
+  }, [formData.metodo_de_pago, totalFinal, totalVenta]);
+  
 
-  const [cargasVentas, setCargasVentas] = useState([])
-
-  const initialState = fields.reduce((acc, campo) => {
-    return { ...acc, [campo.name]: '' }
-  }, {})
-  const [formData, setFormData] = useState(initialState)
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData((prevFormData) => ({
@@ -28,59 +57,56 @@ const FormVentas = ({ fields }) => {
     }))
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault()
 
-    try {
-      let formDataToSend = { ...formData }
+  //   try {
+  //     let formDataToSend = { ...formData }
 
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formDataToSend),
-        credentials: 'include'
-      })
+  //     const response = await fetch(endpoint, {
+  //       method: 'POST',
+  //       mode: 'cors',
+  //       headers: {
+  //         'Content-Type': 'application/json'
+  //       },
+  //       body: JSON.stringify(formDataToSend),
+  //       credentials: 'include'
+  //     })
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        const errorMessage = errorData.errors ? errorData.errors.join(', ') : errorData.error
-        throw new Error(errorMessage)
-      }
+  //     if (!response.ok) {
+  //       const errorData = await response.json()
+  //       const errorMessage = errorData.errors ? errorData.errors.join(', ') : errorData.error
+  //       throw new Error(errorMessage)
+  //     }
 
-      const responseData = await response.json()
-      console.log(responseData)
+  //     const responseData = await response.json()
+  //     console.log(responseData)
 
-      toast.success('Haz relizado una venta', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
-      })
-    } catch (error) {
-      console.error('Error al enviar datos:', error.message)
-      toast.error('Error al intentar iniciar sesión:' + error.message, {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
-      })
-    }
-  }
+  //     toast.success('Haz relizado una venta', {
+  //       position: 'top-right',
+  //       autoClose: 5000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: false,
+  //       draggable: true,
+  //       progress: undefined,
+  //       theme: 'light'
+  //     })
+  //   } catch (error) {
+  //     console.error('Error al enviar datos:', error.message)
+  //     toast.error('Error al intentar iniciar sesión:' + error.message, {
+  //       position: 'top-right',
+  //       autoClose: 5000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //       pauseOnHover: false,
+  //       draggable: true,
+  //       progress: undefined,
+  //       theme: 'light'
+  //     })
+  //   }
+  // }
 
-  const [articuloAComprar, setArticuloAComprar] = useState('') // Inicializado como string vacío
-  const { user } = useContext(AuthContext)
-  const [dataArticulo, setDataArticulo] = useState(null) // Inicializa como null para indicar que no hay datos
 
   const handlePedirPrecioArticulo = async () => {
     const articuloTrimmed = articuloAComprar.trim() // Elimina los espacios en blanco al principio y al final
@@ -159,7 +185,6 @@ const FormVentas = ({ fields }) => {
     }
   }
 
-  const [totalVenta, useTotalVenta] = useState(0)
   useEffect(() => {
     const sumaTotal = cargasVentas.reduce((accumulator, carga) => {
       return accumulator + parseFloat(carga.Precio) * carga.Cantidad
@@ -167,34 +192,64 @@ const FormVentas = ({ fields }) => {
     useTotalVenta(sumaTotal)
   }, [cargasVentas, useTotalVenta])
 
-  const [finalizado, setFinalizado] = useState(false)
 
   const handleFinalizarPago = () => {
     setFinalizado(true)
   }
 
-  const optionsFormaDePago = ["Efectivo", "Tarjeta"]
-  const optionsTarjeta = ["Visa", "MasterCard", "Mercado Pago", "Cuenta DNI",]
+  const optionsFormaDePago = ['Efectivo', 'Tarjeta']
+  const optionsTarjeta = [
+    'Visa',
+    'MasterCard',
+    'Cabal',
+    'Debito',
+    'Fertil',
+    'Maestro',
+    'Nativa',
+    'Mercado Pago',
+    'Cuenta DNI'
+  ]
 
   const handleEntregaChange = (e) => {
-    let valor = parseFloat(e.target.value);
+    let valor = parseFloat(e.target.value)
 
     // Si el valor no es un número válido o es negativo
     if (isNaN(valor) || valor <= 0) {
-      setCambio(`Debe ingresar un valor válido mayor a 0`);
-      setEntrega(0);
+      setCambio(`Debe ingresar un valor válido mayor a 0`)
+      setEntrega(0)
     } else if (valor < totalVenta) {
       // Si el valor es menor que el total de la venta
-      setCambio(`No se puede entregar menos que ${totalVenta}`);
-      setEntrega(valor);
+      setCambio(`No se puede entregar menos que ${totalVenta}`)
+      setEntrega(valor)
     } else {
       // Si el valor es válido y mayor o igual al total de la venta
-      setEntrega(valor);
-      setCambio(valor - totalVenta);
+      setEntrega(valor)
+      setCambio(valor - totalVenta)
     }
   }
 
+  const handleAdelantoChange = (e) => {
+    let valor = parseFloat(e.target.value)
+    if (isNaN(valor)) {
+      setCambio(0)
+    } else {
+      setAdelanto(valor)
+      setResto(totalVenta - valor)
+    }
+  }
 
+  const handleInteresChange = (e) => {
+    setInteres(parseFloat(e.target.value) || 0); // Asegúrate de que el valor sea un número
+  };
+  
+  useEffect(() => {
+    if (interes > 0) {
+      const resultado = resto + resto * (interes / 100);
+      setTotalFinal(resultado);
+    }
+  }, [interes]); // Solo ejecuta cuando el interés cambia
+
+  console.log(formData)
 
   return (
     <>
@@ -284,14 +339,16 @@ const FormVentas = ({ fields }) => {
               Finalizar
             </p>
             {finalizado && (
-              <article className='pasarela'>
+              <article className="pasarela">
                 <div className="forma__de__pago">
                   <div className="flex">
                     <label>
                       <select
-                        onChange={handleFormaDePagoChange}
-                        value={formaDePago}
+                        // onChange={handleFormaDePagoChange}
+                        onChange={handleChange}
+                        // value={formaDePago}
                         className="input"
+                        name='metodo_de_pago'
                         required
                       >
                         <option value="">Seleccione una opción</option>
@@ -304,7 +361,7 @@ const FormVentas = ({ fields }) => {
                       <span>Forma de pago</span>
                     </label>
                   </div>
-                  {formaDePago === 'Efectivo' && (
+                  {formData.metodo_de_pago === 'Efectivo' && (
                     <>
                       <div className="flex">
                         <label>
@@ -320,28 +377,80 @@ const FormVentas = ({ fields }) => {
                       <p>Cambio: {cambio}</p>
                     </>
                   )}
-                  {formaDePago === 'Tarjeta' && (<>
-                    <div className="flex">
-                      <label>
-                        <select
-                          className="input"
-                          required
-                        >
-                          <option value="">Seleccione una opción</option>
-                          {optionsTarjeta.map((option, optIndex) => (
-                            <option key={optIndex} value={option}>
-                              {option}
-                            </option>
-                          ))}
-                        </select>
-                        <span>Tarjeta</span>
-                      </label>
-                    </div>
-                  </>)}
+                  {formData.metodo_de_pago === 'Tarjeta' && (
+                    <>
+                      <div className="flex">
+                        <label>
+                          <input
+                            onChange={handleAdelantoChange}
+                            type="number"
+                            name="id_mercaderia"
+                            className="input"
+                          />
+                          <span>Adelanto</span>
+                        </label>
+                      </div>
+                      <p>Resto: {resto}</p>
+
+                      {adelanto >= 0 && (
+                        <>
+                          <div className="flex">
+                            <label>
+                              <select
+                                onChange={handleTipoDeTarjetaChange}
+                                className="input"
+                                required
+                              >
+                                <option value="">Seleccione una opción</option>
+                                {optionsTarjeta.map((option, optIndex) => (
+                                  <option key={optIndex} value={option}>
+                                    {option}
+                                  </option>
+                                ))}
+                              </select>
+                              <span>Tipo de tarjeta</span>
+                            </label>
+                          </div>
+                          {tipoDeTarjeta.length >= 1 && (
+                            <>
+                              <div className="flex">
+                                <label>
+                                  <select onChange={handleCuotasChange} className="input" required>
+                                    <option>Seleccione cantidad de cuotas</option>
+                                    {[...Array(12).keys()].map((n) => (
+                                      <option key={n + 1} value={n + 1}>
+                                        {n + 1} cuota(s)
+                                      </option>
+                                    ))}
+                                  </select>
+                                  <span>Cuotas</span>
+                                </label>
+                              </div>
+                              {cuotas > 1 && (
+                                <>
+                                  <div className="flex">
+                                    <label>
+                                      <input
+                                        onChange={handleInteresChange}
+                                        type="number"
+                                        name="id_mercaderia"
+                                        className="input"
+                                      />
+                                      <span>Interes en (%)</span>
+                                    </label>
+                                  </div>
+                                  {totalFinal}
+                                </>
+                              )}
+                            </>
+                          )}
+                        </>
+                      )}
+                    </>
+                  )}
                 </div>
               </article>
             )}
-
             <p className="totalVenta">Total: ${totalVenta}</p>
           </>
         )}
