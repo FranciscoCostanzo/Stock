@@ -83,10 +83,10 @@ const FormVentas = () => {
         cuotas: esTarjeta ? dataVentasFields.cuotas : 0,
         total_venta: esPorcentajeEnTarjeta
           ? truncarADosDecimales(
-            truncarADosDecimales(precioTotalArticulo - adelanto) +
-            truncarADosDecimales(precioTotalArticulo - adelanto) *
-            (dataVentasFields.porcentaje / 100)
-          )
+              truncarADosDecimales(precioTotalArticulo - adelanto) +
+                truncarADosDecimales(precioTotalArticulo - adelanto) *
+                  (dataVentasFields.porcentaje / 100)
+            )
           : truncarADosDecimales(precioTotalArticulo - adelanto)
       }
     })
@@ -156,7 +156,7 @@ const FormVentas = () => {
           // Si existe, incrementa la cantidad
           return prevCargas.map((articulo) =>
             articulo.id_mercaderia === dataArticulo.id_mercaderia &&
-              articulo.Descripcion === dataArticulo.Descripcion
+            articulo.Descripcion === dataArticulo.Descripcion
               ? { ...articulo, Cantidad: articulo.Cantidad + 1 }
               : articulo
           )
@@ -556,9 +556,9 @@ const FormVentas = () => {
                                       <span>Interes en (%)</span>
                                     </label>
                                   </div>
-                                  <p>Total para tarjeta: {totalFinal}</p>
                                 </>
                               )}
+                              <p className='total__tarjeta'>Total para tarjeta: ${totalFinal}</p>
                             </>
                           )}
                         </>
