@@ -16,7 +16,9 @@ export const pedirStockPorSucursal = async (req, res) => {
       JOIN 
         Mercaderia m ON s.id_mercaderia = m.id
       WHERE 
-        s.id_sucursal = ? AND m.borrado = 0
+        s.id_sucursal = ? 
+        AND m.borrado = 0
+        AND s.cantidad > 0
       `,
       [idSucursal]
     );
@@ -33,6 +35,7 @@ export const pedirStockPorSucursal = async (req, res) => {
     res.status(500).json({ error: "Error obteniendo el stock por sucursal." });
   }
 };
+
 
 export const pedirStockAdmin = async (req, res) => {
   try {
@@ -53,6 +56,7 @@ export const pedirStockAdmin = async (req, res) => {
         Sucursal ON Stock.id_sucursal = Sucursal.id
       WHERE 
         Stock.borrado = 0
+        AND Stock.cantidad > 0
     `);
 
     res.json(results);

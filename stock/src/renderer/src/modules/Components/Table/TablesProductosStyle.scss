@@ -14,8 +14,8 @@
         background-color: #fff;
         scrollbar-gutter: stable;
     }
-    .table-wrapper[tipoDeTabla="ventas"]{
-        max-height: calc(44vh - 60px); // Ajusta la altura máxima según tus necesidades
+    .table-wrapper[tipodetabla="ventas"]{
+        max-height: calc(36vh - 60px); // Ajusta la altura máxima según tus necesidades
     }
 }
 

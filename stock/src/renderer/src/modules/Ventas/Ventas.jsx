@@ -2,19 +2,11 @@ import { Link } from 'react-router-dom'
 import BtnVolver from '../Components/Btns/BtnVolver/BtnVolver'
 import FormVentas from './components/FormVentas'
 const Ventas = () => {
-  const fieldsVentasEmpleado = [
-    {
-      label: 'Otra cosa',
-      name: 'id',
-      type: 'number'
-    }
-  ]
-
   return (
     <section className="ventas">
       <BtnVolver donde="/inicio" />
       <article className="contenedor__form__ventas">
-        <FormVentas fields={fieldsVentasEmpleado} />
+        <FormVentas/>
       </article>
       <article className="contenedor__btns__sigpestanas">
         <Link className="btn__pestanas__siguiente" to="/ventas">

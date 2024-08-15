@@ -68,7 +68,7 @@ CREATE TABLE Usuarios (
 );
 
 CREATE TABLE Ventas (
-    id_venta INT NOT NULL,
+    id_venta VARCHAR(36) NOT NULL,               -- Usamos UUID en vez de INT
     fecha_venta DATE NOT NULL,
     hora_venta TIME NOT NULL,
     id_usuario INT,
@@ -76,16 +76,19 @@ CREATE TABLE Ventas (
     id_mercaderia INT,
     cantidad INT NOT NULL,
     metodo_de_pago ENUM('efectivo', 'tarjeta') NOT NULL,
-    nombre_cliente VARCHAR(100) NOT NULL,
-    apellido_cliente VARCHAR(100) NOT NULL,
-    dni_cliente VARCHAR(20) NOT NULL,
-    cuotas INT,
+    nombre_cliente VARCHAR(100) DEFAULT NULL,    -- Permitir NULL en ventas en efectivo
+    apellido_cliente VARCHAR(100) DEFAULT NULL,  -- Permitir NULL en ventas en efectivo
+    dni_cliente VARCHAR(20) DEFAULT NULL,        -- Permitir NULL en ventas en efectivo
+    cuotas INT DEFAULT NULL,                     -- Permitir NULL en ventas en efectivo
+    adelanto DECIMAL(10, 2) DEFAULT NULL,        -- Permitir NULL en ventas en efectivo
     total_venta DECIMAL(10, 2) NOT NULL,
+    total DECIMAL(10, 2) NOT NULL,
     PRIMARY KEY (id_venta, id_mercaderia, id_sucursal),
     FOREIGN KEY (id_usuario) REFERENCES Usuarios(id),
     FOREIGN KEY (id_sucursal) REFERENCES Sucursal(id),
     FOREIGN KEY (id_mercaderia) REFERENCES Mercaderia(id)
 );
+
 
 ```
 

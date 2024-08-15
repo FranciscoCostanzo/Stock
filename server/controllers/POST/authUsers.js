@@ -134,13 +134,14 @@ export const login = async (req, res) => {
     // Generar el token JWT con los datos del usuario y de la sucursal (si no es admin)
     const token = jwt.sign(
       {
+        id: user[0].id,
         nombre: user[0].nombre,
         rol: user[0].rol,
         sucursal: sucursalData, // Adjuntar datos de la sucursal solo si no es admin
       },
       process.env.SECRET_JWT_KEY,
       {
-        expiresIn: "1h",
+        expiresIn: "2h",
       }
     );
 

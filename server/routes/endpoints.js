@@ -6,7 +6,10 @@ import {
     logout,
     register,
 } from "../controllers/POST/authUsers.js";
-import { pedirSucursales } from "../controllers/GET/pedirSucursales.js";
+import {
+    pedirSucursales,
+    pedirTarjetas,
+} from "../controllers/GET/pedirMateriales.js";
 import {
     pedirInversionAdmin,
     pedirMercaderiaAdmin,
@@ -24,7 +27,10 @@ import {
     restablecerTodosArticulos,
     vaciarPapelera,
 } from "../controllers/POST/mercaderiaTools.js";
-import { pedirArticuloEmpleado } from "../controllers/POST/ventasTools.js";
+import {
+    cargarVenta,
+    pedirArticuloEmpleado,
+} from "../controllers/POST/ventasTools.js";
 
 const router = Router();
 
@@ -34,8 +40,11 @@ router.post("/logout", logout);
 router.post("/register", register);
 router.post("/check-token", checkToken);
 
+// Rutas para obtener materiales
 // Ruta para obtener sucursales
-router.get("/sucursales", pedirSucursales);
+router.get("/sucursales", authenticateToken, pedirSucursales);
+// Ruta para obtener tarjetas
+router.get("/tarjetas", authenticateToken, pedirTarjetas);
 
 // Rutas GET de los productos
 // Ruta para obtener Stock por Sucursal
@@ -61,11 +70,20 @@ router.post(
     authenticateToken,
     restablecerTodosArticulos
 );
-router.post("/restablecer-especifico-papelera", authenticateToken, restablecerEspecificoPapelera);
+router.post(
+    "/restablecer-especifico-papelera",
+    authenticateToken,
+    restablecerEspecificoPapelera
+);
 router.post("/vaciar-papelera", authenticateToken, vaciarPapelera);
-router.post("/eliminar-especifico-papelera", authenticateToken, eliminarEspecificoPapelera);
+router.post(
+    "/eliminar-especifico-papelera",
+    authenticateToken,
+    eliminarEspecificoPapelera
+);
 
 //rutas para las ventas
-router.post("/articulo-empleado", authenticateToken, pedirArticuloEmpleado)
+router.post("/articulo-empleado", authenticateToken, pedirArticuloEmpleado);
+router.post("/venta", authenticateToken, cargarVenta);
 
 export default router;

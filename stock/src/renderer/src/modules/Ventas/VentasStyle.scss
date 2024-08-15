@@ -11,7 +11,7 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        height: 600px; // Ajusta la altura máxima según tus necesidades
+        height: 700px;
         width: 90%; // Para asegurarse de que sea responsivo
         border-radius: 10px;
         gap: 1rem;
@@ -115,7 +115,15 @@
                     stroke: #ffffff;
                 }
             }
+
+            .btn__silenciado {
+                cursor: default;
+                transition: all 0.2s ease;
+                opacity: 0.4;
+                scale: 0.9;
+            }
         }
+
 
         .pasarela__de__pago {
             width: 100%;
@@ -127,45 +135,86 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px;
-            height: 100px;
+            height: 200px;
+
+            .contendor__pasarela {
+
+                .pasarela {
+                    flex-wrap: wrap;
+                    display: flex;
+                    flex-direction: row;
+                    gap: 20px;
+
+                    .flex {
+                        width: 200px;
+
+                        label {
+                            position: relative;
+
+                            .input,
+                            select {
+                                /* Añadido select aquí para que comparta los mismos estilos */
+                                width: 100%;
+                                padding: 14px 11px 22px 11px;
+                                outline: 0;
+                                border: 1px solid rgba(73, 73, 73, 0.499);
+                                border-radius: 9px;
+                                transition: $time-hover;
+                                font-size: $font-s;
+
+                                &:focus {
+                                    background-color: rgb(233, 230, 230);
+                                }
+
+                                &+span {
+                                    position: absolute;
+                                    left: 11px;
+                                    top: 39px;
+                                    color: rgb(73, 73, 73);
+                                    font-size: $font-xxs;
+                                    cursor: text;
+                                    transition: 0.3s ease;
+                                    font-weight: 700;
+                                }
+                            }
+                        }
+                    }
+
+                    p {
+                        justify-content: center;
+                        display: flex;
+                        align-items: center;
+                        width: 120px;
+                        font-size: 20px;
+                        font-weight: bold;
+                    }
+
+                    .btn__guardar__venta {
+                        position: absolute;
+                        top: -20%;
+                        width: fit-content;
+                        left: 19%;
+                    }
+                }
+            }
 
             .totalVenta {
+                position: absolute;
+                top: -20%;
+                right: 0;
                 width: 130px;
                 font-size: 20px;
                 font-weight: bold;
             }
 
             .btn__finalizar {
-                display: flex;
-                align-items: center;
-                justify-content: flex-start;
-                gap: 5px;
-                z-index: 10;
-                text-decoration: none;
-                cursor: pointer;
-                text-align: center;
-                text-decoration: none;
+                position: absolute;
+                top: -20%;
                 color: #ffffff;
-                font-size: 18px;
-                padding: 4px 10px;
-                border: #000 1px solid;
-                font-weight: bold;
-                border-radius: 6px;
-                transition: 0.1s ease;
                 background-color: #3eb001;
 
                 svg {
-                    width: 30px;
-                    height: 30px;
-                    stroke-width: 1.8;
-                    stroke-linecap: round;
-                    stroke-linejoin: round;
                     stroke: #ffffff;
-                    fill: none;
-                }
-
-                &:hover {
-                    scale: 1.05;
                 }
             }
         }
