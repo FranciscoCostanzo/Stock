@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { obtenerArticuloEmpleado, obtenerTarjetas } from '../lib/libVentas'
 import { AuthContext } from '../../Auth/context/AuthContext'
 import TablesProductos from '../../Components/Table/TablesProductos'
@@ -13,7 +13,7 @@ const FormVentas = () => {
   const [entrega, setEntrega] = useState(0)
   const [cambio, setCambio] = useState(0)
   // Variables FormData Efectivo
-  const [totalVenta, useTotalVenta] = useState(0)
+  const [totalVenta, setTotalVenta] = useState(0)
   //
 
   const [resto, setResto] = useState(0)
@@ -41,7 +41,6 @@ const FormVentas = () => {
     nombre_cliente: '',
     apellido_cliente: '',
     dni_cliente: 0,
-    totalVenta: 0,
     porcentaje: 0
   })
 
@@ -95,34 +94,55 @@ const FormVentas = () => {
     })
   }
 
-  useEffect(() => {
-    const loadTarjetas = async () => {
-      try {
-        let data = await obtenerTarjetas()
-        setTarjetas(data)
-      } catch (error) {
-        console.log('Error al cargar tarjetas:', error.message)
-      }
-    }
+  // useEffect(() => {
+  //   const loadTarjetas = async () => {
+  //     try {
+  //       let data = await obtenerTarjetas()
+  //       if (JSON.stringify(data) !== JSON.stringify(tarjetas)) {
+  //         setTarjetas(data)
+  //       }
+  //     } catch (error) {
+  //       console.log('Error al cargar tarjetas:', error.message)
+  //     }
+  //   }
+  //   loadTarjetas()
+  // }, [])
 
-    loadTarjetas()
+  const obtenerTarjetasMemoizada = useCallback(async () => {
+    try {
+      let data = await obtenerTarjetas()
+      // setTarjetas(data)
+      if (JSON.stringify(data) !== JSON.stringify(tarjetas)) {
+        setTarjetas(data)
+      }
+    } catch (error) {
+      console.log('Error al cargar tarjetas:', error.message)
+    }
   }, [])
 
+  useEffect(() => {
+    obtenerTarjetasMemoizada()
+  }, [])
+
+
+  console.log(tarjetas)
+
   const handleChange = (e) => {
-    const { name, value } = e.target
-    setDataVentasFields((prevFormData) => ({
-      ...prevFormData,
+    const { name, value } = e.target;
+    const newFields = {
+      ...dataVentasFields,
       [name]: value
-    }))
-    if (dataVentasFields.metodo_de_pago === 'Efectivo') {
-      setDataVentasFields((prevData) => ({
-        ...prevData,
-        adelanto: 0,
-        id_tarjeta: 0,
-        cuotas: 0
-      }))
+    };
+
+    if (newFields.metodo_de_pago === 'Efectivo') {
+      newFields.adelanto = 0;
+      newFields.id_tarjeta = 0;
+      newFields.cuotas = 0;
     }
-  }
+
+    setDataVentasFields(newFields);
+  };
+
 
   const handlePedirPrecioArticulo = async () => {
     const articuloTrimmed = articuloAComprar.trim() // Elimina los espacios en blanco al principio y al final
@@ -205,15 +225,14 @@ const FormVentas = () => {
     const sumaTotal = cargasVentas.reduce((accumulator, carga) => {
       return accumulator + parseFloat(carga.Precio) * carga.Cantidad
     }, 0)
-    useTotalVenta(sumaTotal)
-  }, [cargasVentas, useTotalVenta])
+    setTotalVenta(sumaTotal)
+  }, [cargasVentas])
 
   const handleFinalizarPago = () => {
-    setFinalizado(true)
-    if (finalizado === true) {
-      setFinalizado(false)
-    }
-  }
+    setFinalizado((prev) => !prev);
+  };
+
+
   const handleEntregaChange = (e) => {
     let valor = parseFloat(e.target.value)
 
@@ -234,34 +253,35 @@ const FormVentas = () => {
 
   useEffect(() => {
     if (dataVentasFields.porcentaje > 0 && dataVentasFields.cuotas > 1) {
-      const resultado = resto + resto * (dataVentasFields.porcentaje / 100)
-      setTotalFinal(resultado)
+      const resultado = resto + resto * (dataVentasFields.porcentaje / 100);
+      setTotalFinal(resultado);
     } else {
-      setTotalFinal(resto)
+      setTotalFinal(resto);
       setDataVentasFields((prevData) => ({
         ...prevData,
         porcentaje: 0
-      }))
+      }));
     }
-  }, [dataVentasFields.porcentaje, resto, dataVentasFields.cuotas])
+  }, [dataVentasFields.porcentaje, resto, dataVentasFields.cuotas]);
+
+
 
   useEffect(() => {
-    // if (dataVentasFields.porcentaje > 0 && dataVentasFields.cuotas > 1) {
-    //   const resultado = resto + resto * (dataVentasFields.porcentaje / 100)
-    //   setTotalFinal(resultado)
-    // } else {
-    //   setTotalFinal(resto)
-    //   setDataVentasFields((prevData) => ({
-    //     ...prevData,
-    //     porcentaje: 0
-    //   }))
-    // }
+    let idBuscado = parseFloat(dataVentasFields.id_tarjeta);
+    const aumentoPorUsarTarjeta = tarjetas.find(tarjeta => tarjeta.id === idBuscado);
 
+    // Verificamos si el aumentoPorUsarTarjeta existe y si el valor de 'resto' es válido
+    if (aumentoPorUsarTarjeta && resto > 0) {
+      const nuevoResultado = resto + resto * (aumentoPorUsarTarjeta.aumento / 100);
 
-  }, [dataVentasFields.id_tarjeta])
+      // Actualizamos solo si el nuevo resultado es diferente del valor anterior
+      if (nuevoResultado !== totalVenta) {
+        console.log(dataVentasFields.id_tarjeta, resto, tarjetas, totalVenta)
+        // setTotalVenta(nuevoResultado); // Actualizamos el estado solo cuando es necesario
+      }
+    }
+  }, [dataVentasFields.id_tarjeta, resto, totalVenta]); // totalVenta debe estar en las dependencias
 
-  console.log(tarjetas)
-  console.log(dataVentasFields.id_tarjeta)
 
   const handleSubmit = async (e) => {
     e.preventDefault()

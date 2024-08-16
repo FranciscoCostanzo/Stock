@@ -8,8 +8,7 @@ export const AuthRouter = ({ requireAuth = true }) => {
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
   const location = useLocation().pathname
-
-
+  
   useEffect(() => {
     const verifyToken = async () => {
       // Si no se requiere autenticación o ya hay un usuario autenticado, no hace falta verificar el token

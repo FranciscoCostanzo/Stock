@@ -19,7 +19,7 @@ function createWindow() {
     }
   })
 
-  mainWindow.setMinimumSize(1550, 920)
+  mainWindow.setMinimumSize(1550, 820)
 
   const template = [
     {
