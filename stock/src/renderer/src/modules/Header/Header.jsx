@@ -1,7 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { AuthContext } from '../Auth/context/AuthContext'
 import { useContext, useState } from 'react'
-import AuthTimeStampAviso from './components/AuthTimeStampAviso'
 
 const Header = () => {
   const { user, setUser } = useContext(AuthContext)
@@ -70,7 +69,6 @@ const Header = () => {
                 </span>
               </>
             )}
-            <AuthTimeStampAviso />
           </article>
         )}
         <span>

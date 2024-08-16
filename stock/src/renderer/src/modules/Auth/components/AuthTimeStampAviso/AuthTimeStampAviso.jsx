@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
-import { AuthContext } from '../../Auth/context/AuthContext'
+import { AuthContext } from '../../context/AuthContext'
 import { Link } from 'react-router-dom'
 
 const AuthTimeStampAviso = () => {
@@ -15,6 +15,8 @@ const AuthTimeStampAviso = () => {
 
       if (timeLeft <= 0) {
         setSessionExpired(true)
+        setUser(null)
+        setTimeRemaining(0)
       } else {
         setTimeRemaining(timeLeft)
 
@@ -23,7 +25,7 @@ const AuthTimeStampAviso = () => {
           if (newTimeLeft <= 0) {
             setSessionExpired(true)
             clearInterval(interval)
-            setUser([])
+            setUser(null)
           } else {
             setTimeRemaining(newTimeLeft)
           }
@@ -52,10 +54,10 @@ const AuthTimeStampAviso = () => {
         </article>
       ) : (
         timeRemaining !== null && (
-          <>
-            <p>Tu sesión expirará en:</p>
-            <span>{formatTime(timeRemaining)}</span>
-          </>
+          <article className='contador__time__stamp'>
+            <p>Tu sesión expirará en: <strong>{formatTime(timeRemaining)}</strong></p>
+            
+          </article>
         )
       )}
     </div>

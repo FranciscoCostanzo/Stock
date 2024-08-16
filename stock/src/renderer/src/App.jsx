@@ -11,6 +11,7 @@ import Mercaderia from './modules/Mercaderia/Mercaderia'
 import Papelera from './modules/Mercaderia/Papelera'
 import Ventas from './modules/Ventas/Ventas'
 import Inversion from './modules/Mercaderia/Inversion'
+import AuthTimeStampAviso from './modules/Auth/components/AuthTimeStampAviso/AuthTimeStampAviso'
 
 const App = () => {
   useEffect(() => {
@@ -50,6 +51,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
       </Route>
     </Routes>
+    <AuthTimeStampAviso/>
     </>
   )
 }
