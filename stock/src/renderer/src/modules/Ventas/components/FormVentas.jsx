@@ -46,18 +46,21 @@ const FormVentas = () => {
   })
 
   useEffect(() => {
-    // const total = dataVentasFields.metodo_de_pago === 'Efectivo' ? totalVenta : totalFinal
     const adelantoField =
       dataVentasFields.metodo_de_pago === 'Tarjeta' ? dataVentasFields.adelanto : 0
     const nuevoResto = totalVenta - adelantoField
-    setResto(nuevoResto)
+    if (adelantoField > totalVenta) {
+      setResto('No se pueden poner valores mayores al total')
+    } else {
+      setResto(nuevoResto)
+    }
 
     setDataVentasFields((prevData) => ({
       ...prevData,
       total_venta: totalVenta,
       adelanto: adelantoField
     }))
-  }, [dataVentasFields.metodo_de_pago, totalVenta, totalFinal, dataVentasFields.adelanto])
+  }, [dataVentasFields.metodo_de_pago, totalVenta, dataVentasFields.adelanto])
 
   const construirFormDataDinamico = () => {
     return cargasVentas.map((articulo) => {
@@ -83,10 +86,10 @@ const FormVentas = () => {
         cuotas: esTarjeta ? dataVentasFields.cuotas : 0,
         total_venta: esPorcentajeEnTarjeta
           ? truncarADosDecimales(
-              truncarADosDecimales(precioTotalArticulo - adelanto) +
-                truncarADosDecimales(precioTotalArticulo - adelanto) *
-                  (dataVentasFields.porcentaje / 100)
-            )
+            truncarADosDecimales(precioTotalArticulo - adelanto) +
+            truncarADosDecimales(precioTotalArticulo - adelanto) *
+            (dataVentasFields.porcentaje / 100)
+          )
           : truncarADosDecimales(precioTotalArticulo - adelanto)
       }
     })
@@ -156,7 +159,7 @@ const FormVentas = () => {
           // Si existe, incrementa la cantidad
           return prevCargas.map((articulo) =>
             articulo.id_mercaderia === dataArticulo.id_mercaderia &&
-            articulo.Descripcion === dataArticulo.Descripcion
+              articulo.Descripcion === dataArticulo.Descripcion
               ? { ...articulo, Cantidad: articulo.Cantidad + 1 }
               : articulo
           )
@@ -230,13 +233,35 @@ const FormVentas = () => {
   }
 
   useEffect(() => {
-    if (dataVentasFields.porcentaje > 0) {
+    if (dataVentasFields.porcentaje > 0 && dataVentasFields.cuotas > 1) {
       const resultado = resto + resto * (dataVentasFields.porcentaje / 100)
       setTotalFinal(resultado)
     } else {
       setTotalFinal(resto)
+      setDataVentasFields((prevData) => ({
+        ...prevData,
+        porcentaje: 0
+      }))
     }
-  }, [dataVentasFields.porcentaje])
+  }, [dataVentasFields.porcentaje, resto, dataVentasFields.cuotas])
+
+  useEffect(() => {
+    // if (dataVentasFields.porcentaje > 0 && dataVentasFields.cuotas > 1) {
+    //   const resultado = resto + resto * (dataVentasFields.porcentaje / 100)
+    //   setTotalFinal(resultado)
+    // } else {
+    //   setTotalFinal(resto)
+    //   setDataVentasFields((prevData) => ({
+    //     ...prevData,
+    //     porcentaje: 0
+    //   }))
+    // }
+
+
+  }, [dataVentasFields.id_tarjeta])
+
+  console.log(tarjetas)
+  console.log(dataVentasFields.id_tarjeta)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -558,7 +583,7 @@ const FormVentas = () => {
                                   </div>
                                 </>
                               )}
-                              <p className='total__tarjeta'>Total para tarjeta: ${totalFinal}</p>
+                              <p className="total__tarjeta">Total para tarjeta: ${totalFinal}</p>
                             </>
                           )}
                         </>
