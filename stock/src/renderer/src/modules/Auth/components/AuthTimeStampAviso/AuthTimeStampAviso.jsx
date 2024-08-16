@@ -4,62 +4,64 @@ import { Link } from 'react-router-dom'
 
 const AuthTimeStampAviso = () => {
   const { user, setUser } = useContext(AuthContext)
-  const [timeRemaining, setTimeRemaining] = useState(null)
+  const [timeRemaining, setTimeRemaining] = useState(0)
   const [sessionExpired, setSessionExpired] = useState(false)
+  const [aviso, setAviso] = useState(true)
 
   useEffect(() => {
     if (user) {
-      const currentTime = Math.floor(Date.now() / 1000) // Tiempo actual en segundos
-      const timeLeft = user.exp - currentTime
-      console.log(timeLeft)
+      const checkSession = () => {
+        const currentTime = Math.floor(Date.now() / 1000)
+        const timeLeft = user.exp - currentTime
 
-      if (timeLeft <= 0) {
-        setSessionExpired(true)
-        setUser(null)
-        setTimeRemaining(0)
-      } else {
-        setTimeRemaining(timeLeft)
-
-        const interval = setInterval(() => {
-          const newTimeLeft = user.exp - Math.floor(Date.now() / 1000)
-          if (newTimeLeft <= 0) {
-            setSessionExpired(true)
-            clearInterval(interval)
-            setUser(null)
-          } else {
-            setTimeRemaining(newTimeLeft)
-          }
-        }, 1000)
-
-        return () => clearInterval(interval)
+        if (timeLeft <= 0) {
+          setSessionExpired(true)
+          setUser(null)
+          setTimeRemaining(0)
+          setAviso(true)
+        } else {
+          setSessionExpired(false)
+          setTimeRemaining(timeLeft)
+        }
       }
+
+      checkSession()
+      const interval = setInterval(checkSession, 1000)
+
+      return () => clearInterval(interval)
     }
-  }, [user])
+  }, [user, setUser])
 
   const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60)
+    const hours = Math.floor(seconds / 3600)
+    const minutes = Math.floor((seconds % 3600) / 60)
     const remainingSeconds = seconds % 60
-    return `${minutes} minutos y ${remainingSeconds} segundos`
+    return `${hours} horas, ${minutes} minutos y ${remainingSeconds} segundos`
+  }
+
+  const handleCerrarAviso = () => {
+    setAviso(false)
   }
 
   return (
     <div>
-      {sessionExpired ? (
-        <article className="aviso__time__stamp">
-          <div className="aviso">
-            <p>
-              Tu sesión ha expirado. Por favor, vuelve a <Link to="/">iniciar sesión</Link>.
-            </p>
-          </div>
-        </article>
-      ) : (
-        timeRemaining !== null && (
-          <article className='contador__time__stamp'>
-            <p>Tu sesión expirará en: <strong>{formatTime(timeRemaining)}</strong></p>
-            
+      {sessionExpired
+        ? aviso && (
+          <article className="aviso__time__stamp">
+            <div className="aviso">
+              <p>
+                Tu sesión ha expirado. Por favor, vuelve a <strong onClick={handleCerrarAviso}>iniciar sesión</strong>
+              </p>
+            </div>
           </article>
         )
-      )}
+        : timeRemaining > 0 && (
+          <article className="contador__time__stamp">
+            <p>
+              Tu sesión expirará en: <strong>{formatTime(timeRemaining)}</strong>
+            </p>
+          </article>
+        )}
     </div>
   )
 }
