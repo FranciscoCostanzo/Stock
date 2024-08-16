@@ -101,10 +101,6 @@ const FormVentas = () => {
     })
   }
 
-  const formDataDinamico = construirFormDataDinamico()
-
-  console.log(formDataDinamico)
-
   useEffect(() => {
     const loadTarjetas = async () => {
       try {
@@ -244,84 +240,54 @@ const FormVentas = () => {
     }
   }
 
-  // useEffect(() => {
-  //   if (dataVentasFields.porcentaje > 0 && dataVentasFields.cuotas > 1) {
-  //     const resultado = resto + resto * (dataVentasFields.porcentaje / 100)
-  //     setTotalFinal(resultado)
-  //   } else {
-  //     // setTotalFinal(resto)
-  //     setDataVentasFields((prevData) => ({
-  //       ...prevData,
-  //       porcentaje: 0
-  //     }))
-  //   }
-  // }, [dataVentasFields.porcentaje, resto, dataVentasFields.cuotas])
-
-  // useEffect(() => {
-  //   let idBuscado = parseFloat(dataVentasFields.id_tarjeta)
-  //   const aumentoPorUsarTarjeta = tarjetas.find((tarjeta) => tarjeta.id === idBuscado)
-  //   // Verificamos si el aumentoPorUsarTarjeta existe y si el valor de 'resto' es válido
-  //   if (aumentoPorUsarTarjeta && resto > 0) {
-  //     const nuevoResultado = resto + resto * (aumentoPorUsarTarjeta.aumento / 100)
-
-  //     // Actualizamos solo si el nuevo resultado es diferente al estado actual
-  //     if (nuevoResultado !== totalVenta) {
-  //       setTotalFinal(nuevoResultado)
-  //       setDataVentasFields((prevData) => ({
-  //         ...prevData,
-  //         aumento: aumentoPorUsarTarjeta.aumento
-  //       }))
-  //     }
-  //   } else {
-  //     setDataVentasFields((prevData) => ({
-  //       ...prevData,
-  //       aumento: 0
-  //     }))
-  //   }
-  // }, [dataVentasFields.id_tarjeta])
-
   useEffect(() => {
-    let idBuscado = parseFloat(dataVentasFields.id_tarjeta);
-    const aumentoPorUsarTarjeta = tarjetas.find((tarjeta) => tarjeta.id === idBuscado);
-  
+    let idBuscado = parseFloat(dataVentasFields.id_tarjeta)
+    const aumentoPorUsarTarjeta = tarjetas.find((tarjeta) => tarjeta.id === idBuscado)
+
     // Inicializamos el resultado con el valor actual de 'resto'
-    let resultado = resto;
-  
+    let resultado = resto
+
     // Si existe un aumento por usar tarjeta, lo sumamos al total
     if (aumentoPorUsarTarjeta && resto > 0) {
-      resultado += resto * (aumentoPorUsarTarjeta.aumento / 100);
-  
+      resultado += resto * (aumentoPorUsarTarjeta.aumento / 100)
+
       // Si también hay un porcentaje adicional por las cuotas, lo sumamos al total después del aumento por tarjeta
       if (dataVentasFields.porcentaje > 0 && dataVentasFields.cuotas > 1) {
-        resultado += resultado * (dataVentasFields.porcentaje / 100);
-      } else{
+        resultado += resultado * (dataVentasFields.porcentaje / 100)
+      } else {
         setDataVentasFields((prevData) => ({
           ...prevData,
           porcentaje: 0
-        }));
+        }))
       }
-  
+
       // Actualizamos el campo de aumento en 'dataVentasFields' solo si ha cambiado
       if (aumentoPorUsarTarjeta.aumento !== dataVentasFields.aumento) {
         setDataVentasFields((prevData) => ({
           ...prevData,
           aumento: aumentoPorUsarTarjeta.aumento
-        }));
+        }))
       }
     } else {
       // Si no hay aumento por tarjeta, lo reseteamos
       setDataVentasFields((prevData) => ({
         ...prevData,
         aumento: 0
-      }));
+      }))
     }
-  
+
     // Actualizamos el total final solo si el resultado cambia
     if (resultado !== totalVenta) {
-      setTotalFinal(resultado);
+      setTotalFinal(resultado)
     }
-  }, [dataVentasFields.porcentaje, dataVentasFields.cuotas, dataVentasFields.id_tarjeta, resto, tarjetas, totalVenta]);
-  
+  }, [
+    dataVentasFields.porcentaje,
+    dataVentasFields.cuotas,
+    dataVentasFields.id_tarjeta,
+    resto,
+    tarjetas,
+    totalVenta
+  ])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -329,9 +295,6 @@ const FormVentas = () => {
     try {
       // Crear el formData dinámico
       const formDataDinamico = construirFormDataDinamico()
-
-      console.log(formDataDinamico)
-
       const response = await fetch('http://localhost:3000/venta', {
         method: 'POST',
         mode: 'cors',
@@ -349,8 +312,6 @@ const FormVentas = () => {
       }
 
       const responseData = await response.json()
-      console.log(responseData)
-
       toast.success('Haz realizado una venta', {
         position: 'top-right',
         autoClose: 5000,
@@ -361,6 +322,7 @@ const FormVentas = () => {
         progress: undefined,
         theme: 'light'
       })
+      window.location.reload()
     } catch (error) {
       console.error('Error al enviar datos:', error.message)
       toast.error('Error al intentar iniciar sesión: ' + error.message, {
@@ -375,8 +337,6 @@ const FormVentas = () => {
       })
     }
   }
-
-  console.log(totalFinal/ dataVentasFields.cuotas)
 
   return (
     <>
@@ -582,7 +542,10 @@ const FormVentas = () => {
                                   <span>Cuotas</span>
                                 </label>
                               </div>
-                              <p>{dataVentasFields.cuotas} Cuota de {totalFinal/ dataVentasFields.cuotas}</p>
+                              <p>
+                                {dataVentasFields.cuotas} Cuota de{' '}
+                                {totalFinal / dataVentasFields.cuotas}
+                              </p>
                               <div className="flex">
                                 <label>
                                   <input

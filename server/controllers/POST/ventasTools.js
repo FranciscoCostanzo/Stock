@@ -32,6 +32,13 @@ export const cargarVenta = async (req, res) => {
         total_venta,
       } = venta;
 
+      // Validación adicional para ventas con método de pago 'tarjeta'
+      if (metodo_de_pago === "tarjeta") {
+        if (!nombre_cliente || !apellido_cliente || !dni_cliente) {
+          return res.status(400).json({ message: "Datos de cliente son obligatorios para pagos con tarjeta" });
+        }
+      }
+
       // Verificar si hay suficiente stock disponible antes de realizar la venta
       const [stockResult] = await db.query(
         `SELECT cantidad FROM Stock WHERE id_mercaderia = ? AND id_sucursal = ?`,
@@ -51,26 +58,6 @@ export const cargarVenta = async (req, res) => {
       // Calcular el campo total como suma de adelanto y total_venta
       const total = adelanto + total_venta;
 
-      // Si el método de pago es 'tarjeta', usar los datos de tarjeta, caso contrario, null
-      const tarjetaInfo =
-        metodo_de_pago === "tarjeta"
-          ? {
-              id_tarjeta,
-              nombre_cliente,
-              apellido_cliente,
-              dni_cliente,
-              cuotas,
-              adelanto,
-            }
-          : {
-              id_tarjeta: null,
-              nombre_cliente: null,
-              apellido_cliente: null,
-              dni_cliente: null,
-              cuotas: null,
-              adelanto: null,
-            };
-
       // Ejecutar la inserción en la base de datos
       await db.query(
         `INSERT INTO Ventas (
@@ -87,12 +74,12 @@ export const cargarVenta = async (req, res) => {
           id_mercaderia,
           cantidad,
           metodo_de_pago,
-          tarjetaInfo.id_tarjeta,
-          tarjetaInfo.nombre_cliente,
-          tarjetaInfo.apellido_cliente,
-          tarjetaInfo.dni_cliente,
-          tarjetaInfo.cuotas,
-          tarjetaInfo.adelanto,
+          metodo_de_pago === "tarjeta" ? id_tarjeta : null,
+          metodo_de_pago === "tarjeta" ? nombre_cliente : null,
+          metodo_de_pago === "tarjeta" ? apellido_cliente : null,
+          metodo_de_pago === "tarjeta" ? dni_cliente : null,
+          metodo_de_pago === "tarjeta" ? cuotas : null,
+          metodo_de_pago === "tarjeta" ? adelanto : null,
           total_venta,
           total,
         ]
@@ -113,6 +100,7 @@ export const cargarVenta = async (req, res) => {
     res.status(500).json({ message: "Error al registrar las ventas", error });
   }
 };
+
 
 export const pedirArticuloEmpleado = async (req, res) => {
   const { id_mercaderia, id_sucursal } = req.body;
