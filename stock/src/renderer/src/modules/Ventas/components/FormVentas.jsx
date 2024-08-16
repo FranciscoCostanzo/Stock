@@ -17,7 +17,6 @@ const FormVentas = () => {
   //
 
   const [resto, setResto] = useState(0)
-  const [interes, setInteres] = useState(0)
   const [totalFinal, setTotalFinal] = useState(0)
   const [articuloAComprar, setArticuloAComprar] = useState('') // Inicializado como string vacío
   const [dataArticulo, setDataArticulo] = useState(null) // Inicializa como null para indicar que no hay datos
@@ -41,7 +40,8 @@ const FormVentas = () => {
     nombre_cliente: '',
     apellido_cliente: '',
     dni_cliente: 0,
-    porcentaje: 0
+    porcentaje: 0,
+    aumento: 0
   })
 
   useEffect(() => {
@@ -70,6 +70,19 @@ const FormVentas = () => {
       const adelanto = esTarjeta
         ? truncarADosDecimales((precioTotalArticulo / totalVenta) * dataVentasFields.adelanto)
         : 0
+      const porcentajePorUsarTarjeta = esTarjeta
+        ? dataVentasFields.aumento > 0
+          ? dataVentasFields.aumento
+          : 0
+        : 0
+
+      const total_venta = esPorcentajeEnTarjeta
+        ? truncarADosDecimales(
+          truncarADosDecimales(precioTotalArticulo - adelanto) +
+          truncarADosDecimales(precioTotalArticulo - adelanto) *
+          (parseFloat(dataVentasFields.porcentaje) / 100)
+        )
+        : truncarADosDecimales(precioTotalArticulo - adelanto)
 
       return {
         id_usuario: user.id,
@@ -83,16 +96,14 @@ const FormVentas = () => {
         dni_cliente: esTarjeta ? dataVentasFields.dni_cliente : 0,
         adelanto: adelanto,
         cuotas: esTarjeta ? dataVentasFields.cuotas : 0,
-        total_venta: esPorcentajeEnTarjeta
-          ? truncarADosDecimales(
-            truncarADosDecimales(precioTotalArticulo - adelanto) +
-            truncarADosDecimales(precioTotalArticulo - adelanto) *
-            (dataVentasFields.porcentaje / 100)
-          )
-          : truncarADosDecimales(precioTotalArticulo - adelanto)
+        total_venta: total_venta + total_venta * (porcentajePorUsarTarjeta / 100)
       }
     })
   }
+
+  const formDataDinamico = construirFormDataDinamico()
+
+  console.log(formDataDinamico)
 
   useEffect(() => {
     const loadTarjetas = async () => {
@@ -107,25 +118,23 @@ const FormVentas = () => {
     }
     loadTarjetas()
   }, [])
-  
-  console.log(tarjetas)
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     const newFields = {
       ...dataVentasFields,
       [name]: value
-    };
-    
-    if (newFields.metodo_de_pago === 'Efectivo') {
-      newFields.adelanto = 0;
-      newFields.id_tarjeta = 0;
-      newFields.cuotas = 0;
     }
-  
-    setDataVentasFields(newFields);
-  };
-  
+
+    if (newFields.metodo_de_pago === 'Efectivo') {
+      newFields.adelanto = 0
+      newFields.id_tarjeta = 0
+      newFields.cuotas = 0
+      newFields.porcentaje = 0
+    }
+
+    setDataVentasFields(newFields)
+  }
 
   const handlePedirPrecioArticulo = async () => {
     const articuloTrimmed = articuloAComprar.trim() // Elimina los espacios en blanco al principio y al final
@@ -175,6 +184,7 @@ const FormVentas = () => {
       console.error('No hay datos de artículo para cargar.')
     }
   }
+
   const handleDescargarArticulo = () => {
     setCargasVentas((prevCargas) => {
       if (prevCargas.length === 0) {
@@ -198,6 +208,7 @@ const FormVentas = () => {
       }
     })
   }
+
   const handleDescargarTodo = () => {
     if (cargasVentas.length > 0) {
       setCargasVentas([])
@@ -212,9 +223,8 @@ const FormVentas = () => {
   }, [cargasVentas])
 
   const handleFinalizarPago = () => {
-    setFinalizado((prev) => !prev);
-  };
-  
+    setFinalizado((prev) => !prev)
+  }
 
   const handleEntregaChange = (e) => {
     let valor = parseFloat(e.target.value)
@@ -234,36 +244,83 @@ const FormVentas = () => {
     }
   }
 
-  useEffect(() => {
-    if (dataVentasFields.porcentaje > 0 && dataVentasFields.cuotas > 1) {
-      const resultado = resto + resto * (dataVentasFields.porcentaje / 100);
-      setTotalFinal(resultado);
-    } else {
-      setTotalFinal(resto);
-      setDataVentasFields((prevData) => ({
-        ...prevData,
-        porcentaje: 0
-      }));
-    }
-  }, [dataVentasFields.porcentaje, resto, dataVentasFields.cuotas]);
-  
+  // useEffect(() => {
+  //   if (dataVentasFields.porcentaje > 0 && dataVentasFields.cuotas > 1) {
+  //     const resultado = resto + resto * (dataVentasFields.porcentaje / 100)
+  //     setTotalFinal(resultado)
+  //   } else {
+  //     // setTotalFinal(resto)
+  //     setDataVentasFields((prevData) => ({
+  //       ...prevData,
+  //       porcentaje: 0
+  //     }))
+  //   }
+  // }, [dataVentasFields.porcentaje, resto, dataVentasFields.cuotas])
 
- 
+  // useEffect(() => {
+  //   let idBuscado = parseFloat(dataVentasFields.id_tarjeta)
+  //   const aumentoPorUsarTarjeta = tarjetas.find((tarjeta) => tarjeta.id === idBuscado)
+  //   // Verificamos si el aumentoPorUsarTarjeta existe y si el valor de 'resto' es válido
+  //   if (aumentoPorUsarTarjeta && resto > 0) {
+  //     const nuevoResultado = resto + resto * (aumentoPorUsarTarjeta.aumento / 100)
+
+  //     // Actualizamos solo si el nuevo resultado es diferente al estado actual
+  //     if (nuevoResultado !== totalVenta) {
+  //       setTotalFinal(nuevoResultado)
+  //       setDataVentasFields((prevData) => ({
+  //         ...prevData,
+  //         aumento: aumentoPorUsarTarjeta.aumento
+  //       }))
+  //     }
+  //   } else {
+  //     setDataVentasFields((prevData) => ({
+  //       ...prevData,
+  //       aumento: 0
+  //     }))
+  //   }
+  // }, [dataVentasFields.id_tarjeta])
+
   useEffect(() => {
     let idBuscado = parseFloat(dataVentasFields.id_tarjeta);
-    const aumentoPorUsarTarjeta = tarjetas.find(tarjeta => tarjeta.id === idBuscado);
+    const aumentoPorUsarTarjeta = tarjetas.find((tarjeta) => tarjeta.id === idBuscado);
   
-    // Verificamos si el aumentoPorUsarTarjeta existe y si el valor de 'resto' es válido
+    // Inicializamos el resultado con el valor actual de 'resto'
+    let resultado = resto;
+  
+    // Si existe un aumento por usar tarjeta, lo sumamos al total
     if (aumentoPorUsarTarjeta && resto > 0) {
-      const nuevoResultado = resto + resto * (aumentoPorUsarTarjeta.aumento / 100);
+      resultado += resto * (aumentoPorUsarTarjeta.aumento / 100);
   
-      // Actualizamos solo si el nuevo resultado es diferente del valor anterior
-      if (nuevoResultado !== totalVenta) {
-        console.log(dataVentasFields.id_tarjeta, resto, tarjetas, totalVenta)
-        // setTotalVenta(nuevoResultado); // Actualizamos el estado solo cuando es necesario
+      // Si también hay un porcentaje adicional por las cuotas, lo sumamos al total después del aumento por tarjeta
+      if (dataVentasFields.porcentaje > 0 && dataVentasFields.cuotas > 1) {
+        resultado += resultado * (dataVentasFields.porcentaje / 100);
+      } else{
+        setDataVentasFields((prevData) => ({
+          ...prevData,
+          porcentaje: 0
+        }));
       }
+  
+      // Actualizamos el campo de aumento en 'dataVentasFields' solo si ha cambiado
+      if (aumentoPorUsarTarjeta.aumento !== dataVentasFields.aumento) {
+        setDataVentasFields((prevData) => ({
+          ...prevData,
+          aumento: aumentoPorUsarTarjeta.aumento
+        }));
+      }
+    } else {
+      // Si no hay aumento por tarjeta, lo reseteamos
+      setDataVentasFields((prevData) => ({
+        ...prevData,
+        aumento: 0
+      }));
     }
-  }, [dataVentasFields.id_tarjeta, resto, totalVenta]); // totalVenta debe estar en las dependencias
+  
+    // Actualizamos el total final solo si el resultado cambia
+    if (resultado !== totalVenta) {
+      setTotalFinal(resultado);
+    }
+  }, [dataVentasFields.porcentaje, dataVentasFields.cuotas, dataVentasFields.id_tarjeta, resto, tarjetas, totalVenta]);
   
 
   const handleSubmit = async (e) => {
@@ -318,6 +375,8 @@ const FormVentas = () => {
       })
     }
   }
+
+  console.log(totalFinal/ dataVentasFields.cuotas)
 
   return (
     <>
@@ -523,7 +582,7 @@ const FormVentas = () => {
                                   <span>Cuotas</span>
                                 </label>
                               </div>
-                              <p>{dataVentasFields.cuotas}</p>
+                              <p>{dataVentasFields.cuotas} Cuota de {totalFinal/ dataVentasFields.cuotas}</p>
                               <div className="flex">
                                 <label>
                                   <input
@@ -576,7 +635,6 @@ const FormVentas = () => {
                                     <label>
                                       <input
                                         onChange={handleChange}
-                                        value={dataVentasFields.porcentaje}
                                         type="number"
                                         name="porcentaje"
                                         className="input"
