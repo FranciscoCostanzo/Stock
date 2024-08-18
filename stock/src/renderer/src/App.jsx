@@ -12,6 +12,9 @@ import Papelera from './modules/Mercaderia/Papelera'
 import Ventas from './modules/Ventas/Ventas'
 import Inversion from './modules/Mercaderia/Inversion'
 import AuthTimeStampAviso from './modules/Auth/components/AuthTimeStampAviso/AuthTimeStampAviso'
+import Cambios from './modules/Ventas/Cambios'
+import Fallas from './modules/Mercaderia/Fallas'
+import Configuracion from './modules/Configuracion/Configuracion.jsx'
 
 const App = () => {
   useEffect(() => {
@@ -45,9 +48,12 @@ const App = () => {
         <Route path="/stock" element={<Stock />} />
         <Route path="/papelera" element={<Papelera />} />
         <Route path="/inversion" element={<Inversion />} />
+        <Route path="/fallas" element={<Fallas />} />
 
         <Route path="/ventas" element={<Ventas />} />
+        <Route path="/cambios" element={<Cambios />} />
 
+        <Route path="/configuracion" element={<Configuracion />} />
         <Route path="/register" element={<Register />} />
       </Route>
     </Routes>

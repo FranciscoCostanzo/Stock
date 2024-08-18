@@ -140,7 +140,7 @@ const Form = ({ fields, endpoint, tipoDeForm }) => {
   }
 
   return (
-    <form tipoDeFormulario={tipoDeForm && "register"} className="form" onSubmit={handleSubmit}>
+    <form tipodeformulario={tipoDeForm && "register"} className="form" onSubmit={handleSubmit}>
       {tipoDeForm === true ? (
         <>
           <p className="title">Registrarse</p>

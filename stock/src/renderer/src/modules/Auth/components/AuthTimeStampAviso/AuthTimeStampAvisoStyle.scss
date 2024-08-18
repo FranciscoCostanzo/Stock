@@ -32,9 +32,7 @@
             cursor: pointer;
             }
         }
-
     }
-
 }
 
 .contador__time__stamp{
@@ -43,12 +41,11 @@
     padding: 10px;
     background-color: #000;
     color: #fff;
-    width: 330px;
+    width: fit-content;
     text-align: start;
     display: flex;
     align-items: center;
     justify-content: flex-start;
-
     border-radius: 0 8px 0 0;
 
     p{

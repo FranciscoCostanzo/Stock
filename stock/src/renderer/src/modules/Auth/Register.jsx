@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Form from './components/FormAuth'
 import { fetchSucursales } from './lib/libAuth.js'
+import BtnVolver from '../Components/Btns/BtnVolver/BtnVolver.jsx'
 
 const Register = () => {
   const [sucursales, setSucursales] = useState([])
@@ -45,11 +46,14 @@ const Register = () => {
   ]
 
   return (
+    <section style={{position: "relative"}}>
+        <BtnVolver donde="/configuracion"/>
     <Form
       fields={camposRegistro}
       tipoDeForm={true}
       endpoint="http://localhost:3000/register"
     />
+    </section>
   )
 }
 

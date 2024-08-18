@@ -1,0 +1,17 @@
+.contenedor__pages{
+    position: relative;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 600px;
+    width: 90%; // Para asegurarse de que sea responsivo
+    border-radius: 10px;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    border-radius: 16px;
+    padding: 20px;
+}
