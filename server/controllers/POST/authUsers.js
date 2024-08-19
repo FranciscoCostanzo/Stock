@@ -68,10 +68,8 @@ export const login = async (req, res) => {
     // Validar los datos recibidos contra el esquema de login
     loginSchema.parse({ nombre, password });
 
-    // Obtener la conexión a la base de datos
     const connection = await db.getConnection();
 
-    // Verificar si el usuario existe
     const [user] = await connection.execute(
       "SELECT * FROM Usuarios WHERE nombre = ?",
       [nombre]
@@ -84,7 +82,6 @@ export const login = async (req, res) => {
         .json({ error: "Nombre de usuario o contraseña incorrectos." });
     }
 
-    // Comparar la contraseña proporcionada con la contraseña hasheada
     const passwordMatch = await bcrypt.compare(password, user[0].password);
     if (!passwordMatch) {
       connection.release();
@@ -93,12 +90,10 @@ export const login = async (req, res) => {
         .json({ error: "Nombre de usuario o contraseña incorrectos." });
     }
 
-    // Verificar el rol del usuario
     const { rol } = user[0];
     let sucursalData = null;
 
     if (rol !== "admin") {
-      // Consultar la tabla Usuario_Sucursal para obtener el ID de la sucursal
       const [userSucursal] = await connection.execute(
         "SELECT id_sucursal FROM Usuario_Sucursal WHERE id_usuario = ?",
         [user[0].id]
@@ -111,9 +106,8 @@ export const login = async (req, res) => {
           .json({ error: "No se encontró sucursal para el usuario." });
       }
 
-      const sucursalId = userSucursal[0].id_sucursal; // Asegúrate de que este nombre sea correcto
+      const sucursalId = userSucursal[0].id_sucursal;
 
-      // Obtener los datos de la sucursal desde la tabla Sucursal
       const [sucursal] = await connection.execute(
         "SELECT * FROM Sucursal WHERE id = ?",
         [sucursalId]
@@ -131,13 +125,15 @@ export const login = async (req, res) => {
 
     connection.release();
 
-    // Generar el token JWT con los datos del usuario y de la sucursal (si no es admin)
+    // Definir el tiempo de expiración en milisegundos
+    const expiresIn = 8 * 60 * 60 * 1000; // 8 horas en milisegundos
+
     const token = jwt.sign(
       {
         id: user[0].id,
         nombre: user[0].nombre,
         rol: user[0].rol,
-        sucursal: sucursalData, // Adjuntar datos de la sucursal solo si no es admin
+        sucursal: sucursalData,
       },
       process.env.SECRET_JWT_KEY,
       {
@@ -145,13 +141,13 @@ export const login = async (req, res) => {
       }
     );
 
-    // Establecer la cookie y enviar la respuesta en un solo paso
+    // Configurar la cookie con maxAge para que coincida con expiresIn
     res
       .cookie("access_token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
-        maxAge: 1000 * 60 * 60,
+        maxAge: expiresIn, // Tiempo de vida en milisegundos
       })
       .status(200)
       .json({ message: "Te autenticaste correctamente" });
@@ -166,6 +162,7 @@ export const login = async (req, res) => {
     });
   }
 };
+
 
 export const checkToken = async (req, res) => {
   const token = req.cookies.access_token;
