@@ -26,6 +26,7 @@ import {
     enviarFalla,
     modificarArticulo,
     restablecerEspecificoPapelera,
+    restablecerFalla,
     restablecerTodosArticulos,
     vaciarPapelera,
 } from "../controllers/POST/mercaderiaTools.js";
@@ -87,6 +88,7 @@ router.post(
 );
 
 router.post("/enviar-falla", authenticateToken, enviarFalla);
+router.post("/restablecer-falla", authenticateToken, restablecerFalla);
 
 //rutas para las ventas
 router.post("/articulo-empleado", authenticateToken, pedirArticuloEmpleado);

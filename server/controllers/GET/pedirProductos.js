@@ -111,13 +111,27 @@ export const pedirPapeleraAdmin = async (req, res) => {
 
 export const pedirFallasAdmin = async (req, res) => {
   try {
-    // Consulta para obtener la mercadería
-    const [results] = await db.query(`SELECT * FROM Fallas`);
+    // Consulta para obtener las fallas con los alias y joins necesarios
+    const [results] = await db.query(`
+      SELECT 
+      Mercaderia.id AS Articulo,
+      Mercaderia.descripcion AS Descripcion,
+      CONCAT(Sucursal.ciudad, ' - ', Sucursal.nombre) AS Sucursal,
+      Fallas.cantidad,
+        CONCAT(Usuarios.nombre, ' - ', Usuarios.rol) AS Usuario,
+        DATE_FORMAT(Fallas.fecha, '%Y/%m/%d') AS Fecha,
+        Fallas.hora
+      FROM Fallas
+      JOIN Mercaderia ON Fallas.id_mercaderia = Mercaderia.id
+      JOIN Sucursal ON Fallas.id_sucursal = Sucursal.id
+      JOIN Usuarios ON Fallas.id_usuario = Usuarios.id
+    `);
 
+    // Enviar los resultados como respuesta JSON
     res.json(results);
   } catch (error) {
-    console.error("Error al obtener la mercadería:", error);
-    res.status(500).json({ message: "Error al obtener la mercadería." });
+    console.error("Error al obtener las fallas:", error);
+    res.status(500).json({ message: "Error al obtener las fallas." });
   }
 };
 

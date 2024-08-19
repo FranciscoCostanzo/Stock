@@ -8,7 +8,7 @@ const Dashbord = () => {
     { btn: 'Mercaderia', to: '/stock', toAdmin: '/mercaderia' },
     { btn: 'Ventas', to: "/ventas", toAdmin: "/ventas" },
     { btn: 'Pedidos' },
-    { btn: 'Configuracion', toAdmin: "/register"  },
+    { btn: 'Configuracion', toAdmin: "/configuracion"  },
     { btn: 'Codigo de barra' },
     { btn: 'Caja' }
   ]

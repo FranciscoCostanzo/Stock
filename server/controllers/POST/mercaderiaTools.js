@@ -507,6 +507,101 @@ export const enviarFalla = async (req, res) => {
   }
 };
 
+export const restablecerFalla = async (req, res) => {
+  const { id_usuario, id_mercaderia, id_sucursal, cantidad, OKRF } = req.body;
+
+  // Verificar que todos los datos obligatorios estén presentes y que la confirmación sea "OKRF"
+  if (!id_usuario || !id_mercaderia || !id_sucursal || !cantidad || OKRF !== 'OKRF') {
+    return res.status(400).json({ error: 'Datos faltantes o confirmación inválida' });
+  }
+
+  try {
+    // Obtener una conexión a la base de datos
+    const connection = await db.getConnection();
+
+    // Verificar la cantidad en la tabla Fallas
+    const [fallaResult] = await connection.execute(
+      "SELECT cantidad FROM Fallas WHERE id_usuario = ? AND id_mercaderia = ? AND id_sucursal = ?",
+      [id_usuario, id_mercaderia, id_sucursal]
+    );
+
+    // Verificar si existe la falla
+    if (fallaResult.length === 0) {
+      connection.release();
+      return res.status(404).json({ error: 'No se encontró la falla' });
+    }
+
+    const { cantidad: cantidadFalla } = fallaResult[0];
+
+    // Verificar si la cantidad solicitada es válida
+    if (cantidad > cantidadFalla) {
+      connection.release();
+      return res.status(409).json({ error: 'La cantidad solicitada excede la cantidad en fallas' });
+    }
+
+    // Iniciar la transacción
+    await connection.beginTransaction();
+
+    // Actualizar la cantidad en Fallas o eliminar la fila si la cantidad resulta en 0
+    if (cantidad === cantidadFalla) {
+      // Si la cantidad es igual, eliminar la fila
+      await connection.execute(
+        "DELETE FROM Fallas WHERE id_usuario = ? AND id_mercaderia = ? AND id_sucursal = ?",
+        [id_usuario, id_mercaderia, id_sucursal]
+      );
+    } else {
+      // Si la cantidad es menor, restar la cantidad
+      await connection.execute(
+        "UPDATE Fallas SET cantidad = cantidad - ? WHERE id_usuario = ? AND id_mercaderia = ? AND id_sucursal = ?",
+        [cantidad, id_usuario, id_mercaderia, id_sucursal]
+      );
+
+      // Verificar si la cantidad resultante es 0 y eliminar la fila si es el caso
+      const [newFallaResult] = await connection.execute(
+        "SELECT cantidad FROM Fallas WHERE id_usuario = ? AND id_mercaderia = ? AND id_sucursal = ?",
+        [id_usuario, id_mercaderia, id_sucursal]
+      );
+
+      if (newFallaResult.length > 0 && newFallaResult[0].cantidad === 0) {
+        await connection.execute(
+          "DELETE FROM Fallas WHERE id_usuario = ? AND id_mercaderia = ? AND id_sucursal = ?",
+          [id_usuario, id_mercaderia, id_sucursal]
+        );
+      }
+    }
+
+    // Actualizar la cantidad en el Stock
+    await connection.execute(
+      "UPDATE Stock SET cantidad = cantidad + ? WHERE id_mercaderia = ? AND id_sucursal = ?",
+      [cantidad, id_mercaderia, id_sucursal]
+    );
+
+    // Confirmar la transacción
+    await connection.commit();
+
+    // Liberar la conexión
+    connection.release();
+
+    // Responder con éxito
+    res.status(200).json({ message: 'Falla restablecida y stock actualizado correctamente' });
+  } catch (error) {
+    console.error('Error al restablecer la falla:', error);
+
+    try {
+      // En caso de error, revertir la transacción
+      await connection.rollback();
+    } catch (rollbackError) {
+      console.error('Error al revertir la transacción:', rollbackError);
+    }
+
+    res.status(500).json({
+      error: 'Error al restablecer la falla. Intenta nuevamente más tarde.',
+    });
+  }
+};
+
+
+
 
 
 

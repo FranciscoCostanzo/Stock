@@ -54,21 +54,18 @@ const ToolsFallas = () => {
                 break
             case 'restablecerFalla':
                 fields = [
+                    { name: 'id_usuario', type: 'number', label: 'Articulo' },
                     { name: 'id_mercaderia', type: 'text', label: 'Artículo' },
                     {
                         name: 'id_sucursal',
                         type: 'select',
                         label: 'Sucursal',
-                        options: [
-                            { value: '1', label: 'Sucursal 1' },
-                            { value: '2', label: 'Sucursal 2' },
-                            { value: '3', label: 'Sucursal 3' }
-                        ]
+                        options: sucursal
                     },
                     { name: 'cantidad', type: 'text', label: 'Cantidad' },
                     { name: 'OKRF', type: 'text', label: 'Confirmación' }
                 ]
-                apiEndpoint = ''
+                apiEndpoint = 'http://localhost:3000/restablecer-falla'
                 tituloFormulario = 'Restablecer Falla'
                 messageFormulario =
                     'Escribe el artículo en específico que quieras restablecer y luego escribe "OKRF" en el campo de confirmación'
