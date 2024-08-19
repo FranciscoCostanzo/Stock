@@ -34,6 +34,7 @@ import {
     cargarVenta,
     pedirArticuloEmpleado,
 } from "../controllers/POST/ventasTools.js";
+import { pedirVentasSemana } from "../controllers/GET/pedirVentas.js";
 
 const router = Router();
 
@@ -62,6 +63,8 @@ router.get("/papelera", authenticateToken, pedirPapeleraAdmin);
 router.get("/inversion", authenticateToken, pedirInversionAdmin);
 // Ruta para obtener la Fallas registradas del stock para el admin
 router.get("/fallas", authenticateToken, pedirFallasAdmin);
+
+router.get("/ventas-semana", authenticateToken, pedirVentasSemana);
 
 // Rutas POST de los productos
 // Ruta para la tabla Mercaderia

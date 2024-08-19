@@ -10,11 +10,13 @@ import Header from './modules/Header/Header'
 import Mercaderia from './modules/Mercaderia/Mercaderia'
 import Papelera from './modules/Mercaderia/Papelera'
 import Ventas from './modules/Ventas/Ventas'
+import VerVentas from './modules/Ventas/VerVentas.jsx'
 import Inversion from './modules/Mercaderia/Inversion'
 import AuthTimeStampAviso from './modules/Auth/components/AuthTimeStampAviso/AuthTimeStampAviso'
 import Cambios from './modules/Ventas/Cambios'
 import Fallas from './modules/Mercaderia/Fallas'
 import Configuracion from './modules/Configuracion/Configuracion.jsx'
+import InternetStatus from './modules/Components/InternetStatus/InternetStatus.jsx'
 
 const App = () => {
   useEffect(() => {
@@ -52,12 +54,14 @@ const App = () => {
 
         <Route path="/ventas" element={<Ventas />} />
         <Route path="/cambios" element={<Cambios />} />
+        <Route path="/ver-ventas" element={<VerVentas />} />
 
         <Route path="/configuracion" element={<Configuracion />} />
         <Route path="/register" element={<Register />} />
       </Route>
     </Routes>
     <AuthTimeStampAviso/>
+    <InternetStatus/>
     </>
   )
 }
