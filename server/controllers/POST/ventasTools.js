@@ -12,8 +12,11 @@ export const cargarVenta = async (req, res) => {
     const idVenta = generateUniqueId();
 
     // Fecha y hora actual en formato ISO 8601
-    const fechaVenta = new Date().toISOString().split("T")[0];
-    const horaVenta = new Date().toISOString().split("T")[1].split(".")[0];
+        const fechaVenta = new Date().toLocaleDateString('en-CA').replace(/-/g, '/'); // YYYY/MM/DD
+        const horaVenta = new Date().toLocaleTimeString('es-AR', {
+          hour12: false,
+          timeZone: 'America/Argentina/Buenos_Aires',
+        });
 
     // Insertar cada objeto como una fila en la tabla Ventas
     for (const venta of ventas) {

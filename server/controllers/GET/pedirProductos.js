@@ -36,7 +36,6 @@ export const pedirStockPorSucursal = async (req, res) => {
   }
 };
 
-
 export const pedirStockAdmin = async (req, res) => {
   try {
     // Consulta para obtener el stock
@@ -110,6 +109,18 @@ export const pedirPapeleraAdmin = async (req, res) => {
   }
 };
 
+export const pedirFallasAdmin = async (req, res) => {
+  try {
+    // Consulta para obtener la mercadería
+    const [results] = await db.query(`SELECT * FROM Fallas`);
+
+    res.json(results);
+  } catch (error) {
+    console.error("Error al obtener la mercadería:", error);
+    res.status(500).json({ message: "Error al obtener la mercadería." });
+  }
+};
+
 export const pedirInversionAdmin = async (req, res) => {
   try {
     // Consulta para obtener el stock total, inversión y retorno para cada producto
@@ -138,6 +149,3 @@ export const pedirInversionAdmin = async (req, res) => {
     res.status(500).json({ message: "Error al obtener la inversión." });
   }
 };
-
-
-

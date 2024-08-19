@@ -1,25 +1,28 @@
-import { useState, useRef, useEffect } from "react";
-import { toast } from 'react-toastify';
-
-
+import { useContext, useRef, useState } from 'react'
+import { AuthContext } from '../../Auth/context/AuthContext'
+import { toast } from 'react-toastify'
 
 const FormModal = ({ fieldsForm, endpoint, onClose, tituloForm, messageForm }) => {
+  const { user } = useContext(AuthContext) // obtener el usuario desde el contexto
+
   const initialState = fieldsForm.reduce((acc, field) => {
-    return { ...acc, [field.name]: "" };
-  }, {});
-  const [formData, setFormData] = useState(initialState);
-  const inputsRef = useRef([]);
+    return { ...acc, [field.name]: field.name === 'id_usuario' ? user.id : '' } // Setea id_usuario desde el contexto
+  }, {})
+  
+  const [formData, setFormData] = useState(initialState)
+  const inputsRef = useRef([])
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: value,
-    }));
-  };
+      [name]: value
+    }))
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
+
     try {
       const response = await fetch(endpoint, {
         method: "POST",
@@ -37,57 +40,16 @@ const FormModal = ({ fieldsForm, endpoint, onClose, tituloForm, messageForm }) =
       const data = await response.json();
       console.log("Respuesta del servidor:", data);
 
-      // Mostrar notificación de éxito
-      toast.success('¡Producto agregado con éxito!', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
-      });
-
-      // Cerrar el modal después de éxito
-      onClose();
+      // Notificación de éxito
+      toast.success('¡Enviado con éxito!', { autoClose: 5000 });
+      
+      onClose(); // Cerrar el modal
       window.location.reload()
     } catch (error) {
-      console.error("Error al enviar el formulario:", error);
-
-      // Mostrar notificación de error
-      toast.error('Error al agregar el producto. Intenta de nuevo.', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: 'light'
-      });
+      console.error("Error:", error);
+      toast.error('Error al enviar.', { autoClose: 5000 });
     }
-  };
-
-  useEffect(() => {
-    const handleWheel = (event) => {
-      event.preventDefault();
-    };
-
-    inputsRef.current.forEach((input) => {
-      if (input) {
-        input.addEventListener("wheel", handleWheel, { passive: false });
-      }
-    });
-
-    return () => {
-      inputsRef.current.forEach((input) => {
-        if (input) {
-          input.removeEventListener("wheel", handleWheel);
-        }
-      });
-    };
-  }, []);
+  }
 
   return (
     <div className="overlay">
@@ -98,14 +60,40 @@ const FormModal = ({ fieldsForm, endpoint, onClose, tituloForm, messageForm }) =
         {fieldsForm.map((field, index) => (
           <div className="flex" key={index}>
             <label>
-              <input
-                ref={(el) => (inputsRef.current[index] = el)}
-                value={formData[field.name]}
-                onChange={handleChange}
-                type={field.type}
-                name={field.name}
-                className="input"
-              />
+              {field.type === 'select' ? (
+                <select
+                  ref={(el) => (inputsRef.current[index] = el)}
+                  value={formData[field.name]}
+                  onChange={handleChange}
+                  name={field.name}
+                  className="input"
+                >
+                  <option value="">Seleccionar {field.label}</option>
+                  {field.options.map((option, idx) => (
+                    <option key={idx} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              ) : field.name === 'id_usuario' ? (
+                <input
+                  ref={(el) => (inputsRef.current[index] = el)}
+                  value={user.id}
+                  type={field.type}
+                  name={field.name}
+                  className="input invisible"
+                  readOnly
+                />
+              ) : (
+                <input
+                  ref={(el) => (inputsRef.current[index] = el)}
+                  value={formData[field.name]}
+                  onChange={handleChange}
+                  type={field.type}
+                  name={field.name}
+                  className="input"
+                />
+              )}
               <span>{field.label}</span>
             </label>
           </div>
@@ -122,7 +110,7 @@ const FormModal = ({ fieldsForm, endpoint, onClose, tituloForm, messageForm }) =
         </div>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default FormModal;
+export default FormModal

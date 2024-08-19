@@ -1,6 +1,6 @@
 import db from "../../config/db.js";
 
-// Papelera TOOLS
+// Productos TOOLS
 export const agregarArticulo = async (req, res) => {
   let { descripcion, costo, publico } = req.body;
 
@@ -428,4 +428,86 @@ export const eliminarEspecificoPapelera = async (req, res) => {
     });
   }
 };
+
+export const enviarFalla = async (req, res) => {
+  const { id_usuario, id_mercaderia, id_sucursal, cantidad } = req.body;
+
+  // Verificar que todos los datos estén presentes
+  if (!id_usuario || !id_mercaderia || !id_sucursal || !cantidad) {
+    return res.status(400).json({ error: 'Faltan datos obligatorios' });
+  }
+
+  try {
+    // Obtener una conexión a la base de datos
+    const connection = await db.getConnection();
+
+    // Verificar la cantidad disponible en el stock
+    const [stockResult] = await connection.execute(
+      "SELECT cantidad FROM Stock WHERE id_mercaderia = ? AND id_sucursal = ?",
+      [id_mercaderia, id_sucursal]
+    );
+
+    // Si no se encuentra el stock o la cantidad es menor que la solicitada
+    if (stockResult.length === 0) {
+      connection.release();
+      return res.status(404).json({ error: 'No se encontró el artículo en el stock.' });
+    }
+
+    const { cantidad: cantidadDisponible } = stockResult[0];
+
+    if (cantidadDisponible < cantidad) {
+      connection.release();
+      return res.status(409).json({ error: 'La cantidad solicitada excede el stock disponible.' });
+    }
+
+    // Fecha y hora actual en formato ISO 8601
+    const fechaActual = new Date().toLocaleDateString('en-CA').replace(/-/g, '/'); // YYYY/MM/DD
+    const horaActual = new Date().toLocaleTimeString('es-AR', {
+      hour12: false,
+      timeZone: 'America/Argentina/Buenos_Aires',
+    });
+
+    // Iniciar la transacción
+    await connection.beginTransaction();
+
+    // Restar la cantidad del stock
+    await connection.execute(
+      "UPDATE Stock SET cantidad = cantidad - ? WHERE id_mercaderia = ? AND id_sucursal = ?",
+      [cantidad, id_mercaderia, id_sucursal]
+    );
+
+    // Insertar la falla en la tabla Fallas
+    await connection.execute(
+      `INSERT INTO Fallas (id_usuario, id_mercaderia, id_sucursal, cantidad, fecha, hora) 
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [id_usuario, id_mercaderia, id_sucursal, cantidad, fechaActual, horaActual]
+    );
+
+    // Confirmar la transacción
+    await connection.commit();
+
+    // Liberar la conexión
+    connection.release();
+
+    // Enviar respuesta exitosa
+    res.status(200).json({ message: 'Falla registrada y stock actualizado correctamente.' });
+  } catch (error) {
+    console.error('Error al registrar la falla:', error);
+
+    try {
+      // En caso de error, revertir la transacción
+      await connection.rollback();
+    } catch (rollbackError) {
+      console.error('Error al revertir la transacción:', rollbackError);
+    }
+
+    res.status(500).json({
+      error: 'Error al registrar la falla. Intenta nuevamente más tarde.',
+    });
+  }
+};
+
+
+
+
 

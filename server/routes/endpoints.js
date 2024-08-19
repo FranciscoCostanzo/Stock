@@ -11,6 +11,7 @@ import {
     pedirTarjetas,
 } from "../controllers/GET/pedirMateriales.js";
 import {
+    pedirFallasAdmin,
     pedirInversionAdmin,
     pedirMercaderiaAdmin,
     pedirPapeleraAdmin,
@@ -22,6 +23,7 @@ import {
     agregarArticulo,
     eliminarArticulo,
     eliminarEspecificoPapelera,
+    enviarFalla,
     modificarArticulo,
     restablecerEspecificoPapelera,
     restablecerTodosArticulos,
@@ -57,6 +59,8 @@ router.get("/mercaderia", authenticateToken, pedirMercaderiaAdmin);
 router.get("/papelera", authenticateToken, pedirPapeleraAdmin);
 // Ruta para obtener la inversion y el retorno del stock para el admin
 router.get("/inversion", authenticateToken, pedirInversionAdmin);
+// Ruta para obtener la Fallas registradas del stock para el admin
+router.get("/fallas", authenticateToken, pedirFallasAdmin);
 
 // Rutas POST de los productos
 // Ruta para la tabla Mercaderia
@@ -81,6 +85,8 @@ router.post(
     authenticateToken,
     eliminarEspecificoPapelera
 );
+
+router.post("/enviar-falla", authenticateToken, enviarFalla);
 
 //rutas para las ventas
 router.post("/articulo-empleado", authenticateToken, pedirArticuloEmpleado);
