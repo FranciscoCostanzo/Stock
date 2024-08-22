@@ -4,34 +4,26 @@ import { AuthContext } from '../Auth/context/AuthContext'
 
 const Dashbord = () => {
   const { user } = useContext(AuthContext)
+
   const btns = [
-    { btn: 'Mercaderia', to: '/stock', toAdmin: '/mercaderia' },
-    { btn: 'Ventas', to: "/ventas", toAdmin: "/ventas" },
-    { btn: 'Pedidos' },
-    { btn: 'Configuracion', toAdmin: "/configuracion"  },
-    { btn: 'Codigo de barra' },
-    { btn: 'Caja' }
+    { btn: 'Mercaderia', to: '/stock', toAdmin: '/mercaderia', roles: ['admin', 'empleado'] },
+    { btn: 'Ventas', to: '/ventas', toAdmin: '/ventas', roles: ['admin', 'empleado'] },
+    { btn: 'Pedidos', roles: ['admin', 'empleado'] },
+    { btn: 'Caja', roles: ['admin', 'empleado'] },
+    { btn: 'Codigo de barra', roles: ['admin'] },
+    { btn: 'Configuracion', toAdmin: '/configuracion', roles: ['admin'] }
   ]
+
+  // Filtra los botones según el rol del usuario
+  const filteredBtns = btns.filter((btn) => btn.roles.includes(user.rol))
 
   return (
     <section className="dashboard">
-      {user.rol === 'admin' ? (
-        <>
-          {btns.map((btn, index) => (
-            <Link key={index} to={btn.toAdmin} className="btn">
-              {btn.btn}
-            </Link>
-          ))}
-        </>
-      ) : (
-        <>
-          {btns.map((btn, index) => (
-            <Link key={index} to={btn.to} className="btn">
-              {btn.btn}
-            </Link>
-          ))}
-        </>
-      )}
+      {filteredBtns.map((btn, index) => (
+        <Link key={index} to={user.rol === 'admin' ? btn.toAdmin : btn.to || '#'} className="btn">
+          {btn.btn}
+        </Link>
+      ))}
     </section>
   )
 }

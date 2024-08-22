@@ -57,9 +57,7 @@ const VerVentas = () => {
     return acumulador;
   }, []);
   
-  console.log(ventasUnificadas);
-  
-  
+  console.log(ventasSemana);
 
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters)

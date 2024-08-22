@@ -8,7 +8,10 @@ import {
 } from "../controllers/POST/authUsers.js";
 import {
     pedirSucursales,
+    pedirSucursalesAdmin,
     pedirTarjetas,
+    pedirTarjetasAdmin,
+    pedirUsuariosAdmin,
 } from "../controllers/GET/pedirMateriales.js";
 import {
     pedirFallasAdmin,
@@ -96,5 +99,9 @@ router.post("/restablecer-falla", authenticateToken, restablecerFalla);
 //rutas para las ventas
 router.post("/articulo-empleado", authenticateToken, pedirArticuloEmpleado);
 router.post("/venta", authenticateToken, cargarVenta);
+
+router.get("/tarjetas-admin", authenticateToken, pedirTarjetasAdmin);
+router.get("/usuarios-admin", authenticateToken, pedirUsuariosAdmin);
+router.get("/sucursales-admin", authenticateToken, pedirSucursalesAdmin);
 
 export default router;
