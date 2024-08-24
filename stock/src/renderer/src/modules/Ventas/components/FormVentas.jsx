@@ -18,8 +18,6 @@ const FormVentas = () => {
 
   const [resto, setResto] = useState(0)
   const [totalFinal, setTotalFinal] = useState(0)
-  const [articuloAComprar, setArticuloAComprar] = useState('') // Inicializado como string vacío
-  const [dataArticulo, setDataArticulo] = useState(null) // Inicializa como null para indicar que no hay datos
   const [cargasVentas, setCargasVentas] = useState([])
   const [finalizado, setFinalizado] = useState(false)
 
@@ -132,22 +130,52 @@ const FormVentas = () => {
     setDataVentasFields(newFields)
   }
 
+  const [dataArticulo, setDataArticulo] = useState({ message: '' });
+  const [articuloAComprar, setArticuloAComprar] = useState('');
+
   const handlePedirPrecioArticulo = async () => {
-    const articuloTrimmed = articuloAComprar.trim() // Elimina los espacios en blanco al principio y al final
+    const articuloTrimmed = articuloAComprar.trim();
 
     if (!articuloTrimmed) {
-      console.error('El campo de artículo está vacío')
-      return // Salir de la función si el campo está vacío
+      toast.warn('El campo de artículo está vacío');
+      return;
     }
 
     try {
-      const data = await obtenerArticuloEmpleado(articuloTrimmed, user.sucursal.id)
-      setDataArticulo(data) // Actualiza con los datos obtenidos
+      const data = await obtenerArticuloEmpleado(articuloTrimmed, user.sucursal.id);
+      setDataArticulo(data); // Set the state with the fetched data
     } catch (error) {
-      console.error(error)
-      setDataArticulo(null) // Restablece a null si hay un error
+      console.error(error);
+
+      if (error.response) {
+        const { error: errorCode, message } = error.response.data;
+
+        switch (errorCode) {
+          case "NoStock":
+            toast.warn(message);
+            setDataArticulo({ message }); // Set dataArticulo with an object containing the message
+            break;
+          case "NoArticulo":
+            toast.warn(message);
+            setDataArticulo({ message }); // Set dataArticulo with an object containing the message
+            break;
+          case "ServerError":
+            toast.error(message);
+            setDataArticulo({ message }); // Set dataArticulo with an object containing the message
+            break;
+          default:
+            toast.error("Ocurrió un error inesperado.");
+            setDataArticulo({ message: "Ocurrió un error inesperado." }); // Default message
+            break;
+        }
+      } else {
+        toast.error("No hay stock disponible o el artículo no existe.");
+        setDataArticulo({ message: "Error al conectar con el servidor." }); // Default message
+      }
     }
-  }
+  };
+  
+  
 
   const handleChangeArticuloAComprar = (e) => {
     setArticuloAComprar(e.target.value) // Actualiza el estado con el valor del input
@@ -364,12 +392,13 @@ const FormVentas = () => {
           </BtnGeneral>
         </article>
         <article className="resultado">
-          <p>
-            Descripción: <strong>{dataArticulo && <>{dataArticulo.Descripcion}</>}</strong>
-          </p>
-          <p>
-            Precio de venta: <strong>{dataArticulo && <>${dataArticulo.Precio}</>}</strong>
-          </p>
+        <p>
+  Descripción: <strong>{dataArticulo && dataArticulo.Descripcion ? dataArticulo.Descripcion : dataArticulo.message}</strong>
+</p>
+<p>
+  Precio de venta: <strong>{dataArticulo && dataArticulo.Precio ? `$${dataArticulo.Precio}` : ''}</strong>
+</p>
+
         </article>
         <BtnGeneral
           tocar={finalizado ? null : handleCargarArticulo}

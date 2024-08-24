@@ -11,7 +11,8 @@ const Dashbord = () => {
     { btn: 'Pedidos', roles: ['admin', 'empleado'] },
     { btn: 'Caja', roles: ['admin', 'empleado'] },
     { btn: 'Codigo de barra', roles: ['admin'] },
-    { btn: 'Configuracion', toAdmin: '/configuracion', roles: ['admin'] }
+    { btn: 'Configuracion', toAdmin: '/configuracion', roles: ['admin'] },
+    { btn: 'register', toAdmin: '/register', roles: ['admin'] }
   ]
 
   // Filtra los botones según el rol del usuario

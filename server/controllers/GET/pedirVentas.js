@@ -18,15 +18,16 @@ export const pedirVentasSemana = async (req, res) => {
         Usuarios.nombre AS Usuario,
         CONCAT(Sucursal.ciudad, ' - ', Sucursal.nombre) AS Sucursal,
         Mercaderia.descripcion AS Descripcion,
+        Mercaderia.costo AS Costo,
         Mercaderia.publico AS Publico,
         Ventas.cantidad AS Cantidad,
         Ventas.metodo_de_pago AS Metodo,
-        Tarjetas.tipo_tarjeta AS Tarjeta,
-        Ventas.cuotas AS Cuotas,
-        Ventas.nombre_cliente AS NombreCliente,
-        Ventas.apellido_cliente AS ApellidoCliente,
-        Ventas.dni_cliente AS DNICliente,
-        Ventas.adelanto AS Adelanto,
+        COALESCE(Tarjetas.tipo_tarjeta, 'No tiene') AS Tarjeta,
+        COALESCE(Ventas.cuotas, 'No tiene') AS Cuotas,
+        COALESCE(Ventas.nombre_cliente, 'No tiene') AS NombreCliente,
+        COALESCE(Ventas.apellido_cliente, 'No tiene') AS ApellidoCliente,
+        COALESCE(Ventas.dni_cliente, 'No tiene') AS DNICliente,
+        COALESCE(Ventas.adelanto, 'No tiene') AS Adelanto,
         Ventas.total_venta AS total_venta,
         Ventas.total AS Total
       FROM 
@@ -49,7 +50,6 @@ export const pedirVentasSemana = async (req, res) => {
     `,
       [fechaInicio, fechaActual]
     );
-
 
     // Enviar los resultados
     res.json(results);

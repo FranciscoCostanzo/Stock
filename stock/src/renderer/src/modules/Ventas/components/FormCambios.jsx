@@ -1,6 +1,10 @@
+import ContenedorPages from "../../Components/Contenedor/ContenedorPages"
+
 const FormCambios = () => {
   return (
-    <div>FormCambios</div>
+    <ContenedorPages>
+      FormCambio
+      </ContenedorPages>
   )
 }
 

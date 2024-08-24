@@ -15,7 +15,11 @@
     border-radius: 6px;
     transition: 0.1s ease;
     background-color: #fff;
-    
+
+    @media (max-width: 1600px) {
+        padding: 3px 9px;
+        font-size: 16px;
+    }
 
     svg {
         width: 30px;
