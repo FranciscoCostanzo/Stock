@@ -6,6 +6,7 @@ import FiltroProductos from '../Mercaderia/components/Filtros/FiltroProductos'
 import BtnVolver from '../Components/Btns/BtnVolver/BtnVolver'
 import BtnGeneral from '../Components/Btns/BtnGeneral'
 import { toast } from 'react-toastify' // Asegúrate de que Toastify esté importado
+import { Link } from 'react-router-dom'
 
 const RecibirPedidos = () => {
   const { user } = useContext(AuthContext)
@@ -44,10 +45,10 @@ const RecibirPedidos = () => {
         toast.info('No hay pedidos para procesar.');
         return;
       }
-  
+
       // Crear un conjunto de IDs únicos (no duplicados)
       const uniqueIds = [...new Set(pedidos.map(pedido => pedido.id))];
-  
+
       // Enviar el formato correcto al servidor
       const response = await fetch('http://localhost:3000/recibir-pedidos', {
         method: 'POST',
@@ -58,16 +59,16 @@ const RecibirPedidos = () => {
         body: JSON.stringify({ ids: uniqueIds }), // Enviar el formato correcto
         credentials: 'include' // Solo si es necesario para tu autenticación
       });
-  
+
       // Verificar la respuesta
       const result = await response.json();
       if (!response.ok) {
         toast.error(`Error al recibir pedidos: ${result.message}`);
         return;
       }
-  
+
       toast.success('Pedidos recibidos con éxito.');
-  
+
       // Actualizar la lista de pedidos después de la recepción
       setPedidos((prevPedidos) =>
         prevPedidos.filter((pedido) => !uniqueIds.includes(pedido.id))
@@ -77,10 +78,10 @@ const RecibirPedidos = () => {
       console.error('Error al enviar los pedidos:', error.message);
     }
   };
-  
+
 
   return (
-    <section className="mercaderia">
+    <section className="ventas">
       {loading ? (
         <div loader="interno" className="contenedor__loader">
           <span className="loader"></span>
@@ -88,7 +89,13 @@ const RecibirPedidos = () => {
         </div>
       ) : (
         <>
+        {user.rol === "admin" ? (
+
           <BtnVolver donde="/pedidos" />
+        ):
+        (
+          <BtnVolver donde="/inicio" />
+        )}
           <article className="table__container">
             <FiltroProductos
               columns={Object.keys(pedidos[0] || {})}
@@ -111,6 +118,17 @@ const RecibirPedidos = () => {
               Recibir Pedidos
             </BtnGeneral>
           )}
+          <article className="contenedor__btns__sigpestanas">
+            <Link className="btn__pestanas__siguiente" to="/fallas">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M11 14l4 -4l-4 -4" />
+                <path d="M16 14l4 -4l-4 -4" />
+                <path d="M15 10h-7a4 4 0 1 0 0 8h1" />
+              </svg>
+              Fallas
+            </Link>
+          </article>
         </>
       )}
     </section>

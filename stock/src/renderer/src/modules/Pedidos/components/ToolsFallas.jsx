@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import FormModal from '../../../Components/Forms/FormModal'
-import { fetchSucursales } from '../../../Auth/lib/libAuth'
+import FormModal from '../../Components/Forms/FormModal'
+import { fetchSucursales } from '../../Auth/lib/libAuth'
 
 const ToolsFallas = () => {
   const [abrirFormModal, setAbrirFormModal] = useState(false)
