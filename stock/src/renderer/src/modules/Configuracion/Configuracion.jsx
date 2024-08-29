@@ -9,6 +9,7 @@ import {
 } from './lib/libConfiguracion'
 import TablesProductos from '../Components/Table/TablesProductos'
 import FiltroProductos from '../Mercaderia/components/Filtros/FiltroProductos'
+import { Link } from 'react-router-dom'
 
 const Configuracion = () => {
   const { user } = useContext(AuthContext) // obtener el usuario desde el contexto
@@ -141,6 +142,8 @@ const Configuracion = () => {
                 </React.Fragment>
               ))}
             </div>
+            <Link to="/register">Registar</Link>
+
           </section>
         </>
       )}

@@ -4,6 +4,7 @@ import { AuthContext } from '../../Auth/context/AuthContext'
 import TablesProductos from '../../Components/Table/TablesProductos'
 import BtnGeneral from '../../Components/Btns/BtnGeneral'
 import { toast } from 'react-toastify'
+import SelectSucursales from '../../Components/Inputs/SelectSucursales'
 
 const FormVentas = () => {
   const { user } = useContext(AuthContext)
@@ -59,6 +60,13 @@ const FormVentas = () => {
     }))
   }, [dataVentasFields.metodo_de_pago, totalVenta, dataVentasFields.adelanto])
 
+  const [selectedSucursalId, setSelectedSucursalId] = useState(null)
+
+  const handleSucursalChange = (id) => {
+    setSelectedSucursalId(id)
+  }
+
+
   const construirFormDataDinamico = () => {
     return cargasVentas.map((articulo) => {
       const precioTotalArticulo = articulo.Precio * articulo.Cantidad
@@ -84,7 +92,7 @@ const FormVentas = () => {
 
       return {
         id_usuario: user.id,
-        id_sucursal: user.sucursal.id,
+        id_sucursal: user.rol === "admin" ? selectedSucursalId : user.sucursal.id,
         id_mercaderia: articulo.Artículo,
         cantidad: articulo.Cantidad,
         metodo_de_pago: dataVentasFields.metodo_de_pago.toLowerCase(),
@@ -142,7 +150,7 @@ const FormVentas = () => {
     }
 
     try {
-      const data = await obtenerArticuloEmpleado(articuloTrimmed, user.sucursal.id)
+      const data = await obtenerArticuloEmpleado(articuloTrimmed, user.rol === "admin" ? selectedSucursalId : user.sucursal.id)
       setDataArticulo(data) // Set the state with the fetched data
     } catch (error) {
       console.error(error)
@@ -315,6 +323,7 @@ const FormVentas = () => {
     totalVenta
   ])
 
+
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -364,6 +373,8 @@ const FormVentas = () => {
     }
   }
 
+
+
   return (
     <>
       <div className="contenedor__busqueda">
@@ -379,6 +390,11 @@ const FormVentas = () => {
               />
               <span>Artículo</span>
             </label>
+            {user.rol === "admin" && (
+            <SelectSucursales onChange={handleSucursalChange} />
+            )}
+              
+
           </div>
           <BtnGeneral tocar={handlePedirPrecioArticulo}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">

@@ -2,13 +2,12 @@
 
 .print-area {
   width: 2in;
-  height: 1.1in;
+  height: fit-content;
   border: 1px solid #000;
   padding: 10px;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 @media print {
@@ -33,7 +32,6 @@
 }
 
 .buscar__pedidos {
-  padding: 20px;
   display: flex;
   width: 100%;
   justify-content: flex-start;
@@ -41,45 +39,50 @@
 
   .buscar__articulos {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     gap: 20px;
-  
-    .selector__articulo{
+    width: 100%;
+
+    .btns__inputs__pedidos {
       display: flex;
-      flex-direction: column;
       justify-content: center;
-      height: 120px;
-    }
-
-    .total__eti {
-      width: 70%;
-      border: 1px solid;
-      padding: 6px;
-      border-radius: 8px;
-      font-size: 20px;
-    }
-
-    .articulo__info {
-      width: 100%;
-    }
-
-    .btn__buscar__pedidos {
       width: fit-content;
-      height: fit-content;
+      gap: 20px;
+
+      .selector__articulo {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        height: 160px;
+
+
+      }
     }
+    .btn__imprimir {
+      position: absolute;
+      top: 5%;
+      right: 0;
+      background-color: #3eb001;
+      color: #fff;
 
-    .btn__cargar__etiqueta{
-      width: 70%;
-      height: fit-content;
+      svg {
+        stroke: #fff;
+      }
+
+      
     }
-  }
-}
+    .btn__eliminar {
+      position: absolute;
+      top: 35%;
+      right: 0;
+      background-color: #ff0000;
+      color: #fff;
 
-.btn__imprimir {
-  position: absolute;
-  right: 20px;
+      svg {
+        stroke: #fff;
+      }
 
-  p {
-    font-weight: bold;
+      
+    }
   }
 }

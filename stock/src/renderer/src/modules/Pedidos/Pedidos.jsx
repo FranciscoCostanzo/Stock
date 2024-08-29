@@ -8,6 +8,7 @@ import { obtenerMercaderiaAdmin } from '../Mercaderia/lib/libMercaderia'
 import TablesProductos from '../Components/Table/TablesProductos'
 import SelectSucursales from '../Components/Inputs/SelectSucursales'
 import ContenedorPages from '../Components/Contenedor/ContenedorPages'
+import EtiquetaImpresion from './components/EtiquetaImpresion'
 
 const Pedidos = () => {
   const { user } = useContext(AuthContext)
@@ -19,6 +20,7 @@ const Pedidos = () => {
   const [etiquetas, setEtiquetas] = useState([])
   const [etiquetaActual, setEtiquetaActual] = useState(0)
   const [imprimiendo, setImprimiendo] = useState(false)
+  const [imprimir, setImprimir] = useState(false)
   const [cantidad, setCantidad] = useState('') // Estado para la cantidad
 
   const [selectedSucursalId, setSelectedSucursalId] = useState(null)
@@ -106,17 +108,35 @@ const Pedidos = () => {
     }
 
     if (dataArticulo) {
-      // Agrega el artículo al array de etiquetas solo cuando se cargue la cantidad
-      setEtiquetas((prevEtiquetas) => [
-        ...prevEtiquetas,
-        {
-          Articulo: articuloAComprar,
-          Descripcion: dataArticulo.Descripcion,
-          Precio: dataArticulo.Precio,
-          Cantidad: parseInt(cantidad),
-          Sucursal: selectedSucursalText
-        }
-      ])
+      // Verificar si el artículo con la misma sucursal ya está en el array de etiquetas
+      const existingEtiquetaIndex = etiquetas.findIndex(
+        (etiqueta) =>
+          etiqueta.Articulo === articuloAComprar && etiqueta.Sucursal === selectedSucursalText
+      )
+
+      if (existingEtiquetaIndex >= 0) {
+        // Si ya existe, sumar la cantidad
+        setEtiquetas((prevEtiquetas) =>
+          prevEtiquetas.map((etiqueta, index) =>
+            index === existingEtiquetaIndex
+              ? { ...etiqueta, Cantidad: etiqueta.Cantidad + parseInt(cantidad) }
+              : etiqueta
+          )
+        )
+      } else {
+        // Si no existe, agregar una nueva entrada
+        setEtiquetas((prevEtiquetas) => [
+          ...prevEtiquetas,
+          {
+            Articulo: articuloAComprar,
+            Descripcion: dataArticulo.Descripcion,
+            Precio: dataArticulo.Precio,
+            Cantidad: parseInt(cantidad),
+            Sucursal: selectedSucursalText
+          }
+        ])
+      }
+
       setDataArticulo(null) // Limpia los datos del artículo
       setCantidad('') // Limpia el campo de cantidad
     }
@@ -127,135 +147,210 @@ const Pedidos = () => {
       toast.warn('No hay etiquetas para imprimir.')
       return
     }
-
     setImprimiendo(true)
     try {
-      await window.print()
+      // Generar las etiquetas a imprimir, duplicadas según la cantidad
+      const etiquetasAImprimir = etiquetas.flatMap((etiqueta) =>
+        Array(etiqueta.Cantidad).fill(etiqueta)
+      )
 
-      if (etiquetaActual < etiquetas.length - 1) {
-        setEtiquetaActual(etiquetaActual + 1)
-      } else {
-        toast.success('Todas las etiquetas han sido impresas.')
-        setEtiquetaActual(0)
-        setEtiquetas([])
+      for (const etiqueta of etiquetasAImprimir) {
+        // Aquí es donde debes integrar tu lógica para imprimir cada etiqueta
+        // Por ejemplo, podrías enviar cada `etiqueta` a una función de impresión
+        console.log('Imprimiendo etiqueta:', etiqueta)
+        await window.print() // Aquí deberías reemplazar esto con tu lógica de impresión
       }
+
+      toast.success('Todas las etiquetas han sido impresas.')
+      setEtiquetaActual(0)
+      setEtiquetas([])
     } catch (error) {
-      toast.error('Error al imprimir la etiqueta.')
+      toast.error('Error al imprimir las etiquetas.')
     } finally {
       setImprimiendo(false)
+      setImprimir(false)
     }
   }
 
-  console.log(dataArticulo)
+  const cantidadesDeEti = etiquetas.map((eti) => eti.Cantidad)
+  const sumaTotalCantidades = cantidadesDeEti.reduce(
+    (acumulador, cantidad) => acumulador + cantidad,
+    0
+  )
+
+  // Función para eliminar una etiqueta específica
+  const eliminarEtiquetaEspecifica = (articulo, sucursal) => {
+    setEtiquetas((prevEtiquetas) =>
+      prevEtiquetas.filter(
+        (etiqueta) => !(etiqueta.Articulo === articulo && etiqueta.Sucursal === sucursal)
+      )
+    )
+  }
+
+  // Función para eliminar todas las etiquetas
+  const handleEliminarTodasLasEtiquetas = () => {
+    setEtiquetas([])
+    setCantidad('')
+    setArticuloAComprar('')
+  }
+
+  const handleIrAImprimir = () => {
+    setImprimir(true)
+  }
 
   return (
-    <section className="mercaderia">
-      {loading ? (
-        <div loader="interno" className="contenedor__loader">
-          <span className="loader"></span>
-          <span className="text__loader">Cargando</span>
-        </div>
-      ) : (
+    <>
+      {imprimir ? (
         <>
-          <section className="ventas">
-            <BtnVolver donde="/inicio" />
-
-            <ContenedorPages>
-              <article className="buscar__pedidos">
-                <article className="buscar__articulos">
-                  <div className="flex selector__articulo">
-                    <label>
-                      <input
-                        value={articuloAComprar}
-                        onChange={handleChangeArticuloPedidos}
-                        type="text" // Cambiar a texto para los códigos de artículo
-                        name="id_mercaderia"
-                        className="input"
-                      />
-                      <span>Artículo</span>
-                    </label>
-                    <SelectSucursales onChange={handleSucursalChange} />
-                    <BtnGeneral tocar={handleArticuloPedidos}>
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
-                        <path d="M21 21l-6 -6" />
-                      </svg>
-                      Buscar Artículo
-                    </BtnGeneral>
-                  </div>
-
-                  {dataArticulo && (
-                    <>
-                      <div className="flex">
-                        <label>
-                          <input
-                            value={cantidad}
-                            onChange={handleChangeCantidad}
-                            type="number"
-                            name="cantidad"
-                            className="input"
-                          />
-                          <span>Cantidad</span>
-                        </label>
-                        <BtnGeneral
-                          tocar={cargarEtiqueta}
-                          disabled={!selectedSucursalId} // Deshabilitar el botón si no hay una sucursal seleccionada
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M18 4h-6a3 3 0 0 0 -3 3v7" />
-                            <path d="M13 10l-4 4l-4 -4m8 5l-4 4l-4 -4" />
-                          </svg>
-                          Cargar Pedido
-                        </BtnGeneral>
-                      </div>
-                      <div className="articulo__info">
-                        <h3>Información del Artículo:</h3>
-                        <p>
-                          Descripción: <strong>{dataArticulo.Descripcion}</strong>
-                        </p>
-                        <p>
-                          Precio: <strong>{dataArticulo.Precio}</strong>
-                        </p>
-                        <p>
-                          Artículo: <strong>{articuloAComprar}</strong>
-                        </p>
-                      </div>
-                    </>
-                  )}
-
-                </article>
-              </article>
-
-              <article className="table__container">
-
-                <div className="table-wrapper table__pedidos">
-                  <TablesProductos data={mercaderia} filters={filters} />
-                </div>
-                <br />
-                <div className="total__eti">
-                    <strong>Total Etiquetas: {etiquetas.length}</strong>
-                  </div>
-                <div className="table-wrapper table__pedidos">
-                  <TablesProductos data={etiquetas} filters={filters} />
-                </div>
-              </article>
-
-              <BtnGeneral claseBtn="btn__imprimir" tocar={imprimirEtiqueta}>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                  <path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" />
-                  <path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" />
-                  <path d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z" />
-                </svg>
-                Imprimir
-              </BtnGeneral>
-            </ContenedorPages>
-          </section>
+          <BtnGeneral claseBtn="btn__imprimir" tocar={imprimirEtiqueta}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" />
+              <path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" />
+              <path d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z" />
+            </svg>
+            Imprimir
+          </BtnGeneral>
+          {etiquetas.map((eti, i) => (
+            <EtiquetaImpresion
+              key={i}
+              descripcion={eti.Descripcion}
+              articulo={eti.Articulo}
+              precio={eti.Precio}
+              sucursal={eti.Sucursal}
+            />
+          ))}
         </>
+      ) : (
+        <section className="mercaderia">
+          {loading ? (
+            <div loader="interno" className="contenedor__loader">
+              <span className="loader"></span>
+              <span className="text__loader">Cargando</span>
+            </div>
+          ) : (
+            <>
+              <section className="ventas">
+                <BtnVolver donde="/inicio" />
+
+                <ContenedorPages>
+                  <article className="buscar__pedidos">
+                    <article className="buscar__articulos">
+                      <div className="btns__inputs__pedidos">
+                        <div className="flex selector__articulo">
+                          <label>
+                            <input
+                              value={articuloAComprar}
+                              onChange={handleChangeArticuloPedidos}
+                              type="text" // Cambiar a texto para los códigos de artículo
+                              name="id_mercaderia"
+                              className="input"
+                            />
+                            <span>Artículo</span>
+                          </label>
+                          <SelectSucursales onChange={handleSucursalChange} />
+                          <BtnGeneral tocar={handleArticuloPedidos}>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                              <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                              <path d="M21 21l-6 -6" />
+                            </svg>
+                            Buscar Artículo
+                          </BtnGeneral>
+                        </div>
+                        {dataArticulo && (
+                          <div className="flex selector__articulo">
+                            <label>
+                              <input
+                                value={cantidad}
+                                onChange={handleChangeCantidad}
+                                type="number"
+                                name="cantidad"
+                                className="input"
+                              />
+                              <span>Cantidad</span>
+                            </label>
+                            <BtnGeneral
+                              tocar={cargarEtiqueta}
+                              disabled={!selectedSucursalId} // Deshabilitar el botón si no hay una sucursal seleccionada
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M18 4h-6a3 3 0 0 0 -3 3v7" />
+                                <path d="M13 10l-4 4l-4 -4m8 5l-4 4l-4 -4" />
+                              </svg>
+                              Cargar Pedido
+                            </BtnGeneral>
+                          </div>
+                        )}
+                      </div>
+
+                      {dataArticulo && (
+                        <div>
+                          <h3>Información del Artículo:</h3>
+                          <p>
+                            Descripción: <strong>{dataArticulo.Descripcion}</strong>
+                          </p>
+                          <p>
+                            Precio: <strong>{dataArticulo.Precio}</strong>
+                          </p>
+                          <p>
+                            Artículo: <strong>{articuloAComprar}</strong>
+                          </p>
+                          <p>
+                            Sucursal: <strong>{selectedSucursalText}</strong>
+                          </p>
+                        </div>
+                      )}
+                      {etiquetas.length > 0 && (
+                        <>
+                          <BtnGeneral claseBtn="btn__imprimir" tocar={handleIrAImprimir}>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                              <path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" />
+                              <path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" />
+                              <path d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z" />
+                            </svg>
+                            Imprimir
+                          </BtnGeneral>
+                          <BtnGeneral
+                            claseBtn="btn__eliminar"
+                            tocar={handleEliminarTodasLasEtiquetas}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                              <path d="M4 7l16 0" />
+                              <path d="M10 11l0 6" />
+                              <path d="M14 11l0 6" />
+                              <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                              <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                            </svg>
+                            Anular Todo
+                          </BtnGeneral>
+                        </>
+                      )}
+                    </article>
+                  </article>
+
+                  <article className="table__container">
+                    <div className="table-wrapper table__pedidos">
+                      <TablesProductos data={mercaderia} filters={filters} />
+                    </div>
+                    <br />
+                    <div>
+                      <strong>Total Etiquetas: {sumaTotalCantidades}</strong>
+                    </div>
+                    <div className="table-wrapper table__pedidos">
+                      <TablesProductos data={etiquetas} filters={filters} />
+                    </div>
+                  </article>
+                </ContenedorPages>
+              </section>
+            </>
+          )}
+        </section>
       )}
-    </section>
+    </>
   )
 }
 
