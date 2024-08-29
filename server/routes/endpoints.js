@@ -15,6 +15,7 @@ import {
 } from "../controllers/GET/pedirMateriales.js";
 import {
     pedirFallasAdmin,
+    pedirFallasEmpleado,
     pedirInversionAdmin,
     pedirMercaderiaAdmin,
     pedirPapeleraAdmin,
@@ -67,6 +68,7 @@ router.get("/papelera", authenticateToken, pedirPapeleraAdmin);
 router.get("/inversion", authenticateToken, pedirInversionAdmin);
 // Ruta para obtener la Fallas registradas del stock para el admin
 router.get("/fallas", authenticateToken, pedirFallasAdmin);
+router.get("/fallas/:idSucursal", authenticateToken, pedirFallasEmpleado);
 
 router.get("/ventas-semana", authenticateToken, pedirVentasSemana);
 

@@ -96,6 +96,25 @@ export const obtenerFallasAdmin = async () => {
   }
 }
 
+export const obtenerFallasEmpelado = async (idSucursal) => {
+  try {
+    const response = await fetch(`http://localhost:3000/fallas/${idSucursal}`, {
+      method: 'GET',
+      credentials: 'include'
+    })
+
+    if (!response.ok) {
+      throw new Error('Error al obtener el stock.')
+    }
+
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.error('Error en la solicitud:', error)
+    throw error
+  }
+}
+
 export const obtenerInversionAdmin = async () => {
   try {
     const response = await fetch(`http://localhost:3000/inversion`, {

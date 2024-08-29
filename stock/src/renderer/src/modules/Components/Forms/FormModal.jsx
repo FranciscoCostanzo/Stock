@@ -2,7 +2,7 @@ import { useContext, useRef, useState } from 'react'
 import { AuthContext } from '../../Auth/context/AuthContext'
 import { toast } from 'react-toastify'
 
-const FormModal = ({ fieldsForm, endpoint, onClose, tituloForm, messageForm }) => {
+const FormModal = ({ fieldsForm, endpoint, onClose, tituloForm, messageForm, additionalData }) => {
   const { user } = useContext(AuthContext) // obtener el usuario desde el contexto
 
   const initialState = fieldsForm.reduce((acc, field) => {
@@ -23,6 +23,9 @@ const FormModal = ({ fieldsForm, endpoint, onClose, tituloForm, messageForm }) =
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    const dataToSend = { ...formData, ...additionalData };
+
+    console.log(dataToSend)
     try {
       const response = await fetch(endpoint, {
         method: 'POST',
@@ -30,7 +33,7 @@ const FormModal = ({ fieldsForm, endpoint, onClose, tituloForm, messageForm }) =
           'Content-Type': 'application/json'
         },
         credentials: 'include',
-        body: JSON.stringify(formData)
+        body: JSON.stringify(dataToSend)
       })
 
       if (!response.ok) {

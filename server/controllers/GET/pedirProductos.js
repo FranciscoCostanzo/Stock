@@ -135,6 +135,37 @@ export const pedirFallasAdmin = async (req, res) => {
   }
 };
 
+export const pedirFallasEmpleado = async (req, res) => {
+  // Obtén el idSucursal desde los parámetros de la URL
+  const { idSucursal } = req.params;
+
+  try {
+    // Consulta para obtener las fallas con los alias y joins necesarios, y filtrar por id_sucursal
+    const [results] = await db.query(`
+      SELECT 
+        Mercaderia.id AS Articulo,
+        Mercaderia.descripcion AS Descripcion,
+        CONCAT(Sucursal.ciudad, ' - ', Sucursal.nombre) AS Sucursal,
+        Fallas.cantidad,
+        CONCAT(Usuarios.nombre, ' - ', Usuarios.rol) AS Usuario,
+        DATE_FORMAT(Fallas.fecha, '%Y/%m/%d') AS Fecha,
+        Fallas.hora
+      FROM Fallas
+      JOIN Mercaderia ON Fallas.id_mercaderia = Mercaderia.id
+      JOIN Sucursal ON Fallas.id_sucursal = Sucursal.id
+      JOIN Usuarios ON Fallas.id_usuario = Usuarios.id
+      WHERE Fallas.id_sucursal = ?
+    `, [idSucursal]);
+
+    // Enviar los resultados como respuesta JSON
+    res.json(results);
+  } catch (error) {
+    console.error("Error al obtener las fallas:", error);
+    res.status(500).json({ message: "Error al obtener las fallas." });
+  }
+};
+
+
 export const pedirInversionAdmin = async (req, res) => {
   try {
     // Consulta para obtener el stock total, inversión y retorno para cada producto
