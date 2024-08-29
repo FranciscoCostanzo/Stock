@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../../context/AuthContext'
-import { Link } from 'react-router-dom'
 
 const AuthTimeStampAviso = () => {
   const { user, setUser } = useContext(AuthContext)
@@ -47,21 +46,22 @@ const AuthTimeStampAviso = () => {
     <div>
       {sessionExpired
         ? aviso && (
-          <article className="aviso__time__stamp">
-            <div className="aviso">
-              <p>
-                Tu sesión ha expirado. Por favor, vuelve a <strong onClick={handleCerrarAviso}>iniciar sesión</strong>
-              </p>
-            </div>
-          </article>
-        )
+            <article className="aviso__time__stamp">
+              <div className="aviso">
+                <p>
+                  Tu sesión ha expirado. Por favor, vuelve a{' '}
+                  <strong onClick={handleCerrarAviso}>iniciar sesión</strong>
+                </p>
+              </div>
+            </article>
+          )
         : timeRemaining > 0 && (
-          <article className="contador__time__stamp">
-            <p>
-              Tu sesión expirará en: <strong>{formatTime(timeRemaining)}</strong>
-            </p>
-          </article>
-        )}
+            <article className="contador__time__stamp">
+              <p>
+                Tu sesión expirará en: <strong>{formatTime(timeRemaining)}</strong>
+              </p>
+            </article>
+          )}
     </div>
   )
 }

@@ -7,7 +7,7 @@ const Ventas = () => {
     <section className="ventas">
       <BtnVolver donde="/inicio" />
       <ContenedorPages>
-        <FormVentas/>
+        <FormVentas />
       </ContenedorPages>
       <article className="contenedor__btns__sigpestanas">
         <Link className="btn__pestanas__siguiente" to="/generar-cambios">

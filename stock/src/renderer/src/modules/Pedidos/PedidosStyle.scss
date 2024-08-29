@@ -1,0 +1,85 @@
+/* En tu archivo CSS (por ejemplo, styles.css) */
+
+.print-area {
+  width: 2in;
+  height: 1.1in;
+  border: 1px solid #000;
+  padding: 10px;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+
+  .print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2in;
+    height: 1.8in;
+    border: 0;
+    padding: 0;
+  }
+}
+
+.buscar__pedidos {
+  padding: 20px;
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+  position: relative;
+
+  .buscar__articulos {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  
+    .selector__articulo{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 120px;
+    }
+
+    .total__eti {
+      width: 70%;
+      border: 1px solid;
+      padding: 6px;
+      border-radius: 8px;
+      font-size: 20px;
+    }
+
+    .articulo__info {
+      width: 100%;
+    }
+
+    .btn__buscar__pedidos {
+      width: fit-content;
+      height: fit-content;
+    }
+
+    .btn__cargar__etiqueta{
+      width: 70%;
+      height: fit-content;
+    }
+  }
+}
+
+.btn__imprimir {
+  position: absolute;
+  right: 20px;
+
+  p {
+    font-weight: bold;
+  }
+}

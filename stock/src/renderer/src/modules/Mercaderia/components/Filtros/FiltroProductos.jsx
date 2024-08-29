@@ -1,40 +1,40 @@
 // Filtro.jsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 
 // Función para aplicar el debounce
 const useDebounce = (value, delay) => {
-  const [debouncedValue, setDebouncedValue] = useState(value);
+  const [debouncedValue, setDebouncedValue] = useState(value)
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
+      setDebouncedValue(value)
+    }, delay)
 
     return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
+      clearTimeout(handler)
+    }
+  }, [value, delay])
 
-  return debouncedValue;
-};
+  return debouncedValue
+}
 
 const Filtro = ({ columns, onFilterChange }) => {
-  const [localFilters, setLocalFilters] = useState({});
-  const debouncedFilters = useDebounce(localFilters, 300);
+  const [localFilters, setLocalFilters] = useState({})
+  const debouncedFilters = useDebounce(localFilters, 300)
 
   const handleInputChange = (column, value) => {
-    const newFilters = { ...localFilters, [column]: value };
-    setLocalFilters(newFilters);
-  };
+    const newFilters = { ...localFilters, [column]: value }
+    setLocalFilters(newFilters)
+  }
 
   useEffect(() => {
-    onFilterChange(debouncedFilters);
-  }, [debouncedFilters, onFilterChange]);
+    onFilterChange(debouncedFilters)
+  }, [debouncedFilters, onFilterChange])
 
-  return ( 
-    <div className='contenedor__filtros'>
+  return (
+    <div className="contenedor__filtros">
       {columns.map((column) => (
-        <div  key={column}>
+        <div key={column}>
           <input
             type="text"
             onChange={(e) => handleInputChange(column, e.target.value)}
@@ -43,7 +43,7 @@ const Filtro = ({ columns, onFilterChange }) => {
         </div>
       ))}
     </div>
-  );
-};
+  )
+}
 
-export default Filtro;
+export default Filtro

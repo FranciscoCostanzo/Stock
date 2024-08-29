@@ -17,6 +17,7 @@ import Cambios from './modules/Ventas/Cambios'
 import Fallas from './modules/Mercaderia/Fallas'
 import Configuracion from './modules/Configuracion/Configuracion.jsx'
 import InternetStatus from './modules/Components/InternetStatus/InternetStatus.jsx'
+import Pedidos from './modules/Pedidos/Pedidos.jsx'
 
 const App = () => {
   useEffect(() => {
@@ -38,30 +39,32 @@ const App = () => {
 
   return (
     <>
-    <Header/>
-    <Routes>
-      <Route element={<AuthRouter requireAuth={false} />}>
-        <Route path="/" element={<Login />} />
-      </Route>
-      <Route element={<AuthRouter />}>
-        <Route path="/inicio" element={<Dashboard />} />
+      <Header />
+      <Routes>
+        <Route element={<AuthRouter requireAuth={false} />}>
+          <Route path="/" element={<Login />} />
+        </Route>
+        <Route element={<AuthRouter />}>
+          <Route path="/inicio" element={<Dashboard />} />
 
-        <Route path="/mercaderia" element={<Mercaderia />} />
-        <Route path="/stock" element={<Stock />} />
-        <Route path="/papelera" element={<Papelera />} />
-        <Route path="/inversion" element={<Inversion />} />
-        <Route path="/fallas" element={<Fallas />} />
+          <Route path="/mercaderia" element={<Mercaderia />} />
+          <Route path="/stock" element={<Stock />} />
+          <Route path="/papelera" element={<Papelera />} />
+          <Route path="/inversion" element={<Inversion />} />
+          <Route path="/fallas" element={<Fallas />} />
 
-        <Route path="/ventas" element={<Ventas />} />
-        <Route path="/generar-cambios" element={<Cambios />} />
-        <Route path="/ver-ventas" element={<VerVentas />} />
+          <Route path="/ventas" element={<Ventas />} />
+          <Route path="/generar-cambios" element={<Cambios />} />
+          <Route path="/ver-ventas" element={<VerVentas />} />
 
-        <Route path="/configuracion" element={<Configuracion />} />
-        <Route path="/register" element={<Register />} />
-      </Route>
-    </Routes>
-    <AuthTimeStampAviso/>
-    <InternetStatus/>
+          <Route path="/pedidos" element={<Pedidos />} />
+
+          <Route path="/configuracion" element={<Configuracion />} />
+          <Route path="/register" element={<Register />} />
+        </Route>
+      </Routes>
+      <AuthTimeStampAviso />
+      <InternetStatus />
     </>
   )
 }

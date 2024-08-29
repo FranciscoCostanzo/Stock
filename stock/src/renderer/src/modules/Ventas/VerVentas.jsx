@@ -55,62 +55,65 @@ const VerVentas = () => {
   //   return acumulador;
   // }, []);
 
-  const ventasUnificadas = ventasSemana.map(({
-    id_venta,
-    Fecha,
-    Hora,
-    Usuario,
-    Sucursal,
-    Metodo,
-    Tarjeta,
-    NombreCliente,
-    ApellidoCliente,
-    DNICliente,
-    Descripcion,
-    Adelanto,
-    total_venta,
-    Total
-  }) => ({
-    id_venta,
-    Fecha,
-    Hora,
-    Usuario,
-    Sucursal,
-    Metodo,
-    Tarjeta,
-    NombreCliente,
-    ApellidoCliente,
-    DNICliente,
-    Descripcion,
-    Adelanto: parseFloat(Adelanto),
-    total_venta: parseFloat(total_venta),
-    Total: parseFloat(Total)
-  }));
+  const ventasUnificadas = ventasSemana.map(
+    ({
+      id_venta,
+      Fecha,
+      Hora,
+      Usuario,
+      Sucursal,
+      Metodo,
+      Tarjeta,
+      NombreCliente,
+      ApellidoCliente,
+      DNICliente,
+      Descripcion,
+      Adelanto,
+      total_venta,
+      Total
+    }) => ({
+      id_venta,
+      Fecha,
+      Hora,
+      Usuario,
+      Sucursal,
+      Metodo,
+      Tarjeta,
+      NombreCliente,
+      ApellidoCliente,
+      DNICliente,
+      Descripcion,
+      Adelanto: parseFloat(Adelanto),
+      total_venta: parseFloat(total_venta),
+      Total: parseFloat(Total)
+    })
+  )
 
-  const filtros = ventasSemana.map(({
-    Fecha,
-    Usuario,
-    Sucursal,
-    Metodo,
-    Tarjeta,
-    NombreCliente,
-    ApellidoCliente,
-    DNICliente,
-    Descripcion,
-    Total
-  }) => ({
-    Fecha,
-    Usuario,
-    Sucursal,
-    Metodo,
-    Tarjeta,
-    NombreCliente,
-    ApellidoCliente,
-    DNICliente,
-    Descripcion,
-    Total: parseFloat(Total)
-  }));
-  
+  const filtros = ventasSemana.map(
+    ({
+      Fecha,
+      Usuario,
+      Sucursal,
+      Metodo,
+      Tarjeta,
+      NombreCliente,
+      ApellidoCliente,
+      DNICliente,
+      Descripcion,
+      Total
+    }) => ({
+      Fecha,
+      Usuario,
+      Sucursal,
+      Metodo,
+      Tarjeta,
+      NombreCliente,
+      ApellidoCliente,
+      DNICliente,
+      Descripcion,
+      Total: parseFloat(Total)
+    })
+  )
 
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters)

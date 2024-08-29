@@ -46,13 +46,9 @@ const Register = () => {
   ]
 
   return (
-    <section style={{position: "relative"}}>
-        <BtnVolver donde="/configuracion"/>
-    <Form
-      fields={camposRegistro}
-      tipoDeForm={true}
-      endpoint="http://localhost:3000/register"
-    />
+    <section style={{ position: 'relative' }}>
+      <BtnVolver donde="/configuracion" />
+      <Form fields={camposRegistro} tipoDeForm={true} endpoint="http://localhost:3000/register" />
     </section>
   )
 }

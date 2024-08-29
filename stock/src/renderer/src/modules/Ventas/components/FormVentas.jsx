@@ -76,10 +76,10 @@ const FormVentas = () => {
 
       const total_venta = esPorcentajeEnTarjeta
         ? truncarADosDecimales(
-          truncarADosDecimales(precioTotalArticulo - adelanto) +
-          truncarADosDecimales(precioTotalArticulo - adelanto) *
-          (parseFloat(dataVentasFields.porcentaje) / 100)
-        )
+            truncarADosDecimales(precioTotalArticulo - adelanto) +
+              truncarADosDecimales(precioTotalArticulo - adelanto) *
+                (parseFloat(dataVentasFields.porcentaje) / 100)
+          )
         : truncarADosDecimales(precioTotalArticulo - adelanto)
 
       return {
@@ -130,52 +130,50 @@ const FormVentas = () => {
     setDataVentasFields(newFields)
   }
 
-  const [dataArticulo, setDataArticulo] = useState({ message: '' });
-  const [articuloAComprar, setArticuloAComprar] = useState('');
+  const [dataArticulo, setDataArticulo] = useState({ message: '' })
+  const [articuloAComprar, setArticuloAComprar] = useState('')
 
   const handlePedirPrecioArticulo = async () => {
-    const articuloTrimmed = articuloAComprar.trim();
+    const articuloTrimmed = articuloAComprar.trim()
 
     if (!articuloTrimmed) {
-      toast.warn('El campo de artículo está vacío');
-      return;
+      toast.warn('El campo de artículo está vacío')
+      return
     }
 
     try {
-      const data = await obtenerArticuloEmpleado(articuloTrimmed, user.sucursal.id);
-      setDataArticulo(data); // Set the state with the fetched data
+      const data = await obtenerArticuloEmpleado(articuloTrimmed, user.sucursal.id)
+      setDataArticulo(data) // Set the state with the fetched data
     } catch (error) {
-      console.error(error);
+      console.error(error)
 
       if (error.response) {
-        const { error: errorCode, message } = error.response.data;
+        const { error: errorCode, message } = error.response.data
 
         switch (errorCode) {
-          case "NoStock":
-            toast.warn(message);
-            setDataArticulo({ message }); // Set dataArticulo with an object containing the message
-            break;
-          case "NoArticulo":
-            toast.warn(message);
-            setDataArticulo({ message }); // Set dataArticulo with an object containing the message
-            break;
-          case "ServerError":
-            toast.error(message);
-            setDataArticulo({ message }); // Set dataArticulo with an object containing the message
-            break;
+          case 'NoStock':
+            toast.warn(message)
+            setDataArticulo({ message }) // Set dataArticulo with an object containing the message
+            break
+          case 'NoArticulo':
+            toast.warn(message)
+            setDataArticulo({ message }) // Set dataArticulo with an object containing the message
+            break
+          case 'ServerError':
+            toast.error(message)
+            setDataArticulo({ message }) // Set dataArticulo with an object containing the message
+            break
           default:
-            toast.error("Ocurrió un error inesperado.");
-            setDataArticulo({ message: "Ocurrió un error inesperado." }); // Default message
-            break;
+            toast.error('Ocurrió un error inesperado.')
+            setDataArticulo({ message: 'Ocurrió un error inesperado.' }) // Default message
+            break
         }
       } else {
-        toast.error("No hay stock disponible o el artículo no existe.");
-        setDataArticulo({ message: "Error al conectar con el servidor." }); // Default message
+        toast.error('No hay stock disponible o el artículo no existe.')
+        setDataArticulo({ message: 'Error al conectar con el servidor.' }) // Default message
       }
     }
-  };
-  
-  
+  }
 
   const handleChangeArticuloAComprar = (e) => {
     setArticuloAComprar(e.target.value) // Actualiza el estado con el valor del input
@@ -195,7 +193,7 @@ const FormVentas = () => {
           // Si existe, incrementa la cantidad
           return prevCargas.map((articulo) =>
             articulo.id_mercaderia === dataArticulo.id_mercaderia &&
-              articulo.Descripcion === dataArticulo.Descripcion
+            articulo.Descripcion === dataArticulo.Descripcion
               ? { ...articulo, Cantidad: articulo.Cantidad + 1 }
               : articulo
           )
@@ -392,13 +390,18 @@ const FormVentas = () => {
           </BtnGeneral>
         </article>
         <article className="resultado">
-        <p>
-  Descripción: <strong>{dataArticulo && dataArticulo.Descripcion ? dataArticulo.Descripcion : dataArticulo.message}</strong>
-</p>
-<p>
-  Precio de venta: <strong>{dataArticulo && dataArticulo.Precio ? `$${dataArticulo.Precio}` : ''}</strong>
-</p>
-
+          <p>
+            Descripción:{' '}
+            <strong>
+              {dataArticulo && dataArticulo.Descripcion
+                ? dataArticulo.Descripcion
+                : dataArticulo.message}
+            </strong>
+          </p>
+          <p>
+            Precio de venta:{' '}
+            <strong>{dataArticulo && dataArticulo.Precio ? `$${dataArticulo.Precio}` : ''}</strong>
+          </p>
         </article>
         <BtnGeneral
           tocar={finalizado ? null : handleCargarArticulo}
@@ -510,7 +513,16 @@ const FormVentas = () => {
                         </label>
                       </div>
                       <p>Cambio: {cambio}</p>
-                      <button onClick={handleSubmit}>Guardar Venta</button>
+                      <BtnGeneral claseBtn="btn__guardar__venta" tocar={handleSubmit}>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                          <path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                          <path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                          <path d="M17 17h-11v-14h-2" />
+                          <path d="M6 5l14 1l-1 7h-13" />
+                        </svg>
+                        Guardar Venta
+                      </BtnGeneral>
                     </>
                   )}
                   {dataVentasFields.metodo_de_pago === 'Tarjeta' && (

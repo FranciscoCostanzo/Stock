@@ -36,8 +36,8 @@ const Inversion = () => {
   }
 
   if (mercaderia.length > 0) {
-    const totalInversion = mercaderia.reduce((acc, item) => acc + item.Inversion, 0);
-    console.log("Inversión total:", mercaderia.Inversion);
+    const totalInversion = mercaderia.reduce((acc, item) => acc + item.Inversion, 0)
+    console.log('Inversión total:', mercaderia.Inversion)
   }
 
   return (

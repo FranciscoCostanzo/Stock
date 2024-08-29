@@ -1,11 +1,13 @@
-import { app, shell, BrowserWindow, Menu, screen, ipcMain, session } from 'electron'
+import { app, shell, BrowserWindow, Menu, screen, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
+let mainWindow
+
 function createWindow() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width,
     height,
     show: true,
@@ -18,6 +20,8 @@ function createWindow() {
       sandbox: false
     }
   })
+
+  
 
   mainWindow.setMinimumSize(1550, 820)
 
@@ -136,6 +140,14 @@ app.whenReady().then(() => {
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
+
+  // Abrir el puerto cuando la aplicación está lista
+  openSerialPort()
+})
+
+// Manejar el evento 'before-quit' para cerrar el puerto correctamente
+app.on('before-quit', () => {
+  closeSerialPort()
 })
 
 app.on('window-all-closed', () => {

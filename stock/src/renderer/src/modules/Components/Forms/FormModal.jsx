@@ -8,7 +8,7 @@ const FormModal = ({ fieldsForm, endpoint, onClose, tituloForm, messageForm }) =
   const initialState = fieldsForm.reduce((acc, field) => {
     return { ...acc, [field.name]: field.name === 'id_usuario' ? user.id : '' } // Setea id_usuario desde el contexto
   }, {})
-  
+
   const [formData, setFormData] = useState(initialState)
   const inputsRef = useRef([])
 
@@ -25,29 +25,29 @@ const FormModal = ({ fieldsForm, endpoint, onClose, tituloForm, messageForm }) =
 
     try {
       const response = await fetch(endpoint, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json'
         },
         credentials: 'include',
-        body: JSON.stringify(formData),
-      });
+        body: JSON.stringify(formData)
+      })
 
       if (!response.ok) {
-        throw new Error("Error en la solicitud");
+        throw new Error('Error en la solicitud')
       }
 
-      const data = await response.json();
-      console.log("Respuesta del servidor:", data);
+      const data = await response.json()
+      console.log('Respuesta del servidor:', data)
 
       // Notificación de éxito
-      toast.success('¡Enviado con éxito!', { autoClose: 5000 });
-      
-      onClose(); // Cerrar el modal
+      toast.success('¡Enviado con éxito!', { autoClose: 5000 })
+
+      onClose() // Cerrar el modal
       window.location.reload()
     } catch (error) {
-      console.error("Error:", error);
-      toast.error('Error al enviar.', { autoClose: 5000 });
+      console.error('Error:', error)
+      toast.error('Error al enviar.', { autoClose: 5000 })
     }
   }
 

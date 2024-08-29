@@ -28,7 +28,7 @@ export const obtenerTarjetas = async () => {
   try {
     const response = await fetch(`http://localhost:3000/tarjetas`, {
       method: 'GET',
-      credentials: 'include',
+      credentials: 'include'
     })
 
     if (!response.ok) {
@@ -47,7 +47,7 @@ export const obtenerVentasSemana = async () => {
   try {
     const response = await fetch(`http://localhost:3000/ventas-semana`, {
       method: 'GET',
-      credentials: 'include',
+      credentials: 'include'
     })
 
     if (!response.ok) {

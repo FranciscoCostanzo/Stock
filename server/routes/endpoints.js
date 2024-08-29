@@ -38,6 +38,7 @@ import {
     pedirArticuloEmpleado,
 } from "../controllers/POST/ventasTools.js";
 import { pedirVentasSemana } from "../controllers/GET/pedirVentas.js";
+import { pedirArticuloPedidos } from "../controllers/POST/pedidosTools.js";
 
 const router = Router();
 
@@ -104,4 +105,5 @@ router.get("/tarjetas-admin", authenticateToken, pedirTarjetasAdmin);
 router.get("/usuarios-admin", authenticateToken, pedirUsuariosAdmin);
 router.get("/sucursales-admin", authenticateToken, pedirSucursalesAdmin);
 
+router.post("/articulo-pedidos", authenticateToken, pedirArticuloPedidos);
 export default router;

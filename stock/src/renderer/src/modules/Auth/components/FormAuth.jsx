@@ -140,7 +140,7 @@ const Form = ({ fields, endpoint, tipoDeForm }) => {
   }
 
   return (
-    <form tipodeformulario={tipoDeForm && "register"} className="form" onSubmit={handleSubmit}>
+    <form tipodeformulario={tipoDeForm && 'register'} className="form" onSubmit={handleSubmit}>
       {tipoDeForm === true ? (
         <>
           <p className="title">Registrarse</p>
@@ -233,16 +233,10 @@ const Form = ({ fields, endpoint, tipoDeForm }) => {
           <button type="submit" className="submit">
             Crear Cuenta
           </button>
-          {/* <p className="signin">
-                        ¿Ya tienes una cuenta? <Link to="/">Iniciar Sesión</Link>
-                    </p> */}
         </>
       ) : (
         <>
           <button className="submit">Iniciar sesión</button>
-          {/* <p className="signin">
-                        ¿No tienes una cuenta? <Link to="/register">Regístrate</Link>
-                    </p> */}
         </>
       )}
     </form>
