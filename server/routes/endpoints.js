@@ -38,7 +38,7 @@ import {
     pedirArticuloEmpleado,
 } from "../controllers/POST/ventasTools.js";
 import { pedirVentasSemana } from "../controllers/GET/pedirVentas.js";
-import { pedirArticuloPedidos } from "../controllers/POST/pedidosTools.js";
+import { EnviarPedidoAdmin, pedirArticuloPedidos, pedirPedidosAdmin, pedirPedidosEmpleado, pedirPedidosEmpleadoPendientes, recibirPedido } from "../controllers/POST/pedidosTools.js";
 
 const router = Router();
 
@@ -106,4 +106,11 @@ router.get("/usuarios-admin", authenticateToken, pedirUsuariosAdmin);
 router.get("/sucursales-admin", authenticateToken, pedirSucursalesAdmin);
 
 router.post("/articulo-pedidos", authenticateToken, pedirArticuloPedidos);
+router.post("/recibir-pedidos", authenticateToken, recibirPedido);
+router.post("/pedidos", authenticateToken, EnviarPedidoAdmin);
+
+router.get("/ver-pedidos-admin", authenticateToken, pedirPedidosAdmin);
+router.get("/ver-pedidos-empleado/:id_sucursal", authenticateToken, pedirPedidosEmpleado);
+router.get("/ver-pedidos-empleado-pendientes/:id_sucursal", authenticateToken, pedirPedidosEmpleadoPendientes);
+
 export default router;

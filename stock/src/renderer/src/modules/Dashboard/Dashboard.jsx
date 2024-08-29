@@ -8,7 +8,7 @@ const Dashbord = () => {
   const btns = [
     { btn: 'Mercaderia', to: '/stock', toAdmin: '/mercaderia', roles: ['admin', 'empleado'] },
     { btn: 'Ventas', to: '/ventas', toAdmin: '/ventas', roles: ['admin', 'empleado'] },
-    { btn: 'Pedidos', toAdmin: '/pedidos', roles: ['admin', 'empleado'] },
+    { btn: 'Pedidos', to:"/recibir-pedidos",  toAdmin: '/pedidos', roles: ['admin', 'empleado'] },
     { btn: 'Caja', roles: ['admin', 'empleado'] },
     { btn: 'Codigo de barra', roles: ['admin'] },
     { btn: 'Configuracion', toAdmin: '/configuracion', roles: ['admin'] }

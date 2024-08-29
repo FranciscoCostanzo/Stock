@@ -9,6 +9,7 @@ import TablesProductos from '../Components/Table/TablesProductos'
 import SelectSucursales from '../Components/Inputs/SelectSucursales'
 import ContenedorPages from '../Components/Contenedor/ContenedorPages'
 import EtiquetaImpresion from './components/EtiquetaImpresion'
+import { Link } from 'react-router-dom'
 
 const Pedidos = () => {
   const { user } = useContext(AuthContext)
@@ -132,7 +133,8 @@ const Pedidos = () => {
             Descripcion: dataArticulo.Descripcion,
             Precio: dataArticulo.Precio,
             Cantidad: parseInt(cantidad),
-            Sucursal: selectedSucursalText
+            Sucursal: selectedSucursalText,
+            selectedSucursalId: selectedSucursalId
           }
         ])
       }
@@ -142,25 +144,17 @@ const Pedidos = () => {
     }
   }
 
-  const imprimirEtiqueta = async () => {
+  const etiquetasParaTabla = etiquetas.map(({ selectedSucursalId, ...rest }) => rest);
+
+
+  const HandleImprimirEtiqueta = async () => {
     if (etiquetas.length === 0) {
       toast.warn('No hay etiquetas para imprimir.')
       return
     }
     setImprimiendo(true)
     try {
-      // Generar las etiquetas a imprimir, duplicadas según la cantidad
-      const etiquetasAImprimir = etiquetas.flatMap((etiqueta) =>
-        Array(etiqueta.Cantidad).fill(etiqueta)
-      )
-
-      for (const etiqueta of etiquetasAImprimir) {
-        // Aquí es donde debes integrar tu lógica para imprimir cada etiqueta
-        // Por ejemplo, podrías enviar cada `etiqueta` a una función de impresión
-        console.log('Imprimiendo etiqueta:', etiqueta)
-        await window.print() // Aquí deberías reemplazar esto con tu lógica de impresión
-      }
-
+      await window.print()
       toast.success('Todas las etiquetas han sido impresas.')
       setEtiquetaActual(0)
       setEtiquetas([])
@@ -172,20 +166,13 @@ const Pedidos = () => {
     }
   }
 
+
   const cantidadesDeEti = etiquetas.map((eti) => eti.Cantidad)
   const sumaTotalCantidades = cantidadesDeEti.reduce(
     (acumulador, cantidad) => acumulador + cantidad,
     0
   )
 
-  // Función para eliminar una etiqueta específica
-  const eliminarEtiquetaEspecifica = (articulo, sucursal) => {
-    setEtiquetas((prevEtiquetas) =>
-      prevEtiquetas.filter(
-        (etiqueta) => !(etiqueta.Articulo === articulo && etiqueta.Sucursal === sucursal)
-      )
-    )
-  }
 
   // Función para eliminar todas las etiquetas
   const handleEliminarTodasLasEtiquetas = () => {
@@ -194,15 +181,53 @@ const Pedidos = () => {
     setArticuloAComprar('')
   }
 
-  const handleIrAImprimir = () => {
-    setImprimir(true)
+  const construirFormDataDinamico = () => {
+    return etiquetas.map((etiq) => {
+      return {
+        id_usuario: parseInt(user.id, 10),  // Asegura que el ID del usuario sea un número entero
+        id_sucursal: parseInt(etiq.selectedSucursalId, 10),  // Usa el campo temporal
+        id_mercaderia: parseInt(etiq.Articulo, 10),  // Asegura que el ID de la mercadería sea un número entero
+        cantidad: parseInt(etiq.Cantidad, 10)  // Asegura que la cantidad sea un número entero
+      };
+    });
   }
+
+  const handleIrAImprimir = async () => {
+    setImprimir(true)
+
+    // Construir los datos de FormData dinámicamente
+    const data = construirFormDataDinamico()
+    try {
+      const response = await fetch('http://localhost:3000/pedidos', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data),
+        credentials: 'include'
+      })
+
+      if (!response.ok) {
+        throw new Error('Error al enviar los datos')
+      }
+
+      const result = await response.json()
+      toast.success('Datos enviados con éxito.')
+    } catch (error) {
+      console.error('Error en el envío de datos:', error)
+      toast.error('Hubo un error al enviar los datos.')
+    }
+  }
+
+
+
 
   return (
     <>
       {imprimir ? (
         <>
-          <BtnGeneral claseBtn="btn__imprimir" tocar={imprimirEtiqueta}>
+          <BtnGeneral claseBtn="btn__imprimir" tocar={HandleImprimirEtiqueta}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
               <path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" />
@@ -211,15 +236,20 @@ const Pedidos = () => {
             </svg>
             Imprimir
           </BtnGeneral>
-          {etiquetas.map((eti, i) => (
-            <EtiquetaImpresion
-              key={i}
-              descripcion={eti.Descripcion}
-              articulo={eti.Articulo}
-              precio={eti.Precio}
-              sucursal={eti.Sucursal}
-            />
-          ))}
+          <div className="print-area">
+            {etiquetas.map((eti, i) => (
+              Array.from({ length: eti.Cantidad }).map((_, index) => (
+                <EtiquetaImpresion
+                  key={`${i}-${index}`}
+                  descripcion={eti.Descripcion}
+                  articulo={eti.Articulo}
+                  precio={eti.Precio}
+                  sucursal={eti.Sucursal}
+                />
+              ))
+            ))}
+          </div>
+
         </>
       ) : (
         <section className="mercaderia">
@@ -304,14 +334,14 @@ const Pedidos = () => {
                       )}
                       {etiquetas.length > 0 && (
                         <>
-                          <BtnGeneral claseBtn="btn__imprimir" tocar={handleIrAImprimir}>
+                          <BtnGeneral claseBtn="btn__ir__imprimir" tocar={handleIrAImprimir}>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                               <path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" />
                               <path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" />
                               <path d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z" />
                             </svg>
-                            Imprimir
+                            Enviar Pedido e Imprimir
                           </BtnGeneral>
                           <BtnGeneral
                             claseBtn="btn__eliminar"
@@ -341,10 +371,30 @@ const Pedidos = () => {
                       <strong>Total Etiquetas: {sumaTotalCantidades}</strong>
                     </div>
                     <div className="table-wrapper table__pedidos">
-                      <TablesProductos data={etiquetas} filters={filters} />
+                      <TablesProductos data={etiquetasParaTabla} filters={filters} />
                     </div>
                   </article>
                 </ContenedorPages>
+                <article className="contenedor__btns__sigpestanas">
+                  <Link className="btn__pestanas__siguiente" to="/ver-pedidos">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M11 14l4 -4l-4 -4" />
+                      <path d="M16 14l4 -4l-4 -4" />
+                      <path d="M15 10h-7a4 4 0 1 0 0 8h1" />
+                    </svg>
+                    Ver Pedidos
+                  </Link>
+                  {/* <Link className="btn__pestanas__siguiente" to="/ver-ventas">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M11 14l4 -4l-4 -4" />
+                      <path d="M16 14l4 -4l-4 -4" />
+                      <path d="M15 10h-7a4 4 0 1 0 0 8h1" />
+                    </svg>
+                    Ver Ventas
+                  </Link> */}
+                </article>
               </section>
             </>
           )}

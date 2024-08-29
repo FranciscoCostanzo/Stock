@@ -18,6 +18,8 @@ import Fallas from './modules/Mercaderia/Fallas'
 import Configuracion from './modules/Configuracion/Configuracion.jsx'
 import InternetStatus from './modules/Components/InternetStatus/InternetStatus.jsx'
 import Pedidos from './modules/Pedidos/Pedidos.jsx'
+import VerPedidos from './modules/Pedidos/VerPedidos.jsx'
+import RecibirPedidos from './modules/Pedidos/RecibirPedidos.jsx'
 
 const App = () => {
   useEffect(() => {
@@ -58,6 +60,8 @@ const App = () => {
           <Route path="/ver-ventas" element={<VerVentas />} />
 
           <Route path="/pedidos" element={<Pedidos />} />
+          <Route path="/ver-pedidos" element={<VerPedidos />} />
+          <Route path="/recibir-pedidos" element={<RecibirPedidos />} />
 
           <Route path="/configuracion" element={<Configuracion />} />
           <Route path="/register" element={<Register />} />
