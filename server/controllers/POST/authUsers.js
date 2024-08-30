@@ -145,7 +145,7 @@ export const login = async (req, res) => {
     res
       .cookie("access_token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: false, // Asegúrate de que sea 'false' para aplicaciones Electron locales
         sameSite: "strict",
         maxAge: expiresIn, // Tiempo de vida en milisegundos
       })
@@ -162,7 +162,6 @@ export const login = async (req, res) => {
     });
   }
 };
-
 
 export const checkToken = async (req, res) => {
   const token = req.cookies.access_token;

@@ -7,10 +7,10 @@ dotenv.config();
 
 // Configurar CORS
 const corsOptions = {
-  origin: "http://localhost:5173", // Cambia esto al origen de tu aplicación cliente
+  origin: ['http://localhost:5173', '*'], // Permitir cualquier origen (solo para desarrollo)
   methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true // Permitir cookies
+  allowedHeaders: ["Content-Type", "Authorization", "Set-Cookie"],
+  credentials: true,
 };
 
 export const corsMiddleware = cors(corsOptions);

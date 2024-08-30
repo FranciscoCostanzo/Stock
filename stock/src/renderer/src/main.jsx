@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom/client'
 import App from './App'
-import { BrowserRouter } from 'react-router-dom'
+import { HashRouter } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import './main.scss'
 import 'react-toastify/dist/ReactToastify.css'
@@ -8,7 +8,7 @@ import { AuthProvider } from './modules/Auth/context/AuthContext.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <AuthProvider>
-    <BrowserRouter>
+    <HashRouter>
       <App />
       <ToastContainer
         position="top-right"
@@ -22,6 +22,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         pauseOnHover={false}
         theme="light"
       />
-    </BrowserRouter>
+    </HashRouter>
   </AuthProvider>
 )

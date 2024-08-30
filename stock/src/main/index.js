@@ -17,11 +17,15 @@ function createWindow() {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      contextIsolation: true, // Habilita contextIsolation
+      nodeIntegration: false, // Desactiva nodeIntegration
+      sandbox: false,
+      enableRemoteModule: false,
+      worldSafeExecuteJavaScript: true,
+      // Habilita el uso del `contextBridge` para exponer APIs seguras
+      // Puedes agregar más opciones si es necesario
     }
   })
-
-  
 
   mainWindow.setMinimumSize(1550, 820)
 
@@ -140,14 +144,6 @@ app.whenReady().then(() => {
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
-
-  // Abrir el puerto cuando la aplicación está lista
-  openSerialPort()
-})
-
-// Manejar el evento 'before-quit' para cerrar el puerto correctamente
-app.on('before-quit', () => {
-  closeSerialPort()
 })
 
 app.on('window-all-closed', () => {
@@ -155,3 +151,6 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
+
+
+
