@@ -23,19 +23,25 @@ import RecibirPedidos from './modules/Pedidos/RecibirPedidos.jsx'
 
 const App = () => {
   useEffect(() => {
+    // Enviar la solicitud inicial al proceso principal de Electron
     window.api.ipcRenderer.send('check-token')
 
-    window.api.ipcRenderer.on('token-status', (event, token) => {
+    // Definir la función del listener
+    const handleTokenStatus = (event, token) => {
       if (token) {
         console.log('Token recibido:', token)
-        // Puedes almacenar el token en el estado o en un contexto
+        // Aquí podrías actualizar el estado o el contexto con el token recibido
       } else {
         console.log('Token no recibido')
       }
-    })
+    }
 
+    // Registrar el listener para 'token-status'
+    window.api.ipcRenderer.on('token-status', handleTokenStatus)
+
+    // Función de limpieza para remover el listener cuando el componente se desmonte
     return () => {
-      window.api.ipcRenderer.removeAllListeners('token-status')
+      window.api.ipcRenderer.removeListener('token-status', handleTokenStatus)
     }
   }, [])
 

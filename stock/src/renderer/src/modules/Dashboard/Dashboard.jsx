@@ -4,6 +4,7 @@ import { AuthContext } from '../Auth/context/AuthContext'
 
 const Dashbord = () => {
   const { user } = useContext(AuthContext)
+  
 
   const btns = [
     { btn: 'Mercaderia', to: '/stock', toAdmin: '/mercaderia', roles: ['admin', 'empleado'] },

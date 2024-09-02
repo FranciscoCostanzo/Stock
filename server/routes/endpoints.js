@@ -1,4 +1,3 @@
-// endpoints.js
 import { Router } from "express";
 import {
     checkToken,
@@ -22,7 +21,6 @@ import {
     pedirStockAdmin,
     pedirStockPorSucursal,
 } from "../controllers/GET/pedirProductos.js";
-import { authenticateToken } from "../config/server.js";
 import {
     agregarArticulo,
     eliminarArticulo,
@@ -39,7 +37,14 @@ import {
     pedirArticuloEmpleado,
 } from "../controllers/POST/ventasTools.js";
 import { pedirVentasSemana } from "../controllers/GET/pedirVentas.js";
-import { EnviarPedidoAdmin, pedirArticuloPedidos, pedirPedidosAdmin, pedirPedidosEmpleado, pedirPedidosEmpleadoPendientes, recibirPedido } from "../controllers/POST/pedidosTools.js";
+import {
+    EnviarPedidoAdmin,
+    pedirArticuloPedidos,
+    pedirPedidosAdmin,
+    pedirPedidosEmpleado,
+    pedirPedidosEmpleadoPendientes,
+    recibirPedido,
+} from "../controllers/POST/pedidosTools.js";
 
 const router = Router();
 
@@ -51,68 +56,56 @@ router.post("/check-token", checkToken);
 
 // Rutas para obtener materiales
 // Ruta para obtener sucursales
-router.get("/sucursales", authenticateToken, pedirSucursales);
+router.get("/sucursales", pedirSucursales);
 // Ruta para obtener tarjetas
-router.get("/tarjetas", authenticateToken, pedirTarjetas);
+router.get("/tarjetas", pedirTarjetas);
 
 // Rutas GET de los productos
 // Ruta para obtener Stock por Sucursal
-router.get("/stock/:idSucursal", authenticateToken, pedirStockPorSucursal);
+router.get("/stock/:idSucursal", pedirStockPorSucursal);
 // Ruta para obtener Stock para el admin
-router.get("/stock", authenticateToken, pedirStockAdmin);
+router.get("/stock", pedirStockAdmin);
 // Ruta para obtener Mercaderia para el admin
-router.get("/mercaderia", authenticateToken, pedirMercaderiaAdmin);
+router.get("/mercaderia", pedirMercaderiaAdmin);
 // Ruta para obtener Papelera para el admin
-router.get("/papelera", authenticateToken, pedirPapeleraAdmin);
+router.get("/papelera", pedirPapeleraAdmin);
 // Ruta para obtener la inversion y el retorno del stock para el admin
-router.get("/inversion", authenticateToken, pedirInversionAdmin);
+router.get("/inversion", pedirInversionAdmin);
 // Ruta para obtener la Fallas registradas del stock para el admin
-router.get("/fallas", authenticateToken, pedirFallasAdmin);
-router.get("/fallas/:idSucursal", authenticateToken, pedirFallasEmpleado);
+router.get("/fallas", pedirFallasAdmin);
+router.get("/fallas/:idSucursal", pedirFallasEmpleado);
 
-router.get("/ventas-semana", authenticateToken, pedirVentasSemana);
+router.get("/ventas-semana", pedirVentasSemana);
 
 // Rutas POST de los productos
 // Ruta para la tabla Mercaderia
-router.post("/agregar-articulo", authenticateToken, agregarArticulo);
-router.post("/eliminar-articulo", authenticateToken, eliminarArticulo);
-router.post("/modificar-articulo", authenticateToken, modificarArticulo);
+router.post("/agregar-articulo", agregarArticulo);
+router.post("/eliminar-articulo", eliminarArticulo);
+router.post("/modificar-articulo", modificarArticulo);
 
 // Rutas para la pepelera
-router.post(
-    "/restablecer-todos-articulos-papelera",
-    authenticateToken,
-    restablecerTodosArticulos
-);
-router.post(
-    "/restablecer-especifico-papelera",
-    authenticateToken,
-    restablecerEspecificoPapelera
-);
-router.post("/vaciar-papelera", authenticateToken, vaciarPapelera);
-router.post(
-    "/eliminar-especifico-papelera",
-    authenticateToken,
-    eliminarEspecificoPapelera
-);
+router.post("/restablecer-todos-articulos-papelera", restablecerTodosArticulos);
+router.post("/restablecer-especifico-papelera", restablecerEspecificoPapelera);
+router.post("/vaciar-papelera", vaciarPapelera);
+router.post("/eliminar-especifico-papelera", eliminarEspecificoPapelera);
 
-router.post("/enviar-falla", authenticateToken, enviarFalla);
-router.post("/restablecer-falla", authenticateToken, restablecerFalla);
+router.post("/enviar-falla", enviarFalla);
+router.post("/restablecer-falla", restablecerFalla);
 
-//rutas para las ventas
-router.post("/articulo-empleado", authenticateToken, pedirArticuloEmpleado);
-router.post("/venta", authenticateToken, cargarVenta);
+// Rutas para las ventas
+router.post("/articulo-empleado", pedirArticuloEmpleado);
+router.post("/venta", cargarVenta);
 
-router.get("/tarjetas-admin", authenticateToken, pedirTarjetasAdmin);
-router.get("/usuarios-admin", authenticateToken, pedirUsuariosAdmin);
-router.get("/sucursales-admin", authenticateToken, pedirSucursalesAdmin);
+router.get("/tarjetas-admin", pedirTarjetasAdmin);
+router.get("/usuarios-admin", pedirUsuariosAdmin);
+router.get("/sucursales-admin", pedirSucursalesAdmin);
 
-router.post("/articulo-pedidos", authenticateToken, pedirArticuloPedidos);
-router.post("/recibir-pedidos", authenticateToken, recibirPedido);
-router.post("/pedidos", authenticateToken, EnviarPedidoAdmin);
+router.post("/articulo-pedidos", pedirArticuloPedidos);
+router.post("/recibir-pedidos", recibirPedido);
+router.post("/pedidos", EnviarPedidoAdmin);
 
-router.get("/ver-pedidos-admin", authenticateToken, pedirPedidosAdmin);
-router.get("/ver-pedidos-empleado/:id_sucursal", authenticateToken, pedirPedidosEmpleado);
-router.get("/ver-pedidos-empleado-pendientes/:id_sucursal", authenticateToken, pedirPedidosEmpleadoPendientes);
+router.get("/ver-pedidos-admin", pedirPedidosAdmin);
+router.get("/ver-pedidos-empleado/:id_sucursal", pedirPedidosEmpleado);
+router.get("/ver-pedidos-empleado-pendientes/:id_sucursal", pedirPedidosEmpleadoPendientes);
 
 export default router;

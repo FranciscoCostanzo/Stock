@@ -1,13 +1,11 @@
-import { app, shell, BrowserWindow, Menu, screen, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, Menu, screen, ipcMain, session } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
-let mainWindow
-
 function createWindow() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
-  mainWindow = new BrowserWindow({
+  const mainWindow = new BrowserWindow({
     width,
     height,
     show: true,
@@ -17,13 +15,11 @@ function createWindow() {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      contextIsolation: true, // Habilita contextIsolation
-      nodeIntegration: false, // Desactiva nodeIntegration
-      sandbox: false,
+      sandbox: true,
+      contextIsolation: true,
+      nodeIntegration: false,
       enableRemoteModule: false,
-      worldSafeExecuteJavaScript: true,
-      // Habilita el uso del `contextBridge` para exponer APIs seguras
-      // Puedes agregar más opciones si es necesario
+      webSecurity: true,
     }
   })
 
@@ -87,8 +83,8 @@ function createWindow() {
       ]
     }
   ]
-
   const menu = Menu.buildFromTemplate(template)
+
   Menu.setApplicationMenu(menu)
 
   mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
@@ -151,6 +147,3 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
-
-
-

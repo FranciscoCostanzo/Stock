@@ -29,37 +29,11 @@ const VerVentas = () => {
     loadVentas()
   }, [user])
 
-  // const ventasUnificadas = ventasSemana.reduce((acumulador, ventaActual) => {
-  //   // Buscar si ya existe una venta con el mismo id_venta y metodo_de_pago en el acumulador
-  //   const ventaExistente = acumulador.find(
-  //     (venta) =>
-  //       venta.id_venta === ventaActual.id_venta &&
-  //       venta.metodo_de_pago === ventaActual.metodo_de_pago
-  //   );
-  //   // if (ventaExistente) {
-  //   //   // Si existe, sumar adelanto, total_venta y total con conversión a float
-  //   //   ventaExistente.adelanto = parseFloat(
-  //   //     (parseFloat(ventaExistente.adelanto) + parseFloat(ventaActual.adelanto)).toFixed(2)
-  //   //   );
-  //   //   ventaExistente.total_venta = parseFloat(
-  //   //     (parseFloat(ventaExistente.total_venta) + parseFloat(ventaActual.total_venta)).toFixed(2)
-  //   //   );
-  //   //   ventaExistente.total = parseFloat(
-  //   //     (parseFloat(ventaExistente.total) + parseFloat(ventaActual.total)).toFixed(2)
-  //   //   );
-  //   // } else {
-  //   //   // Si no existe, agregar la venta actual al acumulador
-  //   // }
-
-  //     acumulador.push({ ...ventaActual });
-  //   return acumulador;
-  // }, []);
-
-  const ventasUnificadas = ventasSemana.map(
-    ({
+  // Agrupación y suma de valores
+  const ventasUnificadas = ventasSemana.reduce((acc, venta) => {
+    const {
       id_venta,
       Fecha,
-      Hora,
       Usuario,
       Sucursal,
       Metodo,
@@ -67,28 +41,38 @@ const VerVentas = () => {
       NombreCliente,
       ApellidoCliente,
       DNICliente,
-      Descripcion,
       Adelanto,
       total_venta,
       Total
-    }) => ({
-      id_venta,
-      Fecha,
-      Hora,
-      Usuario,
-      Sucursal,
-      Metodo,
-      Tarjeta,
-      NombreCliente,
-      ApellidoCliente,
-      DNICliente,
-      Descripcion,
-      Adelanto: parseFloat(Adelanto),
-      total_venta: parseFloat(total_venta),
-      Total: parseFloat(Total)
-    })
-  )
+    } = venta;
 
+    if (!acc[id_venta]) {
+      acc[id_venta] = {
+        Fecha,
+        Usuario,
+        Sucursal,
+        Metodo,
+        Tarjeta,
+        NombreCliente,
+        ApellidoCliente,
+        DNICliente,
+        Adelanto: Adelanto === "No tiene" ? Adelanto : parseFloat(Adelanto),
+        Total_Venta: parseFloat(total_venta),
+        Total: parseFloat(Total)
+      };
+    } else {
+      acc[id_venta].Adelanto = Adelanto === "No tiene" ? Adelanto : acc[id_venta].Adelanto + parseFloat(Adelanto);
+      acc[id_venta].Total_Venta += parseFloat(total_venta);
+      acc[id_venta].Total += parseFloat(Total);
+    }
+
+    return acc;
+  }, {});
+
+  // Convertir el objeto agrupado en un array
+  const ventasUnificadasArray = Object.values(ventasUnificadas);
+
+  // Filtros
   const filtros = ventasSemana.map(
     ({
       Fecha,
@@ -99,7 +83,6 @@ const VerVentas = () => {
       NombreCliente,
       ApellidoCliente,
       DNICliente,
-      Descripcion,
       Total
     }) => ({
       Fecha,
@@ -110,7 +93,6 @@ const VerVentas = () => {
       NombreCliente,
       ApellidoCliente,
       DNICliente,
-      Descripcion,
       Total: parseFloat(Total)
     })
   )
@@ -135,7 +117,7 @@ const VerVentas = () => {
               onFilterChange={handleFilterChange}
             />
             <div className="table-wrapper">
-              <TablesProductos data={ventasUnificadas} filters={filters} />
+              <TablesProductos data={ventasUnificadasArray} filters={filters} />
             </div>
           </article>
         </>

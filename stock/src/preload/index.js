@@ -1,21 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron');
-// Importar la función fetch desde electron-fetch si la necesitas
-const fetch = require('electron-fetch').default;
 
-// Exponer funciones en el contexto de la ventana del renderer
+// Exponer funciones seguras en el contexto de la ventana del renderer
 contextBridge.exposeInMainWorld('api', {
-  fetch: async (url, options) => {
-    try {
-      const response = await fetch(url, options);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    } catch (error) {
-      console.error('Error in fetch:', error);
-      throw error; // Rethrow error so it can be handled in the renderer
-    }
-  },
   ipcRenderer: {
     send: (channel, data) => {
       // Los canales permitidos deben ser explícitamente listados
@@ -23,7 +9,7 @@ contextBridge.exposeInMainWorld('api', {
       if (validChannels.includes(channel)) {
         ipcRenderer.send(channel, data);
       } else {
-        console.warn(`Attempted to send to invalid channel: ${channel}`);
+        console.warn(`Intento de enviar a un canal inválido: ${channel}`);
       }
     },
     on: (channel, func) => {
@@ -34,7 +20,7 @@ contextBridge.exposeInMainWorld('api', {
         // Registra el nuevo listener
         ipcRenderer.on(channel, (event, ...args) => func(event, ...args));
       } else {
-        console.warn(`Attempted to listen to invalid channel: ${channel}`);
+        console.warn(`Intento de escuchar un canal inválido: ${channel}`);
       }
     },
     removeAllListeners: (channel) => {

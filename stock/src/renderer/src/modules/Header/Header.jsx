@@ -19,7 +19,9 @@ const Header = () => {
 
       if (response.ok) {
         setUser(null)
+        localStorage.removeItem('access_token');
         navigate('/') // Redirige a / para cerrar la sesión
+        window.location.reload()
       } else {
         // Manejar el caso en que la respuesta no es exitosa
         const errorMessage = await response.json()

@@ -150,7 +150,7 @@ export const login = async (req, res) => {
         maxAge: expiresIn, // Tiempo de vida en milisegundos
       })
       .status(200)
-      .json({ message: "Te autenticaste correctamente" });
+      .json({ message: "Te autenticaste correctamente", token: token });
   } catch (error) {
     if (error instanceof z.ZodError) {
       const formattedErrors = error.errors.map((err) => err.message);
@@ -163,23 +163,67 @@ export const login = async (req, res) => {
   }
 };
 
+// Si funcionaria en Electron las cookies usario este controller para autenticar el token
+
+// export const checkToken = async (req, res) => {
+//   const token = req.cookies.access_token;
+//   if (!token) {
+//     // Envía el código de estado 403 con un mensaje de error
+//     return res.status(403).json({ message: "No estás autenticado" });
+//   }
+
+//   try {
+//     const userData = jwt.verify(token, process.env.SECRET_JWT_KEY);
+//     // Si el token es válido, envía la información del usuario
+//     return res.json(userData);
+//   } catch (error) {
+//     console.error("Error verificando el token:", error);
+//     // Envía el código de estado 403 si el token no es válido
+//     return res.status(403).json({ message: "Token no válido" });
+//   }
+// };
+
+// Función para decodificar el JWT desde base64
+function parseJwt(token) {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+  } catch (e) {
+    console.error('Error decodificando el JWT', e);
+    return null;
+  }
+}
+
+// Controlador actualizado para verificar el token
 export const checkToken = async (req, res) => {
-  const token = req.cookies.access_token;
+  const { token } = req.body; // Obtener el token del cuerpo de la solicitud
   if (!token) {
-    // Envía el código de estado 403 con un mensaje de error
-    return res.status(403).json({ message: "No estás autenticado" });
+    // Envía el código de estado 403 con un mensaje de error si el token no está presente
+    return res.status(403).json({ message: "No se ha proporcionado un token" });
   }
 
   try {
-    const userData = jwt.verify(token, process.env.SECRET_JWT_KEY);
+    const userData = parseJwt(token); // Decodificar el token usando la función parseJwt
+
+    if (!userData) {
+      // Si no se pudo decodificar el token, envía el código de estado 403
+      return res.status(403).json({ message: "Token no válido" });
+    }
+
     // Si el token es válido, envía la información del usuario
     return res.json(userData);
   } catch (error) {
     console.error("Error verificando el token:", error);
-    // Envía el código de estado 403 si el token no es válido
+    // Envía el código de estado 403 si ocurre un error
     return res.status(403).json({ message: "Token no válido" });
   }
 };
+
 
 export const logout = async (req, res) => {
   try {
