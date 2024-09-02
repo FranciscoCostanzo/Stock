@@ -18,7 +18,7 @@ const Login = () => {
       dataSucursales={undefined}
       fields={camposInicioSesion}
       tipoDeForm={false}
-      endpoint="http://localhost:3000/login"
+      endpoint="https://servidor.asessaludsrl.com/login"
     />
   )
 }
