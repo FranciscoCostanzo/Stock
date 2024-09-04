@@ -106,6 +106,9 @@ router.post("/pedidos", EnviarPedidoAdmin);
 
 router.get("/ver-pedidos-admin", pedirPedidosAdmin);
 router.get("/ver-pedidos-empleado/:id_sucursal", pedirPedidosEmpleado);
-router.get("/ver-pedidos-empleado-pendientes/:id_sucursal", pedirPedidosEmpleadoPendientes);
+router.get(
+    "/ver-pedidos-empleado-pendientes/:id_sucursal",
+    pedirPedidosEmpleadoPendientes
+);
 
 export default router;

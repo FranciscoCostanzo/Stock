@@ -1,6 +1,8 @@
+import { urlEndpoint } from "../../lib"
+
 export const obtenerTarjetasAdmin = async () => {
   try {
-    const response = await fetch(`http://localhost:3000/tarjetas-admin`, {
+    const response = await fetch(`${urlEndpoint}/tarjetas-admin`, {
       method: 'GET',
       credentials: 'include'
     })
@@ -19,7 +21,7 @@ export const obtenerTarjetasAdmin = async () => {
 
 export const obtenerUsuariosAdmin = async () => {
   try {
-    const response = await fetch(`http://localhost:3000/usuarios-admin`, {
+    const response = await fetch(`${urlEndpoint}/usuarios-admin`, {
       method: 'GET',
       credentials: 'include'
     })
@@ -38,7 +40,7 @@ export const obtenerUsuariosAdmin = async () => {
 
 export const obtenerSucursalesAdmin = async () => {
   try {
-    const response = await fetch(`http://localhost:3000/sucursales-admin`, {
+    const response = await fetch(`${urlEndpoint}/sucursales-admin`, {
       method: 'GET',
       credentials: 'include'
     })

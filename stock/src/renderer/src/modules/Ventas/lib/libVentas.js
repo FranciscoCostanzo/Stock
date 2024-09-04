@@ -1,6 +1,9 @@
+import { urlEndpoint } from "../../lib"
+
+
 export const obtenerArticuloEmpleado = async (idMercadeia, idSucursal) => {
   try {
-    const response = await fetch(`http://localhost:3000/articulo-empleado`, {
+    const response = await fetch(`${urlEndpoint}/articulo-empleado`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -26,7 +29,7 @@ export const obtenerArticuloEmpleado = async (idMercadeia, idSucursal) => {
 
 export const obtenerTarjetas = async () => {
   try {
-    const response = await fetch(`http://localhost:3000/tarjetas`, {
+    const response = await fetch(`${urlEndpoint}/tarjetas`, {
       method: 'GET',
       credentials: 'include'
     })
@@ -45,7 +48,7 @@ export const obtenerTarjetas = async () => {
 
 export const obtenerVentasSemana = async () => {
   try {
-    const response = await fetch(`http://localhost:3000/ventas-semana`, {
+    const response = await fetch(`${urlEndpoint}/ventas-semana`, {
       method: 'GET',
       credentials: 'include'
     })

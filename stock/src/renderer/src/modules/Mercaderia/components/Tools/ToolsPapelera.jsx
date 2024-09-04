@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import FormModal from '../../../Components/Forms/FormModal'
+import { urlEndpoint } from '../../../lib'
 
 const ToolsMercaderia = () => {
   const [abrirFormModal, setAbrirFormModal] = useState(false)
@@ -17,7 +18,7 @@ const ToolsMercaderia = () => {
     switch (action) {
       case 'vaciarPapelera':
         fields = [{ name: 'OKV', type: 'text', label: 'Confirmación' }]
-        apiEndpoint = 'http://localhost:3000/vaciar-papelera'
+        apiEndpoint = `${urlEndpoint}/vaciar-papelera`
         tituloFormulario = 'Vaciar Papelera'
         messageFormulario =
           'Confirmar escribiendo "OKV" para poder vaciar la papelera, todos los artículo se eliminaran definitivamente'
@@ -27,14 +28,14 @@ const ToolsMercaderia = () => {
           { name: 'id', type: 'text', label: 'Artículo' },
           { name: 'OKVE', type: 'text', label: 'Confirmación' }
         ]
-        apiEndpoint = 'http://localhost:3000/eliminar-especifico-papelera'
+        apiEndpoint = `${urlEndpoint}/eliminar-especifico-papelera`
         tituloFormulario = 'Borrar Artículo Específico'
         messageFormulario =
           'Escribe el artículo en específico que quieras eliminar definitivamente y luego escribe "OKVE" en el campo de confirmación'
         break
       case 'restablecerTodo':
         fields = [{ name: 'OKR', type: 'text', label: 'Confirmación' }]
-        apiEndpoint = 'http://localhost:3000/restablecer-todos-articulos-papelera'
+        apiEndpoint = `${urlEndpoint}/restablecer-todos-articulos-papelera`
         tituloFormulario = 'Restablecer Todos los Artículos'
         messageFormulario = 'Confirmar escribiendo "OKR" para restablecer todos los artículos'
         break
@@ -43,7 +44,7 @@ const ToolsMercaderia = () => {
           { name: 'id', type: 'text', label: 'Artículo' },
           { name: 'OKRE', type: 'text', label: 'Confirmación' }
         ]
-        apiEndpoint = 'http://localhost:3000/restablecer-especifico-papelera'
+        apiEndpoint = `${urlEndpoint}/restablecer-especifico-papelera`
         tituloFormulario = 'Restablecer Artículo'
         messageFormulario =
           'Escribe el artículo en específico que quieras restablecer y luego escribe "OKRE" en el campo de confirmación'

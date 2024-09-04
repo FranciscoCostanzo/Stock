@@ -1,7 +1,10 @@
+import { urlEndpoint } from "../../lib"
+
 // Función para obtener el stock por sucursal
+
 export const obtenerStockPorSucursal = async (idSucursal) => {
   try {
-    const response = await fetch(`http://localhost:3000/stock/${idSucursal}`, {
+    const response = await fetch(`${urlEndpoint}/stock/${idSucursal}`, {
       method: 'GET',
       credentials: 'include'
     })
@@ -21,7 +24,7 @@ export const obtenerStockPorSucursal = async (idSucursal) => {
 // Función para obtener el stock para el admin
 export const obtenerStockAdmin = async () => {
   try {
-    const response = await fetch(`http://localhost:3000/stock`, {
+    const response = await fetch(`${urlEndpoint}/stock`, {
       method: 'GET',
       credentials: 'include'
     })
@@ -41,7 +44,7 @@ export const obtenerStockAdmin = async () => {
 // Función para obtener el stock para el admin
 export const obtenerMercaderiaAdmin = async () => {
   try {
-    const response = await fetch(`http://localhost:3000/mercaderia`, {
+    const response = await fetch(`${urlEndpoint}/mercaderia`, {
       method: 'GET',
       credentials: 'include'
     })
@@ -60,7 +63,7 @@ export const obtenerMercaderiaAdmin = async () => {
 
 export const obtenerPapeleraAdmin = async () => {
   try {
-    const response = await fetch(`http://localhost:3000/papelera`, {
+    const response = await fetch(`${urlEndpoint}/papelera`, {
       method: 'GET',
       credentials: 'include'
     })
@@ -79,7 +82,7 @@ export const obtenerPapeleraAdmin = async () => {
 
 export const obtenerFallasAdmin = async () => {
   try {
-    const response = await fetch(`http://localhost:3000/fallas`, {
+    const response = await fetch(`${urlEndpoint}/fallas`, {
       method: 'GET',
       credentials: 'include'
     })
@@ -98,7 +101,7 @@ export const obtenerFallasAdmin = async () => {
 
 export const obtenerFallasEmpelado = async (idSucursal) => {
   try {
-    const response = await fetch(`http://localhost:3000/fallas/${idSucursal}`, {
+    const response = await fetch(`${urlEndpoint}/fallas/${idSucursal}`, {
       method: 'GET',
       credentials: 'include'
     })
@@ -117,7 +120,7 @@ export const obtenerFallasEmpelado = async (idSucursal) => {
 
 export const obtenerInversionAdmin = async () => {
   try {
-    const response = await fetch(`http://localhost:3000/inversion`, {
+    const response = await fetch(`${urlEndpoint}/inversion`, {
       method: 'GET',
       credentials: 'include'
     })

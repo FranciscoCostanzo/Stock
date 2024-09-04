@@ -26,7 +26,7 @@ export const AuthRouter = ({ requireAuth = true }) => {
       }
 
       try {
-        const response = await fetch('http://localhost:3000/check-token', {
+        const response = await fetch('https://servidor.asessaludsrl.com/check-token', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

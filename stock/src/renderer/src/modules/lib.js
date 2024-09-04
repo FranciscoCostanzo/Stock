@@ -1,0 +1,1 @@
+export const urlEndpoint = "https://servidor.asessaludsrl.com"

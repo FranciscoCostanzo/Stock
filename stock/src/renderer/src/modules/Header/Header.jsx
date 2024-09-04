@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { AuthContext } from '../Auth/context/AuthContext'
 import { useContext, useState } from 'react'
+import { urlEndpoint } from '../lib'
 
 const Header = () => {
   const { user, setUser } = useContext(AuthContext)
@@ -12,7 +13,7 @@ const Header = () => {
 
   const handleCerrarSesion = async () => {
     try {
-      const response = await fetch('http://localhost:3000/logout', {
+      const response = await fetch(`${urlEndpoint}/logout`, {
         method: 'POST',
         credentials: 'include'
       })

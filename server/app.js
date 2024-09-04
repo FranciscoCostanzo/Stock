@@ -13,6 +13,11 @@ app.use(express.json());
 
 app.use(cookieParser());
 
+// Ruta principal que devuelve un <h1>
+app.get("/", (req, res) => {
+  res.send("<h1>Servidor Stock</h1>");
+});
+
 // Usar rutas importadas
 app.use("/", routes);
 

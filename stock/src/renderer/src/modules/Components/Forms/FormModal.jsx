@@ -25,7 +25,6 @@ const FormModal = ({ fieldsForm, endpoint, onClose, tituloForm, messageForm, add
 
     const dataToSend = { ...formData, ...additionalData };
 
-    console.log(dataToSend)
     try {
       const response = await fetch(endpoint, {
         method: 'POST',

@@ -1,7 +1,9 @@
+import { urlEndpoint } from "../../lib"
+
 // Función para obtener sucursales
 export const fetchSucursales = async () => {
   try {
-    const response = await fetch('http://localhost:3000/sucursales', {
+    const response = await fetch(`${urlEndpoint}/sucursales`, {
       method: 'GET',
       credentials: 'include'
     })

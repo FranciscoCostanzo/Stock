@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import Login from './modules/Auth/Login'
 import Register from './modules/Auth/Register'
@@ -22,28 +22,22 @@ import VerPedidos from './modules/Pedidos/VerPedidos.jsx'
 import RecibirPedidos from './modules/Pedidos/RecibirPedidos.jsx'
 
 const App = () => {
+  const [tokenStatus, setTokenStatus] = useState(null);
+
   useEffect(() => {
-    // Enviar la solicitud inicial al proceso principal de Electron
-    window.api.ipcRenderer.send('check-token')
+    const checkToken = () => {
+      const token = localStorage.getItem('access_token'); // Obtener el token del localStorage
 
-    // Definir la función del listener
-    const handleTokenStatus = (event, token) => {
       if (token) {
-        console.log('Token recibido:', token)
-        // Aquí podrías actualizar el estado o el contexto con el token recibido
+        setTokenStatus('Token ya está disponible:');
+        console.log(token)
       } else {
-        console.log('Token no recibido')
+        setTokenStatus('Token no disponible, solicitalo.');
+        console.error(tokenStatus)
       }
-    }
-
-    // Registrar el listener para 'token-status'
-    window.api.ipcRenderer.on('token-status', handleTokenStatus)
-
-    // Función de limpieza para remover el listener cuando el componente se desmonte
-    return () => {
-      window.api.ipcRenderer.removeListener('token-status', handleTokenStatus)
-    }
-  }, [])
+    };
+    checkToken();
+  }, []);
 
   return (
     <>

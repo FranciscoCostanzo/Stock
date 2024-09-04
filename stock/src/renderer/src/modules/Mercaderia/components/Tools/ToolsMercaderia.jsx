@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import FormModal from '../../../Components/Forms/FormModal'
+import { urlEndpoint } from '../../../lib'
 
 const ToolsMercaderia = () => {
   const [abrirFormModal, setAbrirFormModal] = useState(false)
@@ -21,7 +22,7 @@ const ToolsMercaderia = () => {
           { name: 'costo', type: 'number', label: 'Precio de Costo' },
           { name: 'publico', type: 'number', label: 'Precio Público' }
         ]
-        apiEndpoint = 'http://localhost:3000/agregar-articulo'
+        apiEndpoint = `${urlEndpoint}/agregar-articulo`
         tituloFormulario = 'Agregar Artículo'
         messageFormulario = 'Agrega un artículo para poder usarlo'
         break
@@ -33,7 +34,7 @@ const ToolsMercaderia = () => {
           { name: 'costo', type: 'number', label: 'Nuevo Precio de Costo' },
           { name: 'publico', type: 'number', label: 'Nuevo Precio Público' }
         ]
-        apiEndpoint = 'http://localhost:3000/modificar-articulo'
+        apiEndpoint = `${urlEndpoint}/modificar-articulo`
         tituloFormulario = 'Modificar Artículo'
         messageFormulario =
           'Modifica una parte del artículo. Debes especificar el artículo que deseas modificar.'
@@ -42,7 +43,7 @@ const ToolsMercaderia = () => {
 
       case 'delete':
         fields = [{ name: 'id', type: 'text', label: 'ID del Artículo' }]
-        apiEndpoint = 'http://localhost:3000/eliminar-articulo'
+        apiEndpoint = `${urlEndpoint}/eliminar-articulo`
         tituloFormulario = 'Eliminar Artículo'
         messageFormulario = 'Elimina un artículo, debes ingresar el ID exacto'
 
