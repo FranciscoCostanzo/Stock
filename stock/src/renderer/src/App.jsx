@@ -20,6 +20,7 @@ import InternetStatus from './modules/Components/InternetStatus/InternetStatus.j
 import Pedidos from './modules/Pedidos/Pedidos.jsx'
 import VerPedidos from './modules/Pedidos/VerPedidos.jsx'
 import RecibirPedidos from './modules/Pedidos/RecibirPedidos.jsx'
+import Caja from './modules/Caja/Caja.jsx'
 
 const App = () => {
   const [tokenStatus, setTokenStatus] = useState(null);
@@ -65,6 +66,8 @@ const App = () => {
 
           <Route path="/configuracion" element={<Configuracion />} />
           <Route path="/register" element={<Register />} />
+
+          <Route path="/caja" element={<Caja />} />
         </Route>
       </Routes>
       <AuthTimeStampAviso />

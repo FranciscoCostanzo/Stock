@@ -45,6 +45,7 @@ import {
     pedirPedidosEmpleadoPendientes,
     recibirPedido,
 } from "../controllers/POST/pedidosTools.js";
+import { agregarTarjeta, editarTarjeta, eliminarTarjeta } from "../controllers/POST/materialesTools.js";
 
 const router = Router();
 
@@ -110,5 +111,9 @@ router.get(
     "/ver-pedidos-empleado-pendientes/:id_sucursal",
     pedirPedidosEmpleadoPendientes
 );
+
+router.post("/eliminar-tarjeta", eliminarTarjeta)
+router.post("/editar-tarjeta", editarTarjeta)
+router.post("/agregar-tarjeta", agregarTarjeta)
 
 export default router;

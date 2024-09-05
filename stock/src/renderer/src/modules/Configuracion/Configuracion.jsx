@@ -10,6 +10,7 @@ import {
 import TablesProductos from '../Components/Table/TablesProductos'
 import FiltroProductos from '../Mercaderia/components/Filtros/FiltroProductos'
 import { Link } from 'react-router-dom'
+import Tools from './Tools'
 
 const Configuracion = () => {
   const { user } = useContext(AuthContext) // obtener el usuario desde el contexto
@@ -31,7 +32,38 @@ const Configuracion = () => {
           <path d="M7 15l.01 0" />
           <path d="M11 15l2 0" />
         </svg>
-      )
+      ),
+      formConfig: [
+        {
+          tituloFormulario: 'Eliminar Tarjeta',
+          messageFormulario:
+            'Escribe "OKT" para confirmar y eliminar la tarjeta especificada. Este proceso es irreversible, y se borrarán todos los datos asociados a la tarjeta.',
+          fields: [
+            { name: 'id', type: 'number', label: 'ID de la Tarjeta' },
+            { name: 'OKT', type: 'text', label: 'Confirmación' }
+          ],
+          apiEndpoint: 'http://localhost:3000/eliminar-tarjeta'
+        },
+        {
+          tituloFormulario: 'Editar Tarjeta',
+          messageFormulario: 'Especifica el ID de la tarjeta y el porcentaje de aumento.',
+          fields: [
+            { name: 'id', type: 'number', label: 'ID de la Tarjeta' },
+            { name: 'aumento', type: 'number', label: 'Porcentaje de Aumento' }
+          ],
+          apiEndpoint: 'http://localhost:3000/editar-tarjeta'
+        },
+        {
+          tituloFormulario: 'Agregar Tarjeta',
+          messageFormulario:
+            'Rellena los detalles de la tarjeta que deseas agregar, Los campos son obligatorios.',
+          fields: [
+            { name: 'tipo_tarjeta', type: 'text', label: 'Nombre de la Tarjeta' },
+            { name: 'aumento', type: 'text', label: 'Porcentaje de Aumento' }
+          ],
+          apiEndpoint: 'http://localhost:3000/agregar-tarjeta'
+        }
+      ]
     },
     {
       btn: 'Registrar Usuarios',
@@ -43,7 +75,32 @@ const Configuracion = () => {
           <path d="M6 21v-2a4 4 0 0 1 4 -4h3.5" />
           <path d="M18.42 15.61a2.1 2.1 0 0 1 2.97 2.97l-3.39 3.42h-3v-3l3.42 -3.39z" />
         </svg>
-      )
+      ),
+      formConfig: [
+        {
+          tituloFormulario: 'Eliminar Usuario',
+          messageFormulario:
+            'Escribe "OKU" para confirmar y eliminar al usuario especificado. Esta acción es irreversible, y se eliminarán todos los datos del usuario.',
+          fields: [
+            { name: 'id', type: 'text', label: 'ID del Usuario' },
+            { name: 'OKU', type: 'text', label: 'Confirmación' }
+          ],
+          apiEndpoint: 'http://localhost:3000/eliminar-usuario'
+        },
+        {
+          tituloFormulario: 'Editar Usuario',
+          messageFormulario:
+            'Especifica el ID del usuario y los campos que desees actualizar. No es necesario completar todos los campos.',
+          fields: [
+            { name: 'id', type: 'number', label: 'ID del Usuario' },
+            { name: 'nombre', type: 'text', label: 'Nombre del Usuario' },
+            { name: 'password', type: 'text', label: 'Contraseña' },
+            { name: 'rol', type: 'text', label: 'Rol del Usuario' }
+          ],
+          apiEndpoint: 'http://localhost:3000/editar-usuario'
+        },
+        {tituloFormulario: 'Agregar Usuario',}
+      ]
     },
     {
       btn: 'Sucursales',
@@ -57,16 +114,51 @@ const Configuracion = () => {
           <path d="M19 21l0 -10.15" />
           <path d="M9 21v-4a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v4" />
         </svg>
-      )
+      ),
+      formConfig: [
+        {
+          tituloFormulario: 'Eliminar Sucursal',
+          messageFormulario:
+            'Escribe "OKS" para confirmar la eliminación de la sucursal. Esta acción es irreversible y se eliminarán todos los datos de la sucursal.',
+          fields: [
+            { name: 'id', type: 'number', label: 'ID de la Sucursal' },
+            { name: 'OKS', type: 'text', label: 'Confirmación' }
+          ],
+          apiEndpoint: 'http://localhost:3000/eliminar-sucursal'
+        },
+        {
+          tituloFormulario: 'Editar Sucursal',
+          messageFormulario:
+            'Especifica el ID de la sucursal y los campos que desees actualizar. No es necesario completar todos los campos.',
+          fields: [
+            { name: 'id', type: 'number', label: 'ID de la Sucursal' },
+            { name: 'nombre', type: 'text', label: 'Nombre de la Sucursal' },
+            { name: 'direccion', type: 'text', label: 'Dirección de la Sucursal' },
+            { name: 'ciudad', type: 'text', label: 'Ciudad de la Sucursal' }
+          ],
+          apiEndpoint: 'http://localhost:3000/editar-sucursal'
+        },
+        {
+          tituloFormulario: 'Agregar Sucursal',
+          messageFormulario:
+            'Rellena los detalles de la sucursal que deseas agregar, Los campos son obligatorios.',
+          fields: [
+            { name: 'nombre', type: 'text', label: 'Nombre de la Sucursal' },
+            { name: 'direccion', type: 'text', label: 'Dirección de la Sucursal' },
+            { name: 'ciudad', type: 'text', label: 'Ciudad de la Sucursal' }
+          ],
+          apiEndpoint: 'http://localhost:3000/agregar-sucursal'
+        }
+      ]
     }
   ]
+
   const [activeIndex, setActiveIndex] = useState(null) // Maneja el índice activo
 
   const handleAbrirSeccion = (index) => {
     setActiveIndex((prevIndex) => (prevIndex === index ? null : index)) // Si es el mismo índice, ciérralo; de lo contrario, ábrelo.
     setIndice(index)
   }
-  console.log(indice)
 
   useEffect(() => {
     const loadMercaderia = async () => {
@@ -99,6 +191,7 @@ const Configuracion = () => {
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters)
   }
+
   return (
     <>
       {user.rol === 'admin' && (
@@ -127,23 +220,24 @@ const Configuracion = () => {
                           <span className="text__loader">Cargando</span>
                         </div>
                       ) : (
-                        <article className="table__container">
-                          <FiltroProductos
-                            columns={Object.keys(btn.muestra[0] || {})}
-                            onFilterChange={handleFilterChange}
-                          />
-                          <div className="table-wrapper">
-                            <TablesProductos data={btn.muestra} filters={filters} />
-                          </div>
-                        </article>
+                        <>
+                          <article className="table__container">
+                            <FiltroProductos
+                              columns={Object.keys(btn.muestra[0] || {})}
+                              onFilterChange={handleFilterChange}
+                            />
+                            <div className="table-wrapper">
+                              <TablesProductos data={btn.muestra} filters={filters} />
+                            </div>
+                          </article>
+                          <Tools formConfigs={btn.formConfig} />
+                        </>
                       )}
                     </>
                   )}
                 </React.Fragment>
               ))}
             </div>
-            <Link to="/register">Registar</Link>
-
           </section>
         </>
       )}

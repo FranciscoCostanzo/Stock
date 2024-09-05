@@ -5,6 +5,7 @@ import TablesProductos from '../../Components/Table/TablesProductos'
 import BtnGeneral from '../../Components/Btns/BtnGeneral'
 import { toast } from 'react-toastify'
 import SelectSucursales from '../../Components/Inputs/SelectSucursales'
+import { urlEndpoint } from '../../lib'
 
 const FormVentas = () => {
   const { user } = useContext(AuthContext)
@@ -330,7 +331,7 @@ const FormVentas = () => {
     try {
       // Crear el formData dinámico
       const formDataDinamico = construirFormDataDinamico()
-      const response = await fetch('http://localhost:3000/venta', {
+      const response = await fetch(`${urlEndpoint}/venta`, {
         method: 'POST',
         mode: 'cors',
         headers: {
