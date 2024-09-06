@@ -1,5 +1,5 @@
-import BtnVolver from "../Components/Btns/BtnVolver/BtnVolver"
-import ContenedorPages from "../Components/Contenedor/ContenedorPages"
+import BtnVolver from '../Components/Btns/BtnVolver/BtnVolver'
+import ContenedorPages from '../Components/Contenedor/ContenedorPages'
 
 const Caja = () => {
     return (

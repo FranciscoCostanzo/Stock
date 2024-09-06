@@ -46,9 +46,28 @@ export const obtenerTarjetas = async () => {
   }
 }
 
-export const obtenerVentasSemana = async () => {
+export const obtenerVentasAdmin = async () => {
   try {
-    const response = await fetch(`${urlEndpoint}/ventas-semana`, {
+    const response = await fetch(`http://localhost:3000/ventas-admin`, {
+      method: 'GET',
+      credentials: 'include'
+    })
+
+    if (!response.ok) {
+      throw new Error('Error al obtener las tarjetas.')
+    }
+
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.error('Error en la solicitud:', error)
+    throw error
+  }
+}
+
+export const obtenerVentasSucursal = async (idSucursal) => {
+  try {
+    const response = await fetch(`http://localhost:3000/ventas-sucursal/${idSucursal}`, {
       method: 'GET',
       credentials: 'include'
     })

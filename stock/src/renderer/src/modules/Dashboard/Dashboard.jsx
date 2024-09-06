@@ -11,7 +11,7 @@ const Dashbord = () => {
     { btn: 'Ventas', to: '/ventas', toAdmin: '/ventas', roles: ['admin', 'empleado'] },
     { btn: 'Pedidos', to:"/recibir-pedidos",  toAdmin: '/pedidos', roles: ['admin', 'empleado'] },
     { btn: 'Caja', to:"/caja", toAdmin:"/caja", roles: ['admin', 'empleado'] },
-    { btn: 'Codigo de barra', roles: ['admin'] },
+    { btn: 'Etiqueta', toAdmin: "/etiqueta", roles: ['admin'] },
     { btn: 'Configuracion', toAdmin: '/configuracion', roles: ['admin'] }
   ]
 

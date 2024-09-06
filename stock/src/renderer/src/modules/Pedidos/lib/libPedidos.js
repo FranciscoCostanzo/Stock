@@ -1,6 +1,8 @@
+import { urlEndpoint } from "../../lib"
+
 export const obtenerArticuloPedidos = async (idMercadeia) => {
   try {
-    const response = await fetch(`http://localhost:3000/articulo-pedidos`, {
+    const response = await fetch(`${urlEndpoint}/articulo-pedidos`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -24,7 +26,7 @@ export const obtenerArticuloPedidos = async (idMercadeia) => {
 }
 export const obtenerPedidosAdmin = async () => {
   try {
-    const response = await fetch(`http://localhost:3000/ver-pedidos-admin`, {
+    const response = await fetch(`${urlEndpoint}/ver-pedidos-admin`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -46,7 +48,7 @@ export const obtenerPedidosAdmin = async () => {
 
 export const obtenerPedidosEmpleado = async (idSucursal) => {
   try {
-    const response = await fetch(`http://localhost:3000/ver-pedidos-empleado/${idSucursal}`, {
+    const response = await fetch(`${urlEndpoint}/ver-pedidos-empleado/${idSucursal}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -68,7 +70,7 @@ export const obtenerPedidosEmpleado = async (idSucursal) => {
 
 export const obtenerPedidosEmpleadoPendientes = async (idSucursal) => {
   try {
-    const response = await fetch(`http://localhost:3000/ver-pedidos-empleado-pendientes/${idSucursal}`, {
+    const response = await fetch(`${urlEndpoint}/ver-pedidos-empleado-pendientes/${idSucursal}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'

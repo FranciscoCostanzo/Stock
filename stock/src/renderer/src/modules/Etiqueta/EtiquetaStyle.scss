@@ -1,0 +1,25 @@
+.contenedor__generar__etiqueta{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    position: relative;
+    border-radius: 10px;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    border-radius: 16px;
+    padding: 20px;
+
+    h2{
+        font-size: 28px;
+        width: 300px;
+        text-align: start;
+    }
+
+    .btn__aceptar__etiqueta{
+        font-size: 22px;
+    }
+}

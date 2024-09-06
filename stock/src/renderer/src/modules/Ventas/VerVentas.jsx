@@ -3,7 +3,7 @@ import BtnVolver from '../Components/Btns/BtnVolver/BtnVolver'
 import TablesProductos from '../Components/Table/TablesProductos'
 import { AuthContext } from '../Auth/context/AuthContext'
 import FiltroProductos from '../Mercaderia/components/Filtros/FiltroProductos'
-import { obtenerVentasSemana } from './lib/libVentas'
+import { obtenerVentasAdmin, obtenerVentasSucursal } from './lib/libVentas'
 
 const VerVentas = () => {
   const { user } = useContext(AuthContext)
@@ -16,7 +16,11 @@ const VerVentas = () => {
       try {
         if (user) {
           let data
-          data = await obtenerVentasSemana()
+          if (user.rol === 'admin') {
+            data = await obtenerVentasAdmin()
+          } else {
+            data = await obtenerVentasSucursal(user.sucursal.id)
+          }
           setVentasSemana(data)
         }
       } catch (error) {
@@ -44,7 +48,7 @@ const VerVentas = () => {
       Adelanto,
       total_venta,
       Total
-    } = venta;
+    } = venta
 
     if (!acc[id_venta]) {
       acc[id_venta] = {
@@ -56,21 +60,22 @@ const VerVentas = () => {
         NombreCliente,
         ApellidoCliente,
         DNICliente,
-        Adelanto: Adelanto === "No tiene" ? Adelanto : parseFloat(Adelanto),
+        Adelanto: Adelanto === 'No tiene' ? Adelanto : parseFloat(Adelanto),
         Total_Venta: parseFloat(total_venta),
         Total: parseFloat(Total)
-      };
+      }
     } else {
-      acc[id_venta].Adelanto = Adelanto === "No tiene" ? Adelanto : acc[id_venta].Adelanto + parseFloat(Adelanto);
-      acc[id_venta].Total_Venta += parseFloat(total_venta);
-      acc[id_venta].Total += parseFloat(Total);
+      acc[id_venta].Adelanto =
+        Adelanto === 'No tiene' ? Adelanto : acc[id_venta].Adelanto + parseFloat(Adelanto)
+      acc[id_venta].Total_Venta += parseFloat(total_venta)
+      acc[id_venta].Total += parseFloat(Total)
     }
 
-    return acc;
-  }, {});
+    return acc
+  }, {})
 
   // Convertir el objeto agrupado en un array
-  const ventasUnificadasArray = Object.values(ventasUnificadas);
+  const ventasUnificadasArray = Object.values(ventasUnificadas)
 
   // Filtros
   const filtros = ventasSemana.map(

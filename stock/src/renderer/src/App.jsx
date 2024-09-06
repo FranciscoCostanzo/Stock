@@ -21,6 +21,7 @@ import Pedidos from './modules/Pedidos/Pedidos.jsx'
 import VerPedidos from './modules/Pedidos/VerPedidos.jsx'
 import RecibirPedidos from './modules/Pedidos/RecibirPedidos.jsx'
 import Caja from './modules/Caja/Caja.jsx'
+import Etiqueta from './modules/Etiqueta/Etiqueta.jsx'
 
 const App = () => {
   const [tokenStatus, setTokenStatus] = useState(null);
@@ -68,6 +69,8 @@ const App = () => {
           <Route path="/register" element={<Register />} />
 
           <Route path="/caja" element={<Caja />} />
+
+          <Route path="/etiqueta" element={<Etiqueta />} />
         </Route>
       </Routes>
       <AuthTimeStampAviso />

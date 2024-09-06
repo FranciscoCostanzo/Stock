@@ -36,7 +36,7 @@ import {
     cargarVenta,
     pedirArticuloEmpleado,
 } from "../controllers/POST/ventasTools.js";
-import { pedirVentasSemana } from "../controllers/GET/pedirVentas.js";
+import { pedirVentasAdmin, pedirVentasPorSucursal } from "../controllers/GET/pedirVentas.js";
 import {
     EnviarPedidoAdmin,
     pedirArticuloPedidos,
@@ -76,7 +76,8 @@ router.get("/inversion", pedirInversionAdmin);
 router.get("/fallas", pedirFallasAdmin);
 router.get("/fallas/:idSucursal", pedirFallasEmpleado);
 
-router.get("/ventas-semana", pedirVentasSemana);
+router.get("/ventas-admin", pedirVentasAdmin);
+router.get("/ventas-sucursal/:idSucursal", pedirVentasPorSucursal);
 
 // Rutas POST de los productos
 // Ruta para la tabla Mercaderia
