@@ -249,7 +249,6 @@ const Pedidos = () => {
               ))
             ))}
           </div>
-
         </>
       ) : (
         <section className="mercaderia">
