@@ -11,13 +11,20 @@ Tenía una base de datos en Microsoft Access y decidí exportarla a Excel para l
 CREATE DATABASE TUBASE;
 
 CREATE TABLE Caja (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    fecha DATETIME NOT NULL,
-    saldo_inicial DECIMAL(10, 2) NOT NULL,
-    saldo_final DECIMAL(10, 2) NOT NULL,
-    id_sucursal INT,
-    CONSTRAINT fk_caja_sucursal FOREIGN KEY (id_sucursal) REFERENCES Sucursal(id)
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  fecha DATE NOT NULL,  -- Fecha en formato ISO 8601
+  motivo INT NOT NULL,  -- Foreign Key a la tabla Motivos_Caja
+  monto DECIMAL(10, 2) NOT NULL,  -- Valor con dos decimales
+  sobrante DECIMAL(10, 2) NOT NULL,  -- Valor con dos decimales
+  id_usuario INT NOT NULL,  -- Foreign Key a la tabla Usuarios
+  id_sucursal INT NOT NULL,  -- Foreign Key a la tabla Sucursal,
+  
+  -- Definición de las Foreign Keys
+  CONSTRAINT fk_motivo FOREIGN KEY (motivo) REFERENCES Motivos_Caja(id),
+  CONSTRAINT fk_usuario FOREIGN KEY (id_usuario) REFERENCES Usuarios(id),
+  CONSTRAINT fk_sucursal FOREIGN KEY (id_sucursal) REFERENCES Sucursal(id)
 );
+
 
 CREATE TABLE Fallas (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -88,6 +95,12 @@ CREATE TABLE Ventas (
     FOREIGN KEY (id_sucursal) REFERENCES Sucursal(id),
     FOREIGN KEY (id_mercaderia) REFERENCES Mercaderia(id)
 );
+
+CREATE TABLE Motivos_Caja (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  motivo VARCHAR(255) NOT NULL
+);
+
 
 
 ```

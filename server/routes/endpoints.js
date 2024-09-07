@@ -46,6 +46,7 @@ import {
     recibirPedido,
 } from "../controllers/POST/pedidosTools.js";
 import { agregarTarjeta, editarTarjeta, eliminarTarjeta } from "../controllers/POST/materialesTools.js";
+import { pedirTotalCajaSucursal } from "../controllers/GET/pedirCaja.js";
 
 const router = Router();
 
@@ -116,5 +117,8 @@ router.get(
 router.post("/eliminar-tarjeta", eliminarTarjeta)
 router.post("/editar-tarjeta", editarTarjeta)
 router.post("/agregar-tarjeta", agregarTarjeta)
+
+
+router.get("/caja/:idSucursal", pedirTotalCajaSucursal)
 
 export default router;

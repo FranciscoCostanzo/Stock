@@ -67,7 +67,6 @@ const FormVentas = () => {
     setSelectedSucursalId(id)
   }
 
-
   const construirFormDataDinamico = () => {
     return cargasVentas.map((articulo) => {
       const precioTotalArticulo = articulo.Precio * articulo.Cantidad
@@ -85,15 +84,15 @@ const FormVentas = () => {
 
       const total_venta = esPorcentajeEnTarjeta
         ? truncarADosDecimales(
-            truncarADosDecimales(precioTotalArticulo - adelanto) +
-              truncarADosDecimales(precioTotalArticulo - adelanto) *
-                (parseFloat(dataVentasFields.porcentaje) / 100)
-          )
+          truncarADosDecimales(precioTotalArticulo - adelanto) +
+          truncarADosDecimales(precioTotalArticulo - adelanto) *
+          (parseFloat(dataVentasFields.porcentaje) / 100)
+        )
         : truncarADosDecimales(precioTotalArticulo - adelanto)
 
       return {
         id_usuario: user.id,
-        id_sucursal: user.rol === "admin" ? selectedSucursalId : user.sucursal.id,
+        id_sucursal: user.rol === 'admin' ? selectedSucursalId : user.sucursal.id,
         id_mercaderia: articulo.Artículo,
         cantidad: articulo.Cantidad,
         metodo_de_pago: dataVentasFields.metodo_de_pago.toLowerCase(),
@@ -151,7 +150,10 @@ const FormVentas = () => {
     }
 
     try {
-      const data = await obtenerArticuloEmpleado(articuloTrimmed, user.rol === "admin" ? selectedSucursalId : user.sucursal.id)
+      const data = await obtenerArticuloEmpleado(
+        articuloTrimmed,
+        user.rol === 'admin' ? selectedSucursalId : user.sucursal.id
+      )
       setDataArticulo(data) // Set the state with the fetched data
     } catch (error) {
       console.error(error)
@@ -202,7 +204,7 @@ const FormVentas = () => {
           // Si existe, incrementa la cantidad
           return prevCargas.map((articulo) =>
             articulo.id_mercaderia === dataArticulo.id_mercaderia &&
-            articulo.Descripcion === dataArticulo.Descripcion
+              articulo.Descripcion === dataArticulo.Descripcion
               ? { ...articulo, Cantidad: articulo.Cantidad + 1 }
               : articulo
           )
@@ -262,7 +264,7 @@ const FormVentas = () => {
 
     // Si el valor no es un número válido o es negativo
     if (isNaN(valor) || valor <= 0) {
-      setCambio(`Debe ingresar un valor válido mayor a 0`)
+      setCambio(``)
       setEntrega(0)
     } else if (valor < totalVenta) {
       // Si el valor es menor que el total de la venta
@@ -324,7 +326,6 @@ const FormVentas = () => {
     totalVenta
   ])
 
-
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -374,8 +375,6 @@ const FormVentas = () => {
     }
   }
 
-
-
   return (
     <>
       <div className="contenedor__busqueda">
@@ -391,11 +390,7 @@ const FormVentas = () => {
               />
               <span>Artículo</span>
             </label>
-            {user.rol === "admin" && (
-            <SelectSucursales onChange={handleSucursalChange} />
-            )}
-              
-
+            {user.rol === 'admin' && <SelectSucursales onChange={handleSucursalChange} />}
           </div>
           <BtnGeneral tocar={handlePedirPrecioArticulo}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -529,17 +524,19 @@ const FormVentas = () => {
                           <span>Entrega</span>
                         </label>
                       </div>
-                      <p>Cambio: {cambio}</p>
-                      <BtnGeneral claseBtn="btn__guardar__venta" tocar={handleSubmit}>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                          <path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                          <path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                          <path d="M17 17h-11v-14h-2" />
-                          <path d="M6 5l14 1l-1 7h-13" />
-                        </svg>
-                        Guardar Venta
-                      </BtnGeneral>
+                      <p className="cambio">Cambio: {cambio}</p>
+                      {entrega >= totalVenta && (
+                        <BtnGeneral claseBtn="btn__guardar__venta" tocar={handleSubmit}>
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                            <path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                            <path d="M17 17h-11v-14h-2" />
+                            <path d="M6 5l14 1l-1 7h-13" />
+                          </svg>
+                          Guardar Venta
+                        </BtnGeneral>
+                      )}
                     </>
                   )}
                   {dataVentasFields.metodo_de_pago === 'Tarjeta' && (
@@ -600,10 +597,12 @@ const FormVentas = () => {
                                   <span>Cuotas</span>
                                 </label>
                               </div>
-                              <p>
-                                {dataVentasFields.cuotas} Cuota de{' '}
-                                {totalFinal / dataVentasFields.cuotas}
-                              </p>
+                              {dataVentasFields.cuotas > 0 && (
+                                <p>
+                                  {dataVentasFields.cuotas} Cuota de{' '}
+                                  {truncarADosDecimales(totalFinal / dataVentasFields.cuotas)}
+                                </p>
+                              )}
                               <div className="flex">
                                 <label>
                                   <input
@@ -665,7 +664,6 @@ const FormVentas = () => {
                                   </div>
                                 </>
                               )}
-                              <p className="total__tarjeta">Total para tarjeta: ${totalFinal}</p>
                             </>
                           )}
                         </>
@@ -676,6 +674,9 @@ const FormVentas = () => {
               </article>
             )}
             <p className="totalVenta">Total: ${totalVenta}</p>
+            {dataVentasFields.id_tarjeta >= 1 && (
+              <p className="total__tarjeta">Total a pagar por la tarjeta: ${totalFinal}</p>
+            )}
           </>
         )}
       </div>

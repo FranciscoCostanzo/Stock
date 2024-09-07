@@ -162,7 +162,7 @@
                 }
 
                 p {
-                    justify-content: center;
+                    justify-content: start;
                     display: flex;
                     align-items: center;
                     width: 120px;
@@ -170,13 +170,12 @@
                     font-weight: bold;
                 }
 
-                .total__tarjeta {
-                    width: 140px;
-                    text-align: end;
-                    position: absolute;
-                    right: 2%;
-                    bottom: 15%;
+                .cambio{
+                    width: 220px;
+
                 }
+
+
 
                 .btn__guardar__venta {
                     position: absolute;
@@ -193,6 +192,16 @@
             top: -20%;
             right: 2%;
             width: 100px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .total__tarjeta {
+            width: 200px;
+            text-align: end;
+            position: absolute;
+            top: -20%;
+            right: 12%;
             font-size: 20px;
             font-weight: bold;
         }
