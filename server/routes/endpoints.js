@@ -6,6 +6,7 @@ import {
     register,
 } from "../controllers/POST/authUsers.js";
 import {
+    pedirMotivosCaja,
     pedirSucursales,
     pedirSucursalesAdmin,
     pedirTarjetas,
@@ -120,5 +121,6 @@ router.post("/agregar-tarjeta", agregarTarjeta)
 
 
 router.get("/caja/:idSucursal", pedirTotalCajaSucursal)
+router.get("/motivos-caja", pedirMotivosCaja)
 
 export default router;

@@ -73,3 +73,13 @@ export const pedirSucursalesAdmin = async (req, res) => {
     res.status(500).json({ error: "Error obteniendo las sucursales." });
   }
 };
+
+export const pedirMotivosCaja = async (req, res) => {
+  try {
+    const [motivos] = await db.query("SELECT * FROM Motivos_Caja");
+    res.status(200).json(motivos);
+  } catch (error) {
+    console.error("Error obteniendo las tarjetas:", error);
+    res.status(500).json({ error: "Error obteniendo las tarjetas." });
+  }
+};

@@ -21,3 +21,22 @@ export const obtenerCajaPorSucursal = async (idSucursal) => {
     throw error // Propagar el error para que sea manejado más arriba
   }
 }
+
+export const obtenerMotivosCaja = async () => {
+  try {
+    const response = await fetch(`http://localhost:3000/motivos-caja`, {
+      method: 'GET',
+      credentials: 'include'
+    })
+
+    if (!response.ok) {
+      throw new Error('Error al obtener la caja.')
+    }
+
+    const data = await response.json()
+    return data // Retornar los datos
+  } catch (error) {
+    console.error('Error en la solicitud:', error)
+    throw error // Propagar el error para que sea manejado más arriba
+  }
+}
