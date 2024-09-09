@@ -1,96 +1,121 @@
-import { useContext, useEffect, useState } from 'react';
-import BtnVolver from '../Components/Btns/BtnVolver/BtnVolver';
-import ContenedorPages from '../Components/Contenedor/ContenedorPages';
-import { obtenerCajaPorSucursal } from './lib/libCaja';
-import { AuthContext } from '../Auth/context/AuthContext';
-import SelectMotivosCaja from './components/SelectMotivosCaja';
-import { toast } from 'react-toastify';
+import { useContext, useEffect, useState } from 'react'
+import BtnVolver from '../Components/Btns/BtnVolver/BtnVolver'
+import ContenedorPages from '../Components/Contenedor/ContenedorPages'
+import { obtenerCajaPorSucursal } from './lib/libCaja'
+import { AuthContext } from '../Auth/context/AuthContext'
+import SelectMotivosCaja from './components/SelectMotivosCaja'
+import { toast } from 'react-toastify'
+import BtnGeneral from '../Components/Btns/BtnGeneral'
 
 const Caja = () => {
-    const { user } = useContext(AuthContext);
-    const [caja, setCaja] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const { user } = useContext(AuthContext)
+    const [caja, setCaja] = useState(null)
+    const [loading, setLoading] = useState(true)
     const [dataCajaFields, setDataCajaFields] = useState({
         monto: 0,
-        sobrante: 0,
-    });
-    const [selectedMotivoId, setSelectedMotivoId] = useState(null);
-    const [cajaEntries, setCajaEntries] = useState([]); // Array que almacena las entradas de caja
+        sobrante: 0
+    })
+    const [selectedMotivoId, setSelectedMotivoId] = useState(null)
+    const [cajaEntries, setCajaEntries] = useState([]) // Array que almacena las entradas de caja
 
     useEffect(() => {
         const loadCaja = async () => {
             try {
                 if (user) {
-                    const data = await obtenerCajaPorSucursal(user.sucursal.id);
-                    setCaja(data);
+                    const data = await obtenerCajaPorSucursal(user.sucursal.id)
+                    setCaja(data)
                 }
             } catch (error) {
-                toast.error('Error al cargar la caja');
-                console.log('Error al cargar la caja:', error.message);
+                toast.error('Error al cargar la caja')
+                console.log('Error al cargar la caja:', error.message)
             } finally {
-                setLoading(false);
+                setLoading(false)
             }
-        };
-        loadCaja();
-    }, [user]);
+        }
+        loadCaja()
+    }, [user])
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const { name, value } = e.target
         setDataCajaFields({
             ...dataCajaFields,
-            [name]: value,
-        });
-    };
+            [name]: value
+        })
+    }
 
     const handleMotivoChange = (id) => {
-        setSelectedMotivoId(id);
-    };
+        setSelectedMotivoId(id)
+    }
+
+    const truncarADosDecimales = (num) => {
+        return Math.trunc(num * 100) / 100
+    }
+
+    const calcularFondo = () => {
+        const totalMontos = cajaEntries.reduce((total, entry) => total + entry.monto, 0)
+        const fondoFinal = caja.totalCaja - totalMontos
+        return truncarADosDecimales(fondoFinal)
+    }
+
+    const isFondoAvailable = () => calcularFondo() > 0
 
     const handleAddEntry = () => {
-        const { monto } = dataCajaFields;
-        const montoNumerico = Number(monto);
+        const { monto } = dataCajaFields
+        const montoNumerico = Number(monto)
 
         if (selectedMotivoId === null) {
-            toast.error('Debes seleccionar un motivo');
-            return;
+            toast.error('Debes seleccionar un motivo')
+            return
         }
 
         // Verificar que el monto no exceda el efectivo disponible
         if (montoNumerico > caja.totalCaja) {
-            toast.error(`No puedes usar más de ${caja.totalCaja} en efectivo`);
-            return;
+            toast.error(`No puedes usar más de ${caja.totalCaja} en efectivo`)
+            return
         }
 
         // Verificar que el motivo no se haya seleccionado antes
-        if (cajaEntries.some(entry => entry.id_motivo === selectedMotivoId)) {
-            toast.error('Ya has seleccionado este motivo, elige otro.');
-            return;
+        if (cajaEntries.some((entry) => entry.id_motivo === selectedMotivoId)) {
+            toast.error('Ya has seleccionado este motivo, elige otro.')
+            return
         }
 
-        // Crear nueva entrada y restar el monto del total de la caja
+        let fondoFinal
+        let sobranteFinal = selectedMotivoId === 2 ? Number(dataCajaFields.sobrante) : 0
+
+        // Si se selecciona motivo 2, restar el monto acumulado antes de agregar la última entrada
+        if (selectedMotivoId === 2) {
+            const totalMontos = cajaEntries.reduce((total, entry) => total + entry.monto, 0)
+            const totalConNuevoMonto = totalMontos + montoNumerico
+
+            // Calcular el fondo con el nuevo monto incluido
+            fondoFinal = truncarADosDecimales(caja.totalCaja - totalConNuevoMonto)
+
+            // Si el fondo es mayor a 0, mostrar error y no permitir agregar sobrante
+            if (fondoFinal > 0) {
+                toast.error(
+                    `Aún tienes un fondo disponible de ${fondoFinal}. Debes cerrar la caja antes de agregar sobrante.`
+                )
+                return
+            }
+        }
+
+        // Crear nueva entrada
         const newEntry = {
             monto: montoNumerico,
-            sobrante: selectedMotivoId === 2 ? Number(dataCajaFields.sobrante) : 0,
+            sobrante: sobranteFinal, // Asegurarse de que el sobrante sea 0 si fondo > 0
+            fondo: selectedMotivoId === 2 ? fondoFinal : 0,
             id_motivo: selectedMotivoId,
             id_usuario: user.id,
-            id_sucursal: user.sucursal.id,
-        };
+            id_sucursal: user.sucursal.id
+        }
 
-        // Actualizar el efectivo en la caja
-        setCaja({
-            ...caja,
-            totalCaja: caja.totalCaja - montoNumerico,
-        });
-
-        setCajaEntries([...cajaEntries, newEntry]); // Agregar nueva entrada al array
-        setDataCajaFields({ monto: 0, sobrante: 0 }); // Resetear los campos
-        setSelectedMotivoId(null); // Resetear motivo
-        toast.success('Entrada agregada exitosamente');
-    };
-
-    const truncarADosDecimales = (num) => {
-        return Math.trunc(num * 100) / 100;
-    };
+        // Agregar nueva entrada al array
+        setCajaEntries([...cajaEntries, newEntry])
+        setDataCajaFields({ monto: 0, sobrante: 0 }) // Resetear los campos
+        setSelectedMotivoId(null) // Resetear motivo
+        toast.success('Entrada agregada exitosamente')
+    }
 
     // Función para cerrar la caja y enviar los datos al endpoint
     const handleCerrarCaja = async () => {
@@ -98,28 +123,27 @@ const Caja = () => {
             const response = await fetch('http://localhost:3000/cerrar-caja', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(cajaEntries), // Enviar el array de entradas en el cuerpo de la solicitud
-                credentials: 'include', // Si es necesario enviar cookies
-            });
+                credentials: 'include' // Si es necesario enviar cookies
+            })
 
             if (!response.ok) {
-                throw new Error('Error al cerrar la caja');
+                throw new Error('Error al cerrar la caja')
             }
 
-            toast.success('Caja cerrada exitosamente');
-            setCajaEntries([]); // Limpiar las entradas de la caja después de cerrarla
+            toast.success('Caja cerrada exitosamente')
+            setCajaEntries([]) // Limpiar las entradas de la caja después de cerrarla
         } catch (error) {
-            toast.error('Error al cerrar la caja');
-            console.log('Error:', error.message);
+            toast.error('Error al cerrar la caja')
+            console.log('Error:', error.message)
         }
-    };
+    }
 
     // Verificar si el motivo con id 2 está en el array
-    const isMotivoRendicionInEntries = cajaEntries.some(entry => entry.id_motivo === 2);
+    const isMotivoRendicionInEntries = cajaEntries.some((entry) => entry.id_motivo === 2)
 
-    console.log(cajaEntries)
     return (
         <>
             {loading ? (
@@ -152,14 +176,26 @@ const Caja = () => {
                                             Total de ventas con tarjeta: <strong>${caja.totalTarjeta}</strong>
                                         </p>
                                     </div>
+                                    {cajaEntries.length > 0 && (
+                                        <div className="contenedor__info__caja">
+                                            <h2>La caja se va a cerrar con:</h2>
+                                            {/* Mostrar entradas actuales */}
+                                            {cajaEntries.map((entry, index) => (
+                                                <p key={index}>
+                                                    Motivo: {entry.id_motivo}, Monto: ${entry.monto}, Sobrante: $
+                                                    {entry.sobrante}
+                                                </p>
+                                            ))}
+                                        </div>
+                                    )}
                                 </article>
                                 <p className="total__ventas__dia">Total de ventas del día: ${caja.totalVentas}</p>
-                                <p className="total__efectivo__dia">Efectivo de la Caja: ${truncarADosDecimales(caja.totalCaja)}</p>
+                                <p className="total__efectivo__dia">Efectivo de la Caja: ${calcularFondo()}</p>
                             </>
                         ) : (
                             <p>No hay datos de caja disponibles.</p>
                         )}
-                        <h4>Cerrar caja:</h4>
+                        <h2>Cerrar caja:</h2>
 
                         {/* Select para motivos */}
                         <SelectMotivosCaja onChange={handleMotivoChange} />
@@ -178,6 +214,8 @@ const Caja = () => {
                             </label>
                         </div>
 
+                        {/* Solo mostrar el campo sobrante si el motivo es 2 y no hay fondo */}
+                        {/* {selectedMotivoId === 2 && !isFondoAvailable() && ( */}
                         {selectedMotivoId === 2 && (
                             <div className="flex">
                                 <label>
@@ -195,27 +233,36 @@ const Caja = () => {
                         )}
 
                         {/* Botón para agregar entrada */}
-                        <button onClick={handleAddEntry} className="btn">Agregar</button>
-
-                        {/* Mostrar entradas actuales */}
-                        <h4>Entradas actuales en caja:</h4>
-                        <ul>
-                            {cajaEntries.map((entry, index) => (
-                                <li key={index}>
-                                    Motivo: {entry.id_motivo}, Monto: ${entry.monto}, Sobrante: ${entry.sobrante}
-                                </li>
-                            ))}
-                        </ul>
+                        <BtnGeneral tocar={handleAddEntry}>
+                            <svg viewBox="0 0 24 24">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                                <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                                <path d="M14 11h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5" />
+                                <path d="M12 17v1m0 -8v1" />
+                            </svg>
+                            Agregar
+                        </BtnGeneral>
 
                         {/* Botón para cerrar la caja */}
                         {isMotivoRendicionInEntries && (
-                            <button onClick={handleCerrarCaja} className="btn">Cerrar Caja</button>
+                            <BtnGeneral tocar={handleCerrarCaja}>
+                                <svg viewBox="0 0 24 24">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M9 14c0 1.657 2.686 3 6 3s6 -1.343 6 -3s-2.686 -3 -6 -3s-6 1.343 -6 3z" />
+                                    <path d="M9 14v4c0 1.656 2.686 3 6 3s6 -1.344 6 -3v-4" />
+                                    <path d="M3 6c0 1.072 1.144 2.062 3 2.598s4.144 .536 6 0c1.856 -.536 3 -1.526 3 -2.598c0 -1.072 -1.144 -2.062 -3 -2.598s-4.144 -.536 -6 0c-1.856 .536 -3 1.526 -3 2.598z" />
+                                    <path d="M3 6v10c0 .888 .772 1.45 2 2" />
+                                    <path d="M3 11c0 .888 .772 1.45 2 2" />
+                                </svg>
+                                Cerrar Caja
+                            </BtnGeneral>
                         )}
                     </ContenedorPages>
                 </section>
             )}
         </>
-    );
-};
+    )
+}
 
-export default Caja;
+export default Caja

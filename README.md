@@ -15,7 +15,8 @@ CREATE TABLE Caja (
   fecha DATE NOT NULL,  -- Fecha en formato ISO 8601
   motivo INT NOT NULL,  -- Foreign Key a la tabla Motivos_Caja
   monto DECIMAL(10, 2) NOT NULL,  -- Valor con dos decimales
-  sobrante DECIMAL(10, 2) NOT NULL,  -- Valor con dos decimales
+  sobrante DECIMAL(10, 2) NOT NULL,
+  fondo DECIMAL(10, 2) NOT NULL,
   id_usuario INT NOT NULL,  -- Foreign Key a la tabla Usuarios
   id_sucursal INT NOT NULL,  -- Foreign Key a la tabla Sucursal,
 
