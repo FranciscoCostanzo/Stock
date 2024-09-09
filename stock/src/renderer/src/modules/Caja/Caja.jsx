@@ -4,7 +4,7 @@ import ContenedorPages from '../Components/Contenedor/ContenedorPages';
 import { obtenerCajaPorSucursal } from './lib/libCaja';
 import { AuthContext } from '../Auth/context/AuthContext';
 import SelectMotivosCaja from './components/SelectMotivosCaja';
-import { toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const Caja = () => {
     const { user } = useContext(AuthContext);
@@ -47,8 +47,17 @@ const Caja = () => {
     };
 
     const handleAddEntry = () => {
+        const { monto } = dataCajaFields;
+        const montoNumerico = Number(monto);
+
         if (selectedMotivoId === null) {
             toast.error('Debes seleccionar un motivo');
+            return;
+        }
+
+        // Verificar que el monto no exceda el efectivo disponible
+        if (montoNumerico > caja.totalCaja) {
+            toast.error(`No puedes usar más de ${caja.totalCaja} en efectivo`);
             return;
         }
 
@@ -58,13 +67,20 @@ const Caja = () => {
             return;
         }
 
+        // Crear nueva entrada y restar el monto del total de la caja
         const newEntry = {
-            monto: Number(dataCajaFields.monto),
+            monto: montoNumerico,
             sobrante: selectedMotivoId === 2 ? Number(dataCajaFields.sobrante) : 0,
             id_motivo: selectedMotivoId,
             id_usuario: user.id,
             id_sucursal: user.sucursal.id,
         };
+
+        // Actualizar el efectivo en la caja
+        setCaja({
+            ...caja,
+            totalCaja: caja.totalCaja - montoNumerico,
+        });
 
         setCajaEntries([...cajaEntries, newEntry]); // Agregar nueva entrada al array
         setDataCajaFields({ monto: 0, sobrante: 0 }); // Resetear los campos
@@ -72,6 +88,38 @@ const Caja = () => {
         toast.success('Entrada agregada exitosamente');
     };
 
+    const truncarADosDecimales = (num) => {
+        return Math.trunc(num * 100) / 100;
+    };
+
+    // Función para cerrar la caja y enviar los datos al endpoint
+    const handleCerrarCaja = async () => {
+        try {
+            const response = await fetch('http://localhost:3000/cerrar-caja', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(cajaEntries), // Enviar el array de entradas en el cuerpo de la solicitud
+                credentials: 'include', // Si es necesario enviar cookies
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al cerrar la caja');
+            }
+
+            toast.success('Caja cerrada exitosamente');
+            setCajaEntries([]); // Limpiar las entradas de la caja después de cerrarla
+        } catch (error) {
+            toast.error('Error al cerrar la caja');
+            console.log('Error:', error.message);
+        }
+    };
+
+    // Verificar si el motivo con id 2 está en el array
+    const isMotivoRendicionInEntries = cajaEntries.some(entry => entry.id_motivo === 2);
+
+    console.log(cajaEntries)
     return (
         <>
             {loading ? (
@@ -106,7 +154,7 @@ const Caja = () => {
                                     </div>
                                 </article>
                                 <p className="total__ventas__dia">Total de ventas del día: ${caja.totalVentas}</p>
-                                <p className="total__efectivo__dia">Efectivo de la Caja: ${caja.totalCaja}</p>
+                                <p className="total__efectivo__dia">Efectivo de la Caja: ${truncarADosDecimales(caja.totalCaja)}</p>
                             </>
                         ) : (
                             <p>No hay datos de caja disponibles.</p>
@@ -158,6 +206,11 @@ const Caja = () => {
                                 </li>
                             ))}
                         </ul>
+
+                        {/* Botón para cerrar la caja */}
+                        {isMotivoRendicionInEntries && (
+                            <button onClick={handleCerrarCaja} className="btn">Cerrar Caja</button>
+                        )}
                     </ContenedorPages>
                 </section>
             )}

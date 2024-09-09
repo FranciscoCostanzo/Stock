@@ -7,7 +7,9 @@ export const agregarArticulo = async (req, res) => {
   try {
     // Validar que todos los campos estén presentes
     if (!descripcion || costo === undefined || publico === undefined) {
-      return res.status(400).json({ error: "Todos los campos son requeridos." });
+      return res
+        .status(400)
+        .json({ error: "Todos los campos son requeridos." });
     }
 
     // Eliminar espacios al principio y al final de las cadenas de texto
@@ -15,12 +17,16 @@ export const agregarArticulo = async (req, res) => {
 
     // Verificar si algún campo de texto está vacío después de eliminar espacios
     if (descripcion === "") {
-      return res.status(400).json({ error: "La descripción no puede estar vacía." });
+      return res
+        .status(400)
+        .json({ error: "La descripción no puede estar vacía." });
     }
 
     // Verificar si los valores numéricos son válidos
     if (isNaN(costo) || isNaN(publico) || costo === "" || publico === "") {
-      return res.status(400).json({ error: "Costo y público deben ser números válidos." });
+      return res
+        .status(400)
+        .json({ error: "Costo y público deben ser números válidos." });
     }
 
     // Obtener una conexión a la base de datos
@@ -70,7 +76,9 @@ export const modificarArticulo = async (req, res) => {
   try {
     // Validar que el ID esté presente
     if (!id) {
-      return res.status(400).json({ error: "El ID del artículo es requerido." });
+      return res
+        .status(400)
+        .json({ error: "El ID del artículo es requerido." });
     }
 
     // Obtener una conexión a la base de datos
@@ -96,12 +104,22 @@ export const modificarArticulo = async (req, res) => {
       updateValues.push(descripcion.trim());
     }
 
-    if (costo !== undefined && costo !== null && !isNaN(costo) && costo !== "") {
+    if (
+      costo !== undefined &&
+      costo !== null &&
+      !isNaN(costo) &&
+      costo !== ""
+    ) {
       updateFields.push("costo = ?");
       updateValues.push(costo);
     }
 
-    if (publico !== undefined && publico !== null && !isNaN(publico) && publico !== "") {
+    if (
+      publico !== undefined &&
+      publico !== null &&
+      !isNaN(publico) &&
+      publico !== ""
+    ) {
       updateFields.push("publico = ?");
       updateValues.push(publico);
     }
@@ -218,11 +236,9 @@ export const restablecerTodosArticulos = async (req, res) => {
     connection.release();
 
     // Enviar una respuesta exitosa
-    res
-      .status(200)
-      .json({
-        message: "Todos los artículos han sido restablecidos correctamente.",
-      });
+    res.status(200).json({
+      message: "Todos los artículos han sido restablecidos correctamente.",
+    });
   } catch (error) {
     console.error("Error al restablecer todos los artículos:", error);
 
@@ -245,7 +261,11 @@ export const restablecerEspecificoPapelera = async (req, res) => {
 
   // Verificar que la confirmación es "OKRE"
   if (OKRE !== "OKRE") {
-    return res.status(400).json({ error: "Confirmación incorrecta. Escriba 'OKRE' para proceder." });
+    return res
+      .status(400)
+      .json({
+        error: "Confirmación incorrecta. Escriba 'OKRE' para proceder.",
+      });
   }
 
   try {
@@ -268,17 +288,18 @@ export const restablecerEspecificoPapelera = async (req, res) => {
     // Verificar si el artículo está marcado como borrado
     if (borradoMercaderia !== 1) {
       connection.release();
-      return res.status(409).json({ error: "El artículo no está en la papelera." });
+      return res
+        .status(409)
+        .json({ error: "El artículo no está en la papelera." });
     }
 
     // Iniciar una transacción
     await connection.beginTransaction();
 
     // Restablecer el estado de borrado del artículo en la tabla Mercaderia
-    await connection.execute(
-      "UPDATE Mercaderia SET borrado = 0 WHERE id = ?",
-      [id]
-    );
+    await connection.execute("UPDATE Mercaderia SET borrado = 0 WHERE id = ?", [
+      id,
+    ]);
 
     // Restablecer el estado de borrado en todas las filas de la tabla Stock que corresponden al id_mercaderia
     await connection.execute(
@@ -293,7 +314,9 @@ export const restablecerEspecificoPapelera = async (req, res) => {
     connection.release();
 
     // Enviar una respuesta exitosa
-    res.status(200).json({ message: "El artículo ha sido restablecido correctamente." });
+    res
+      .status(200)
+      .json({ message: "El artículo ha sido restablecido correctamente." });
   } catch (error) {
     console.error("Error al restablecer el artículo:", error);
 
@@ -315,7 +338,12 @@ export const vaciarPapelera = async (req, res) => {
 
   // Verificar que la confirmación sea "OKV"
   if (OKV !== "OKV") {
-    return res.status(400).json({ error: "Error en la confirmación. Debes escribir 'OKV' para vaciar la papelera." });
+    return res
+      .status(400)
+      .json({
+        error:
+          "Error en la confirmación. Debes escribir 'OKV' para vaciar la papelera.",
+      });
   }
 
   try {
@@ -326,14 +354,10 @@ export const vaciarPapelera = async (req, res) => {
     await connection.beginTransaction();
 
     // Eliminar registros de la tabla Stock donde la columna borrado sea 1
-    await connection.execute(
-      "DELETE FROM Stock WHERE borrado = 1"
-    );
+    await connection.execute("DELETE FROM Stock WHERE borrado = 1");
 
     // Eliminar registros de la tabla Mercaderia donde la columna borrado sea 1
-    await connection.execute(
-      "DELETE FROM Mercaderia WHERE borrado = 1"
-    );
+    await connection.execute("DELETE FROM Mercaderia WHERE borrado = 1");
 
     // Confirmar la transacción
     await connection.commit();
@@ -342,7 +366,12 @@ export const vaciarPapelera = async (req, res) => {
     connection.release();
 
     // Enviar una respuesta exitosa
-    res.status(200).json({ message: "Papelera vaciada correctamente. Todos los registros eliminados." });
+    res
+      .status(200)
+      .json({
+        message:
+          "Papelera vaciada correctamente. Todos los registros eliminados.",
+      });
   } catch (error) {
     console.error("Error al vaciar la papelera:", error);
 
@@ -364,7 +393,12 @@ export const eliminarEspecificoPapelera = async (req, res) => {
 
   // Verificar que la confirmación sea "OKVE"
   if (OKVE !== "OKVE") {
-    return res.status(400).json({ error: "Error en la confirmación. Debes escribir 'OKVE' para eliminar el artículo." });
+    return res
+      .status(400)
+      .json({
+        error:
+          "Error en la confirmación. Debes escribir 'OKVE' para eliminar el artículo.",
+      });
   }
 
   try {
@@ -387,7 +421,9 @@ export const eliminarEspecificoPapelera = async (req, res) => {
     // Verificar si el artículo está marcado como borrado
     if (borradoMercaderia !== 1) {
       connection.release();
-      return res.status(409).json({ error: "El artículo no está en la papelera." });
+      return res
+        .status(409)
+        .json({ error: "El artículo no está en la papelera." });
     }
 
     // Iniciar una transacción
@@ -434,7 +470,7 @@ export const enviarFalla = async (req, res) => {
 
   // Verificar que todos los datos estén presentes
   if (!id_usuario || !id_mercaderia || !id_sucursal || !cantidad) {
-    return res.status(400).json({ error: 'Faltan datos obligatorios' });
+    return res.status(400).json({ error: "Faltan datos obligatorios" });
   }
 
   try {
@@ -450,21 +486,27 @@ export const enviarFalla = async (req, res) => {
     // Si no se encuentra el stock o la cantidad es menor que la solicitada
     if (stockResult.length === 0) {
       connection.release();
-      return res.status(404).json({ error: 'No se encontró el artículo en el stock.' });
+      return res
+        .status(404)
+        .json({ error: "No se encontró el artículo en el stock." });
     }
 
     const { cantidad: cantidadDisponible } = stockResult[0];
 
     if (cantidadDisponible < cantidad) {
       connection.release();
-      return res.status(409).json({ error: 'La cantidad solicitada excede el stock disponible.' });
+      return res
+        .status(409)
+        .json({ error: "La cantidad solicitada excede el stock disponible." });
     }
 
     // Fecha y hora actual en formato ISO 8601
-    const fechaActual = new Date().toLocaleDateString('en-CA').replace(/-/g, '/'); // YYYY/MM/DD
-    const horaActual = new Date().toLocaleTimeString('es-AR', {
+    const fechaActual = new Date()
+      .toLocaleDateString("en-CA")
+      .replace(/-/g, "/"); // YYYY/MM/DD
+    const horaActual = new Date().toLocaleTimeString("es-AR", {
       hour12: false,
-      timeZone: 'America/Argentina/Buenos_Aires',
+      timeZone: "America/Argentina/Buenos_Aires",
     });
 
     // Iniciar la transacción
@@ -480,7 +522,14 @@ export const enviarFalla = async (req, res) => {
     await connection.execute(
       `INSERT INTO Fallas (id_usuario, id_mercaderia, id_sucursal, cantidad, fecha, hora) 
        VALUES (?, ?, ?, ?, ?, ?)`,
-      [id_usuario, id_mercaderia, id_sucursal, cantidad, fechaActual, horaActual]
+      [
+        id_usuario,
+        id_mercaderia,
+        id_sucursal,
+        cantidad,
+        fechaActual,
+        horaActual,
+      ]
     );
 
     // Confirmar la transacción
@@ -490,19 +539,21 @@ export const enviarFalla = async (req, res) => {
     connection.release();
 
     // Enviar respuesta exitosa
-    res.status(200).json({ message: 'Falla registrada y stock actualizado correctamente.' });
+    res
+      .status(200)
+      .json({ message: "Falla registrada y stock actualizado correctamente." });
   } catch (error) {
-    console.error('Error al registrar la falla:', error);
+    console.error("Error al registrar la falla:", error);
 
     try {
       // En caso de error, revertir la transacción
       await connection.rollback();
     } catch (rollbackError) {
-      console.error('Error al revertir la transacción:', rollbackError);
+      console.error("Error al revertir la transacción:", rollbackError);
     }
 
     res.status(500).json({
-      error: 'Error al registrar la falla. Intenta nuevamente más tarde.',
+      error: "Error al registrar la falla. Intenta nuevamente más tarde.",
     });
   }
 };
@@ -511,8 +562,16 @@ export const restablecerFalla = async (req, res) => {
   const { id_usuario, id_mercaderia, id_sucursal, cantidad, OKRF } = req.body;
 
   // Verificar que todos los datos obligatorios estén presentes y que la confirmación sea "OKRF"
-  if (!id_usuario || !id_mercaderia || !id_sucursal || !cantidad || OKRF !== 'OKRF') {
-    return res.status(400).json({ error: 'Datos faltantes o confirmación inválida' });
+  if (
+    !id_usuario ||
+    !id_mercaderia ||
+    !id_sucursal ||
+    !cantidad ||
+    OKRF !== "OKRF"
+  ) {
+    return res
+      .status(400)
+      .json({ error: "Datos faltantes o confirmación inválida" });
   }
 
   try {
@@ -528,7 +587,7 @@ export const restablecerFalla = async (req, res) => {
     // Verificar si existe la falla
     if (fallaResult.length === 0) {
       connection.release();
-      return res.status(404).json({ error: 'No se encontró la falla' });
+      return res.status(404).json({ error: "No se encontró la falla" });
     }
 
     const { cantidad: cantidadFalla } = fallaResult[0];
@@ -536,7 +595,9 @@ export const restablecerFalla = async (req, res) => {
     // Verificar si la cantidad solicitada es válida
     if (cantidad > cantidadFalla) {
       connection.release();
-      return res.status(409).json({ error: 'La cantidad solicitada excede la cantidad en fallas' });
+      return res
+        .status(409)
+        .json({ error: "La cantidad solicitada excede la cantidad en fallas" });
     }
 
     // Iniciar la transacción
@@ -583,26 +644,23 @@ export const restablecerFalla = async (req, res) => {
     connection.release();
 
     // Responder con éxito
-    res.status(200).json({ message: 'Falla restablecida y stock actualizado correctamente' });
+    res
+      .status(200)
+      .json({
+        message: "Falla restablecida y stock actualizado correctamente",
+      });
   } catch (error) {
-    console.error('Error al restablecer la falla:', error);
+    console.error("Error al restablecer la falla:", error);
 
     try {
       // En caso de error, revertir la transacción
       await connection.rollback();
     } catch (rollbackError) {
-      console.error('Error al revertir la transacción:', rollbackError);
+      console.error("Error al revertir la transacción:", rollbackError);
     }
 
     res.status(500).json({
-      error: 'Error al restablecer la falla. Intenta nuevamente más tarde.',
+      error: "Error al restablecer la falla. Intenta nuevamente más tarde.",
     });
   }
 };
-
-
-
-
-
-
-

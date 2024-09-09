@@ -7,6 +7,22 @@ export const pedirTotalCajaSucursal = async (req, res) => {
   const fechaVenta = new Date().toLocaleDateString('en-CA').replace(/-/g, '/'); // YYYY/MM/DD
 
   try {
+    // Verificar si ya se ha registrado un cierre de caja hoy para la misma sucursal
+    const [cierreCajaResults] = await db.query(
+      `
+      SELECT COUNT(*) AS cierre_existente
+      FROM Caja
+      WHERE id_sucursal = ?
+      AND DATE(fecha) = ?
+      `,
+      [idSucursal, fechaVenta]
+    );
+
+    // Si hay al menos un cierre de caja registrado, devolver un mensaje indicando que la caja ya se cerró
+    if (cierreCajaResults[0].cierre_existente > 0) {
+      return res.status(399).json({ message: "Ya se cerró la caja hoy" });
+    }
+
     // Sumar el total de las ventas en efectivo del día
     const [efectivoResults] = await db.query(
       `
@@ -34,27 +50,26 @@ export const pedirTotalCajaSucursal = async (req, res) => {
     // Contar la cantidad de ventas en efectivo del día, agrupadas por id_venta
     const [cantidadEfectivoResults] = await db.query(
       `
-  SELECT COUNT(DISTINCT Ventas.id_venta) AS cantidad_efectivo
-  FROM Ventas
-  WHERE Ventas.id_sucursal = ?
-  AND Ventas.metodo_de_pago = 'efectivo'
-  AND DATE(Ventas.fecha_venta) = ?
-  `,
+      SELECT COUNT(DISTINCT Ventas.id_venta) AS cantidad_efectivo
+      FROM Ventas
+      WHERE Ventas.id_sucursal = ?
+      AND Ventas.metodo_de_pago = 'efectivo'
+      AND DATE(Ventas.fecha_venta) = ?
+      `,
       [idSucursal, fechaVenta]
     );
 
     // Contar la cantidad de ventas con tarjeta del día, agrupadas por id_venta
     const [cantidadTarjetaResults] = await db.query(
       `
-  SELECT COUNT(DISTINCT Ventas.id_venta) AS cantidad_tarjeta
-  FROM Ventas
-  WHERE Ventas.id_sucursal = ?
-  AND Ventas.metodo_de_pago = 'tarjeta'
-  AND DATE(Ventas.fecha_venta) = ?
-  `,
+      SELECT COUNT(DISTINCT Ventas.id_venta) AS cantidad_tarjeta
+      FROM Ventas
+      WHERE Ventas.id_sucursal = ?
+      AND Ventas.metodo_de_pago = 'tarjeta'
+      AND DATE(Ventas.fecha_venta) = ?
+      `,
       [idSucursal, fechaVenta]
     );
-
 
     // Sumar el total de todas las ventas del día, sin discriminar método de pago
     const [totalVentasResults] = await db.query(
@@ -100,8 +115,8 @@ export const pedirTotalCajaSucursal = async (req, res) => {
       cantidadEfectivo: cantidadEfectivoResults[0].cantidad_efectivo,
       cantidadTarjeta: cantidadTarjetaResults[0].cantidad_tarjeta,
       totalVentas: parseFloat(totalVentasResults[0].total_ventas || 0).toFixed(2),
-      totalTarjeta: parseFloat(totalTarjetaResults[0].total_tarjeta || 0).toFixed(2),  // Nueva respuesta
-      totalEfectivoVentas: parseFloat(totalEfectivoResults[0].total_efectivo_ventas || 0).toFixed(2)  // Nueva respuesta
+      totalTarjeta: parseFloat(totalTarjetaResults[0].total_tarjeta || 0).toFixed(2),
+      totalEfectivoVentas: parseFloat(totalEfectivoResults[0].total_efectivo_ventas || 0).toFixed(2)
     });
 
   } catch (error) {

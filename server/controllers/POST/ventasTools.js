@@ -12,11 +12,13 @@ export const cargarVenta = async (req, res) => {
     const idVenta = generateUniqueId();
 
     // Fecha y hora actual en formato ISO 8601
-        const fechaVenta = new Date().toLocaleDateString('en-CA').replace(/-/g, '/'); // YYYY/MM/DD
-        const horaVenta = new Date().toLocaleTimeString('es-AR', {
-          hour12: false,
-          timeZone: 'America/Argentina/Buenos_Aires',
-        });
+    const fechaVenta = new Date()
+      .toLocaleDateString("en-CA")
+      .replace(/-/g, "/"); // YYYY/MM/DD
+    const horaVenta = new Date().toLocaleTimeString("es-AR", {
+      hour12: false,
+      timeZone: "America/Argentina/Buenos_Aires",
+    });
 
     // Insertar cada objeto como una fila en la tabla Ventas
     for (const venta of ventas) {
@@ -38,7 +40,12 @@ export const cargarVenta = async (req, res) => {
       // Validación adicional para ventas con método de pago 'tarjeta'
       if (metodo_de_pago === "tarjeta") {
         if (!nombre_cliente || !apellido_cliente || !dni_cliente) {
-          return res.status(400).json({ message: "Datos de cliente son obligatorios para pagos con tarjeta" });
+          return res
+            .status(400)
+            .json({
+              message:
+                "Datos de cliente son obligatorios para pagos con tarjeta",
+            });
         }
       }
 
@@ -49,13 +56,17 @@ export const cargarVenta = async (req, res) => {
       );
 
       if (stockResult.length === 0) {
-        return res.status(400).json({ message: "Mercadería no encontrada en stock" });
+        return res
+          .status(400)
+          .json({ message: "Mercadería no encontrada en stock" });
       }
 
       const stockDisponible = stockResult[0].cantidad;
 
       if (stockDisponible < cantidad) {
-        return res.status(400).json({ message: "Stock insuficiente para realizar la venta" });
+        return res
+          .status(400)
+          .json({ message: "Stock insuficiente para realizar la venta" });
       }
 
       // Calcular el campo total como suma de adelanto y total_venta
@@ -97,7 +108,11 @@ export const cargarVenta = async (req, res) => {
       );
     }
 
-    res.status(200).json({ message: "Ventas registradas correctamente y stock actualizado" });
+    res
+      .status(200)
+      .json({
+        message: "Ventas registradas correctamente y stock actualizado",
+      });
   } catch (error) {
     console.error("Error al registrar las ventas:", error);
     res.status(500).json({ message: "Error al registrar las ventas", error });
@@ -108,9 +123,9 @@ export const pedirArticuloEmpleado = async (req, res) => {
   const { id_mercaderia, id_sucursal } = req.body;
 
   if (!id_mercaderia || !id_sucursal) {
-    return res.status(400).json({ 
-      error: "FaltanDatos", 
-      message: "Faltan datos en la solicitud." 
+    return res.status(400).json({
+      error: "FaltanDatos",
+      message: "Faltan datos en la solicitud.",
     });
   }
 
@@ -141,7 +156,8 @@ export const pedirArticuloEmpleado = async (req, res) => {
     if (stock.length === 0) {
       return res.status(404).json({
         error: "NoStock", // Error específico para manejar en el front
-        message: "No hay stock disponible o el artículo está marcado como borrado.",
+        message:
+          "No hay stock disponible o el artículo está marcado como borrado.",
       });
     }
 
@@ -155,6 +171,3 @@ export const pedirArticuloEmpleado = async (req, res) => {
     });
   }
 };
-
-
-

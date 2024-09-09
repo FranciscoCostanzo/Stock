@@ -29,6 +29,11 @@ const SelectMotivosCaja = ({ onChange }) => {
     }
   };
 
+  function capitalizeFirstLetter(string) {
+    if (!string) return '' // Manejar cadenas vacías o nulas
+    return string.charAt(0).toUpperCase() + string.slice(1)
+  }
+
   return (
     <div className="flex">
       <label>
@@ -41,7 +46,7 @@ const SelectMotivosCaja = ({ onChange }) => {
           <option value="">Seleccione un motivo</option>
           {motivos.map((option, optIndex) => (
             <option key={optIndex} value={option.id}>
-              {option.motivo}
+              {capitalizeFirstLetter(option.motivo)}
             </option>
           ))}
         </select>

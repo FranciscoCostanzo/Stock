@@ -177,7 +177,8 @@ export const pedirPedidosEmpleadoPendientes = async (req, res) => {
     if (pedidos.length === 0) {
       return res.status(404).json({
         error: "NoPedidos",
-        message: "No se encontraron pedidos pendientes para la sucursal especificada.",
+        message:
+          "No se encontraron pedidos pendientes para la sucursal especificada.",
       });
     }
 
@@ -237,8 +238,10 @@ export const EnviarPedidoAdmin = async (req, res) => {
       }
     }
 
-    // Fecha actual en formato ISO 8601 sin hora
-    const fechaActual = new Date().toISOString().split("T")[0];
+    // Generar la fecha actual en formato ISO 8601
+    const fechaActual = new Date()
+      .toLocaleDateString("en-CA")
+      .replace(/-/g, "/"); // YYYY/MM/DD
 
     // Insertar cada pedido en la tabla Pedidos
     const queries = [];
@@ -284,7 +287,8 @@ export const recibirPedido = async (req, res) => {
     if (!Array.isArray(ids) || ids.length === 0) {
       return res.status(400).json({
         error: "FaltanDatos",
-        message: "Se requiere un array de IDs de pedidos en el formato { ids: [array de IDs] }.",
+        message:
+          "Se requiere un array de IDs de pedidos en el formato { ids: [array de IDs] }.",
       });
     }
 
@@ -300,35 +304,49 @@ export const recibirPedido = async (req, res) => {
     }
 
     // Mapear los datos obtenidos por id_sucursal e id_mercaderia
-    const stockUpdates = pedidosData.reduce((acc, { id_sucursal, id_mercaderia, cantidad }) => {
-      const key = `${id_sucursal}-${id_mercaderia}`;
-      if (!acc[key]) {
-        acc[key] = 0;
-      }
-      acc[key] += cantidad;
-      return acc;
-    }, {});
+    const stockUpdates = pedidosData.reduce(
+      (acc, { id_sucursal, id_mercaderia, cantidad }) => {
+        const key = `${id_sucursal}-${id_mercaderia}`;
+        if (!acc[key]) {
+          acc[key] = 0;
+        }
+        acc[key] += cantidad;
+        return acc;
+      },
+      {}
+    );
 
     // Iniciar una transacción para actualizar la tabla Stock y Pedidos
     await connection.beginTransaction();
 
     for (const [key, totalCantidad] of Object.entries(stockUpdates)) {
-      const [id_sucursal, id_mercaderia] = key.split('-');
+      const [id_sucursal, id_mercaderia] = key.split("-");
 
       // Verificar si existe una fila en Stock con id_sucursal e id_mercaderia
       const stockQuery = `SELECT cantidad FROM Stock WHERE id_sucursal = ? AND id_mercaderia = ?`;
-      const [stockData] = await connection.query(stockQuery, [id_sucursal, id_mercaderia]);
+      const [stockData] = await connection.query(stockQuery, [
+        id_sucursal,
+        id_mercaderia,
+      ]);
 
       if (stockData.length === 0) {
         // Si no existe, insertar una nueva fila en Stock
         const insertQuery = `INSERT INTO Stock (id_sucursal, id_mercaderia, cantidad) VALUES (?, ?, ?)`;
-        await connection.query(insertQuery, [id_sucursal, id_mercaderia, totalCantidad]);
+        await connection.query(insertQuery, [
+          id_sucursal,
+          id_mercaderia,
+          totalCantidad,
+        ]);
       } else {
         // Si existe, sumar la cantidad a la cantidad existente
         const existingQuantity = stockData[0].cantidad;
         const updatedQuantity = existingQuantity + totalCantidad;
         const updateQuery = `UPDATE Stock SET cantidad = ? WHERE id_sucursal = ? AND id_mercaderia = ?`;
-        await connection.query(updateQuery, [updatedQuantity, id_sucursal, id_mercaderia]);
+        await connection.query(updateQuery, [
+          updatedQuantity,
+          id_sucursal,
+          id_mercaderia,
+        ]);
       }
     }
 
@@ -356,4 +374,3 @@ export const recibirPedido = async (req, res) => {
     connection.release();
   }
 };
-
