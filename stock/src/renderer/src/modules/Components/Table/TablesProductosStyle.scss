@@ -48,8 +48,21 @@ table {
         }
     }
 
+
+
     // Estilos para las filas alternas
-    tbody tr:nth-child(even) {
+    tbody tr:nth-of-type(even) {
         background-color: #e0e0e0;
+    }
+    
+
+    .btn__volver__imprimir{
+        position: absolute;
+        left: -14%;
+        @media (max-width: 1600px) {
+        left: -13%;
+        }
+    
+
     }
 }
