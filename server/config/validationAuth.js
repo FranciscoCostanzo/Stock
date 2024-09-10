@@ -34,3 +34,10 @@ export const loginSchema = z.object({
   nombre: nombreSchema,
   password: passwordSchema,
 });
+
+// Define el esquema de validación para los campos del usuario
+export const editarUsuarioSchema = z.object({
+  nombre: nombreSchema,
+  password: passwordSchema,
+  rol: rolSchema,
+});

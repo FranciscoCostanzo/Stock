@@ -3,6 +3,7 @@ import BtnVolver from '../Components/Btns/BtnVolver/BtnVolver'
 import BtnGeneral from '../Components/Btns/BtnGeneral'
 import { AuthContext } from '../Auth/context/AuthContext'
 import {
+  obtenerMotivosAdmin,
   obtenerSucursalesAdmin,
   obtenerTarjetasAdmin,
   obtenerUsuariosAdmin
@@ -17,6 +18,7 @@ const Configuracion = () => {
   const [tarjetasAdmin, setTarjetasAdmin] = useState([])
   const [usuariosAdmin, setUsuariosAdmin] = useState([])
   const [sucursalesAdmin, setSucursalesAdmin] = useState([])
+  const [motivosAdmin, setMotivosAdmin] = useState([])
   const [loading, setLoading] = useState(true)
   const [indice, setIndice] = useState(null)
 
@@ -99,7 +101,7 @@ const Configuracion = () => {
           ],
           apiEndpoint: 'http://localhost:3000/editar-usuario'
         },
-        {tituloFormulario: 'Agregar Usuario',}
+        { tituloFormulario: 'Agregar Usuario' }
       ]
     },
     {
@@ -150,6 +152,53 @@ const Configuracion = () => {
           apiEndpoint: 'http://localhost:3000/agregar-sucursal'
         }
       ]
+    },
+    {
+      btn: 'Cierres de caja',
+      muestra: motivosAdmin,
+      icon: (
+        <svg viewBox="0 0 24 24">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M7 9m0 2a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2z" />
+          <path d="M14 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+          <path d="M17 9v-2a2 2 0 0 0 -2 -2h-10a2 2 0 0 0 -2 2v6a2 2 0 0 0 2 2h2" />
+        </svg>
+      ),
+      formConfig: [
+        {
+          tituloFormulario: 'Eliminar Motivo',
+          messageFormulario:
+            'Escribe "OKM" para confirmar la eliminación de la sucursal. Esta acción es irreversible y se eliminarán todos los datos de la sucursal.',
+          fields: [
+            { name: 'id', type: 'number', label: 'ID del Motivo' },
+            { name: 'OKM', type: 'text', label: 'Confirmación' }
+          ],
+          apiEndpoint: 'http://localhost:3000/eliminar-sucursal'
+        },
+        {
+          tituloFormulario: 'Editar Motivo',
+          messageFormulario:
+            'Especifica el ID de la sucursal y los campos que desees actualizar. No es necesario completar todos los campos.',
+          fields: [
+            { name: 'id', type: 'number', label: 'ID de la Sucursal' },
+            { name: 'nombre', type: 'text', label: 'Nombre de la Sucursal' },
+            { name: 'direccion', type: 'text', label: 'Dirección de la Sucursal' },
+            { name: 'ciudad', type: 'text', label: 'Ciudad de la Sucursal' }
+          ],
+          apiEndpoint: 'http://localhost:3000/editar-sucursal'
+        },
+        {
+          tituloFormulario: 'Agregar Motivo',
+          messageFormulario:
+            'Rellena los detalles de la sucursal que deseas agregar, Los campos son obligatorios.',
+          fields: [
+            { name: 'nombre', type: 'text', label: 'Nombre de la Sucursal' },
+            { name: 'direccion', type: 'text', label: 'Dirección de la Sucursal' },
+            { name: 'ciudad', type: 'text', label: 'Ciudad de la Sucursal' }
+          ],
+          apiEndpoint: 'http://localhost:3000/agregar-sucursal'
+        }
+      ]
     }
   ]
 
@@ -164,17 +213,17 @@ const Configuracion = () => {
     const loadMercaderia = async () => {
       try {
         if (user) {
-          let dataTarjetas
-          let dataUsuarios
-          let dataSucursales
+          let dataTarjetas, dataUsuarios, dataSucursales, dataMotivos
           if (user.rol === 'admin') {
             dataTarjetas = await obtenerTarjetasAdmin()
             dataUsuarios = await obtenerUsuariosAdmin()
             dataSucursales = await obtenerSucursalesAdmin()
+            dataMotivos = await obtenerMotivosAdmin()
           }
           setTarjetasAdmin(dataTarjetas)
           setUsuariosAdmin(dataUsuarios)
           setSucursalesAdmin(dataSucursales)
+          setMotivosAdmin(dataMotivos)
         }
       } catch (error) {
         console.log('Error al cargar mercadería:', error.message)
