@@ -44,9 +44,9 @@ import {
     recibirPedido,
 } from "../controllers/POST/pedidosTools.js";
 import { agregarTarjeta, editarTarjeta, eliminarTarjeta } from "../controllers/POST/materialesTools.js";
-import { pedirTotalCajaSucursal } from "../controllers/GET/pedirCaja.js";
+import { pedirCajaAdmin, pedirTotalCajaSucursal } from "../controllers/GET/pedirCaja.js";
 import { cargarCierreCaja } from "../controllers/POST/cajaTools.js";
-import { pedirPedidosAdmin, pedirPedidosEmpleado, pedirPedidosEmpleadoPendientes } from "../controllers/GET/pedirPedidos.js";
+import { pedirPedidosAdmin, pedirPedidosEmpleado, pedirPedidosEmpleadoPendientes, pedirPedidosEmpleadoRecibidos } from "../controllers/GET/pedirPedidos.js";
 
 const router = Router();
 
@@ -113,6 +113,11 @@ router.get(
     "/ver-pedidos-empleado-pendientes/:id_sucursal",
     pedirPedidosEmpleadoPendientes
 );
+router.get(
+    "/ver-pedidos-empleado-recibidos/:id_sucursal",
+    pedirPedidosEmpleadoRecibidos
+);
+
 
 router.post("/eliminar-tarjeta", eliminarTarjeta)
 router.post("/editar-tarjeta", editarTarjeta)
@@ -121,6 +126,7 @@ router.post("/agregar-tarjeta", agregarTarjeta)
 
 router.get("/caja/:idSucursal", pedirTotalCajaSucursal)
 router.get("/motivos-caja", pedirMotivosCaja)
+router.get("/caja-admin", pedirCajaAdmin)
 router.post("/cerrar-caja", cargarCierreCaja)
 
 export default router;

@@ -22,9 +22,8 @@ const Fallas = () => {
           let data = []
           if (user.rol === 'admin') {
             data = await obtenerFallasAdmin()
-          } else{
+          } else {
             data = await obtenerFallasEmpelado(user.sucursal.id)
-            
           }
           setMercaderia(Array.isArray(data) ? data : [])
         }
@@ -55,10 +54,12 @@ const Fallas = () => {
     setFormFalla(true)
   }
 
-  const additionalData = {
-    id_sucursal: user.sucursal.id, // Ejemplo de datos adicionales
-    id_usuario: user.id // Fecha actual en formato ISO
-  };
+  if (user.rol === 'empleado') {
+    const additionalData = {
+      id_sucursal: user.sucursal.id,
+      id_usuario: user.id
+    }
+  }
 
   return (
     <section className="mercaderia">

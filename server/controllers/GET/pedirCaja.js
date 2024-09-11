@@ -149,3 +149,13 @@ export const pedirTotalCajaSucursal = async (req, res) => {
       .json({ message: "Error al obtener los totales de la caja." });
   }
 };
+
+export const pedirCajaAdmin = async (req, res) => {
+  try {
+    const [caja] = await db.query("SELECT * FROM Caja");
+    res.status(200).json(caja);
+  } catch (error) {
+    console.error("Error obteniendo las tarjetas:", error);
+    res.status(500).json({ error: "Error obteniendo la tabla caja." });
+  }
+};

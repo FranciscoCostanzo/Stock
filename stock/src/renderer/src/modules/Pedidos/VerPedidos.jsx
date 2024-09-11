@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
-import { obtenerPedidosAdmin } from './lib/libPedidos'
+import { obtenerPedidosAdmin, obtenerPedidosEmpleadoRecibidos } from './lib/libPedidos'
 import { AuthContext } from '../Auth/context/AuthContext'
 import TablesProductos from '../Components/Table/TablesProductos'
 import FiltroProductos from '../Mercaderia/components/Filtros/FiltroProductos'
@@ -18,6 +18,8 @@ const VerPedidos = () => {
           let data
           if (user.rol === 'admin') {
             data = await obtenerPedidosAdmin()
+          } else {
+            data = await obtenerPedidosEmpleadoRecibidos(user.sucursal.id)
           }
           setPedidos(data)
         }
@@ -46,14 +48,18 @@ const VerPedidos = () => {
         </div>
       ) : (
         <>
-          <BtnVolver donde="/pedidos" />
+          <BtnVolver donde={user.rol === 'admin' ? '/pedidos' : '/recibir-pedidos'} />
           <article className="table__container">
             <FiltroProductos
               columns={Object.keys(pedidos[0] || {})}
               onFilterChange={handleFilterChange}
             />
             <div className="table-wrapper">
-              <TablesProductos pedidos={true} data={pedidos} filters={filters} />
+              <TablesProductos
+                pedidos={user.rol === 'admin' && true}
+                data={pedidos}
+                filters={filters}
+              />
             </div>
           </article>
         </>

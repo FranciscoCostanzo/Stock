@@ -3,7 +3,7 @@ import BtnVolver from '../Components/Btns/BtnVolver/BtnVolver';
 import TablesProductos from '../Components/Table/TablesProductos';
 import { AuthContext } from '../Auth/context/AuthContext';
 import FiltroProductos from '../Mercaderia/components/Filtros/FiltroProductos';
-import { obtenerCajaAdmin, obtenerCajaSucursal } from './lib/libCaja';
+import { obtenerCajaAdmin } from './lib/libCaja';
 
 const VerCaja = () => {
   const { user } = useContext(AuthContext);
@@ -19,9 +19,10 @@ const VerCaja = () => {
           if (user.rol === 'admin') {
             data = await obtenerCajaAdmin();
           } else {
-            data = await obtenerCajaSucursal(user.sucursal.id);
+            // data = await obtenerCajaSucursal(user.sucursal.id);
           }
           setCajaData(data);
+          console.log(data)
         }
       } catch (error) {
         console.log('Error al cargar caja:', error.message);
@@ -116,7 +117,7 @@ const VerCaja = () => {
   };
 
   return (
-    <section className="caja">
+    <section className="mercaderia">
       {loading ? (
         <div loader="interno" className="contenedor__loader">
           <span className="loader"></span>

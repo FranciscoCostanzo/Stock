@@ -81,7 +81,7 @@ const RecibirPedidos = () => {
 
 
   return (
-    <section className="ventas">
+    <section className="mercaderia">
       {loading ? (
         <div loader="interno" className="contenedor__loader">
           <span className="loader"></span>
@@ -89,13 +89,13 @@ const RecibirPedidos = () => {
         </div>
       ) : (
         <>
-        {user.rol === "admin" ? (
+          {user.rol === "admin" ? (
 
-          <BtnVolver donde="/pedidos" />
-        ):
-        (
-          <BtnVolver donde="/inicio" />
-        )}
+            <BtnVolver donde="/pedidos" />
+          ) :
+            (
+              <BtnVolver donde="/inicio" />
+            )}
           <article className="table__container">
             <FiltroProductos
               columns={Object.keys(pedidos[0] || {})}
@@ -118,7 +118,16 @@ const RecibirPedidos = () => {
               Recibir Pedidos
             </BtnGeneral>
           )}
-          <article className="contenedor__btns__sigpestanas">
+          <article className="contenedor__sigpestanas">
+            <Link className="btn__pestanas__siguiente" to="/ver-pedidos">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M11 14l4 -4l-4 -4" />
+                <path d="M16 14l4 -4l-4 -4" />
+                <path d="M15 10h-7a4 4 0 1 0 0 8h1" />
+              </svg>
+              Ver Recibidos
+            </Link>
             <Link className="btn__pestanas__siguiente" to="/fallas">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
