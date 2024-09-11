@@ -26,7 +26,7 @@ const Caja = () => {
                     setCaja(data)
                 }
             } catch (error) {
-                toast.error('Error al cargar la caja')
+                toast.error(data.message)
                 console.log('Error al cargar la caja:', error.message)
             } finally {
                 setLoading(false)
@@ -157,7 +157,9 @@ const Caja = () => {
                 <section className="ventas">
                     <BtnVolver donde="/inicio" />
                     <ContenedorPages>
-                        {caja ? (
+                        {caja.message ? (
+                            <p>{caja.message}</p>
+                        ) : (
                             <>
                                 <article className="detalle__caja">
                                     <div className="contenedor__info__caja">
@@ -192,8 +194,6 @@ const Caja = () => {
                                 <p className="total__ventas__dia">Total de ventas del día: ${caja.totalVentas}</p>
                                 <p className="total__efectivo__dia">Efectivo de la Caja: ${calcularFondo()}</p>
                             </>
-                        ) : (
-                            <p>No hay datos de caja disponibles.</p>
                         )}
                         <h2>Cerrar caja:</h2>
 
