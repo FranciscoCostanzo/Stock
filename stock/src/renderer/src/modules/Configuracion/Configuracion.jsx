@@ -10,8 +10,8 @@ import {
 } from './lib/libConfiguracion'
 import TablesProductos from '../Components/Table/TablesProductos'
 import FiltroProductos from '../Mercaderia/components/Filtros/FiltroProductos'
-import { Link } from 'react-router-dom'
 import Tools from './Tools'
+import { fetchSucursales } from '../Auth/lib/libAuth'
 
 const Configuracion = () => {
   const { user } = useContext(AuthContext) // obtener el usuario desde el contexto
@@ -21,6 +21,26 @@ const Configuracion = () => {
   const [motivosAdmin, setMotivosAdmin] = useState([])
   const [loading, setLoading] = useState(true)
   const [indice, setIndice] = useState(null)
+  const [sucursales, setSucursales] = useState([])
+
+  useEffect(() => {
+    // Obtener sucursales del servidor
+    const loadSucursales = async () => {
+      try {
+        const data = await fetchSucursales()
+        setSucursales(data) // Guardar las sucursales completas
+      } catch (error) {
+        console.log(error.message)
+      }
+    }
+
+    loadSucursales()
+  }, [])
+
+  const sucursal = sucursales.map(({ id, ciudad }) => ({
+    value: id,
+    label: ciudad
+  }))
 
   const btnsConfiguracion = [
     {
@@ -36,16 +56,6 @@ const Configuracion = () => {
         </svg>
       ),
       formConfig: [
-        {
-          tituloFormulario: 'Eliminar Tarjeta',
-          messageFormulario:
-            'Escribe "OKT" para confirmar y eliminar la tarjeta especificada. Este proceso es irreversible, y se borrarán todos los datos asociados a la tarjeta.',
-          fields: [
-            { name: 'id', type: 'number', label: 'ID de la Tarjeta' },
-            { name: 'OKT', type: 'text', label: 'Confirmación' }
-          ],
-          apiEndpoint: 'http://localhost:3000/eliminar-tarjeta'
-        },
         {
           tituloFormulario: 'Editar Tarjeta',
           messageFormulario: 'Especifica el ID de la tarjeta y el porcentaje de aumento.',
@@ -80,16 +90,6 @@ const Configuracion = () => {
       ),
       formConfig: [
         {
-          tituloFormulario: 'Eliminar Usuario',
-          messageFormulario:
-            'Escribe "OKU" para confirmar y eliminar al usuario especificado. Esta acción es irreversible, y se eliminarán todos los datos del usuario.',
-          fields: [
-            { name: 'id', type: 'text', label: 'ID del Usuario' },
-            { name: 'OKU', type: 'text', label: 'Confirmación' }
-          ],
-          apiEndpoint: 'http://localhost:3000/eliminar-usuario'
-        },
-        {
           tituloFormulario: 'Editar Usuario',
           messageFormulario:
             'Especifica el ID del usuario y los campos que desees actualizar. No es necesario completar todos los campos.',
@@ -97,9 +97,29 @@ const Configuracion = () => {
             { name: 'id', type: 'number', label: 'ID del Usuario' },
             { name: 'nombre', type: 'text', label: 'Nombre del Usuario' },
             { name: 'password', type: 'text', label: 'Contraseña' },
-            { name: 'rol', type: 'text', label: 'Rol del Usuario' }
+            {
+              name: 'rol',
+              type: 'select',
+              label: 'Rol del Usuario',
+              options: [
+                {
+                  valur: 'admin',
+                  label: 'admin'
+                },
+                {
+                  valur: 'empleado',
+                  label: 'empleado'
+                }
+              ]
+            },
+            {
+              name: 'id_sucursal',
+              type: 'select',
+              label: 'Nueva Sucursal',
+              options: sucursal
+            }
           ],
-          apiEndpoint: 'http://localhost:3000/editar-usuario'
+          apiEndpoint: 'http://localhost:3000/update-user'
         },
         { tituloFormulario: 'Agregar Usuario' }
       ]
@@ -164,41 +184,7 @@ const Configuracion = () => {
           <path d="M17 9v-2a2 2 0 0 0 -2 -2h-10a2 2 0 0 0 -2 2v6a2 2 0 0 0 2 2h2" />
         </svg>
       ),
-      formConfig: [
-        {
-          tituloFormulario: 'Eliminar Motivo',
-          messageFormulario:
-            'Escribe "OKM" para confirmar la eliminación de la sucursal. Esta acción es irreversible y se eliminarán todos los datos de la sucursal.',
-          fields: [
-            { name: 'id', type: 'number', label: 'ID del Motivo' },
-            { name: 'OKM', type: 'text', label: 'Confirmación' }
-          ],
-          apiEndpoint: 'http://localhost:3000/eliminar-sucursal'
-        },
-        {
-          tituloFormulario: 'Editar Motivo',
-          messageFormulario:
-            'Especifica el ID de la sucursal y los campos que desees actualizar. No es necesario completar todos los campos.',
-          fields: [
-            { name: 'id', type: 'number', label: 'ID de la Sucursal' },
-            { name: 'nombre', type: 'text', label: 'Nombre de la Sucursal' },
-            { name: 'direccion', type: 'text', label: 'Dirección de la Sucursal' },
-            { name: 'ciudad', type: 'text', label: 'Ciudad de la Sucursal' }
-          ],
-          apiEndpoint: 'http://localhost:3000/editar-sucursal'
-        },
-        {
-          tituloFormulario: 'Agregar Motivo',
-          messageFormulario:
-            'Rellena los detalles de la sucursal que deseas agregar, Los campos son obligatorios.',
-          fields: [
-            { name: 'nombre', type: 'text', label: 'Nombre de la Sucursal' },
-            { name: 'direccion', type: 'text', label: 'Dirección de la Sucursal' },
-            { name: 'ciudad', type: 'text', label: 'Ciudad de la Sucursal' }
-          ],
-          apiEndpoint: 'http://localhost:3000/agregar-sucursal'
-        }
-      ]
+      formConfig: []
     }
   ]
 

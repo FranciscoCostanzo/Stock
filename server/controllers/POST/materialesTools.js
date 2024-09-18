@@ -1,67 +1,7 @@
 import db from "../../config/db.js";
-import { z } from "zod";
 import bcrypt from "bcrypt";
 import { editarUsuarioSchema } from "../../config/validationAuth.js";
 
-
-export const eliminarTarjeta = async (req, res) => {
-    const { id, OKT } = req.body; // Obtener id y confirmación del cuerpo de la solicitud
-
-    // Verificar que la confirmación es "OKT"
-    if (OKT !== "OKT") {
-        return res
-            .status(400)
-            .json({ error: "Confirmación incorrecta. Escriba 'OKT' para proceder." });
-    }
-
-    try {
-        // Obtener una conexión a la base de datos
-        const connection = await db.getConnection();
-
-        // Iniciar una transacción
-        await connection.beginTransaction();
-
-        // Verificar si la tarjeta existe
-        const [rows] = await connection.execute(
-            "SELECT * FROM Tarjetas WHERE id = ?",
-            [id]
-        );
-
-        if (rows.length === 0) {
-            // Si no existe la tarjeta, lanzar un error
-            return res
-                .status(404)
-                .json({ error: "Tarjeta no encontrada. Verifique el id." });
-        }
-
-        // Eliminar la tarjeta
-        await connection.execute("DELETE FROM Tarjetas WHERE id = ?", [id]);
-
-        // Confirmar la transacción
-        await connection.commit();
-
-        // Liberar la conexión a la base de datos
-        connection.release();
-
-        // Enviar una respuesta exitosa
-        res
-            .status(200)
-            .json({ message: "Tarjeta eliminada correctamente." });
-    } catch (error) {
-        console.error("Error al eliminar la tarjeta:", error);
-
-        try {
-            // En caso de error, deshacer la transacción
-            await connection.rollback();
-        } catch (rollbackError) {
-            console.error("Error al revertir la transacción:", rollbackError);
-        }
-
-        res.status(500).json({
-            error: "Error al eliminar la tarjeta. Intenta nuevamente más tarde.",
-        });
-    }
-};
 
 export const editarTarjeta = async (req, res) => {
     let { id, aumento } = req.body;

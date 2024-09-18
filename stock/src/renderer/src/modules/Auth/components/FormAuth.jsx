@@ -143,7 +143,7 @@ const Form = ({ fields, endpoint, tipoDeForm }) => {
     <form tipodeformulario={tipoDeForm ? 'register' : undefined} className="form" onSubmit={handleSubmit}>
       {tipoDeForm === true ? (
         <>
-          <p className="title">Registrarse</p>
+          <p className="title">Registrar Usuario</p>
           <p className="message">Crea una cuenta para agregar un usuario nuevo</p>
         </>
       ) : (

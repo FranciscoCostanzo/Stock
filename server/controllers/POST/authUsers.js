@@ -163,6 +163,111 @@ export const login = async (req, res) => {
   }
 };
 
+export const updateUser = async (req, res) => {
+  const { id, nombre, password, rol, id_sucursal } = req.body;
+
+  try {
+    // Validar los datos recibidos usando Zod (excepto el ID, ya que no lo vamos a modificar)
+    registerSchema.parse({ nombre, password, rol });
+
+    // Verificar si el usuario existe en la base de datos
+    const connection = await db.getConnection();
+    const [user] = await connection.execute("SELECT * FROM Usuarios WHERE id = ?", [id]);
+
+    if (user.length === 0) {
+      connection.release();
+      return res.status(404).json({
+        code: 404,
+        error: "Usuario no encontrado.",
+        message: "El usuario con el ID proporcionado no existe."
+      });
+    }
+
+    // Si el rol es admin, id_sucursal debe ser null o no estar presente
+    if (rol === "admin" && id_sucursal !== null && id_sucursal !== undefined) {
+      connection.release();
+      return res.status(400).json({
+        code: 4001,
+        error: "Rol de administrador no debe tener sucursal.",
+        message: "Si el rol es 'admin', no se debe asignar una sucursal."
+      });
+    }
+
+    // Si se envía una nueva contraseña, compararla con la actual
+    if (password) {
+      const isMatch = await bcrypt.compare(password, user[0].password);
+      if (isMatch) {
+        connection.release();
+        return res.status(400).json({
+          code: 4002,
+          error: "La nueva contraseña no puede ser igual a la actual.",
+          message: "Intenta usar una contraseña diferente."
+        });
+      } else {
+        // Si no coinciden, hashear la nueva contraseña
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await connection.execute("UPDATE Usuarios SET password = ? WHERE id = ?", [hashedPassword, id]);
+      }
+    }
+
+    // Actualizar el nombre sin restricciones
+    if (nombre) {
+      await connection.execute("UPDATE Usuarios SET nombre = ? WHERE id = ?", [nombre, id]);
+    }
+
+    // Verificar si el rol es válido ('admin' o 'empleado')
+    if (rol) {
+      await connection.execute("UPDATE Usuarios SET rol = ? WHERE id = ?", [rol, id]);
+    }
+
+    // Si se proporciona una nueva sucursal y el usuario es 'empleado'
+    if (rol === "empleado" && id_sucursal) {
+      // Verificar si el usuario ya está registrado en esa sucursal
+      const [sucursalExistente] = await connection.execute(
+        "SELECT * FROM Usuario_Sucursal WHERE id_usuario = ? AND id_sucursal = ?",
+        [id, id_sucursal]
+      );
+
+      if (sucursalExistente.length > 0) {
+        connection.release();
+        return res.status(400).json({
+          code: 4003,
+          error: "El usuario ya está asignado a esta sucursal.",
+          message: "No se puede asignar la misma sucursal al usuario."
+        });
+      }
+
+      // Actualizar la sucursal si ya tiene un registro en otra sucursal
+      await connection.execute(
+        "UPDATE Usuario_Sucursal SET id_sucursal = ? WHERE id_usuario = ?",
+        [id_sucursal, id]
+      );
+    }
+
+    connection.release();
+
+    res.status(200).json({
+      code: 200,
+      message: "Usuario actualizado correctamente.",
+    });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      const formattedErrors = error.errors.map((err) => err.message);
+      return res.status(400).json({
+        code: 4004,
+        errors: formattedErrors,
+        message: "Error en la validación de los datos proporcionados."
+      });
+    }
+    console.error("Error al actualizar usuario:", error);
+    res.status(500).json({
+      code: 500,
+      error: "Error al actualizar usuario.",
+      message: "Verifica los datos enviados o contacta al soporte."
+    });
+  }
+};
+
 // Si funcionaria en Electron las cookies usario este controller para autenticar el token
 
 // export const checkToken = async (req, res) => {

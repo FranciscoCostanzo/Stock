@@ -144,8 +144,7 @@ const Pedidos = () => {
     }
   }
 
-  const etiquetasParaTabla = etiquetas.map(({ selectedSucursalId, ...rest }) => rest);
-
+  const etiquetasParaTabla = etiquetas.map(({ selectedSucursalId, ...rest }) => rest)
 
   const HandleImprimirEtiqueta = async () => {
     if (etiquetas.length === 0) {
@@ -166,13 +165,11 @@ const Pedidos = () => {
     }
   }
 
-
   const cantidadesDeEti = etiquetas.map((eti) => eti.Cantidad)
   const sumaTotalCantidades = cantidadesDeEti.reduce(
     (acumulador, cantidad) => acumulador + cantidad,
     0
   )
-
 
   // Función para eliminar todas las etiquetas
   const handleEliminarTodasLasEtiquetas = () => {
@@ -184,12 +181,12 @@ const Pedidos = () => {
   const construirFormDataDinamico = () => {
     return etiquetas.map((etiq) => {
       return {
-        id_usuario: parseInt(user.id, 10),  // Asegura que el ID del usuario sea un número entero
-        id_sucursal: parseInt(etiq.selectedSucursalId, 10),  // Usa el campo temporal
-        id_mercaderia: parseInt(etiq.Articulo, 10),  // Asegura que el ID de la mercadería sea un número entero
-        cantidad: parseInt(etiq.Cantidad, 10)  // Asegura que la cantidad sea un número entero
-      };
-    });
+        id_usuario: parseInt(user.id, 10), // Asegura que el ID del usuario sea un número entero
+        id_sucursal: parseInt(etiq.selectedSucursalId, 10), // Usa el campo temporal
+        id_mercaderia: parseInt(etiq.Articulo, 10), // Asegura que el ID de la mercadería sea un número entero
+        cantidad: parseInt(etiq.Cantidad, 10) // Asegura que la cantidad sea un número entero
+      }
+    })
   }
 
   const handleIrAImprimir = async () => {
@@ -220,8 +217,19 @@ const Pedidos = () => {
     }
   }
 
-
-
+  const handleDescargarEspecifico = (articuloParaEliminar) => {
+    setEtiquetas((prevCargas) => {
+      // Filtrar los artículos que no coincidan con el artículo y sucursal que se quiere eliminar
+      const filteredCargas = prevCargas.filter(
+        (articulo) =>
+          !(articulo.Articulo === articuloParaEliminar.Articulo && 
+            articulo.Sucursal === articuloParaEliminar.Sucursal)
+      )
+      
+      return filteredCargas
+    })
+  }
+  
 
   return (
     <>
@@ -237,7 +245,7 @@ const Pedidos = () => {
             Imprimir
           </BtnGeneral>
           <div className="print-area">
-            {etiquetas.map((eti, i) => (
+            {etiquetas.map((eti, i) =>
               Array.from({ length: eti.Cantidad }).map((_, index) => (
                 <EtiquetaImpresion
                   key={`${i}-${index}`}
@@ -247,7 +255,7 @@ const Pedidos = () => {
                   sucursal={eti.Sucursal}
                 />
               ))
-            ))}
+            )}
           </div>
         </>
       ) : (
@@ -370,7 +378,12 @@ const Pedidos = () => {
                       <strong>Total Etiquetas: {sumaTotalCantidades}</strong>
                     </div>
                     <div className="table-wrapper table__pedidos">
-                      <TablesProductos data={etiquetasParaTabla} filters={filters} />
+                      <TablesProductos
+                        onRowClick={handleDescargarEspecifico}
+                        ventas={true}
+                        data={etiquetasParaTabla}
+                        filters={filters}
+                      />
                     </div>
                   </article>
                 </ContenedorPages>

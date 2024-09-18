@@ -4,6 +4,7 @@ import {
     login,
     logout,
     register,
+    updateUser,
 } from "../controllers/POST/authUsers.js";
 import {
     pedirMotivosCaja,
@@ -43,7 +44,7 @@ import {
     pedirArticuloPedidos,
     recibirPedido,
 } from "../controllers/POST/pedidosTools.js";
-import { agregarTarjeta, editarTarjeta, eliminarTarjeta } from "../controllers/POST/materialesTools.js";
+import { agregarTarjeta, editarTarjeta } from "../controllers/POST/materialesTools.js";
 import { pedirCajaAdmin, pedirTotalCajaSucursal } from "../controllers/GET/pedirCaja.js";
 import { cargarCierreCaja } from "../controllers/POST/cajaTools.js";
 import { pedirPedidosAdmin, pedirPedidosEmpleado, pedirPedidosEmpleadoPendientes, pedirPedidosEmpleadoRecibidos } from "../controllers/GET/pedirPedidos.js";
@@ -55,6 +56,7 @@ router.post("/login", login);
 router.post("/logout", logout);
 router.post("/register", register);
 router.post("/check-token", checkToken);
+router.post("/update-user", updateUser);
 
 // Rutas para obtener materiales
 // Ruta para obtener sucursales
@@ -119,10 +121,8 @@ router.get(
 );
 
 
-router.post("/eliminar-tarjeta", eliminarTarjeta)
 router.post("/editar-tarjeta", editarTarjeta)
 router.post("/agregar-tarjeta", agregarTarjeta)
-
 
 router.get("/caja/:idSucursal", pedirTotalCajaSucursal)
 router.get("/motivos-caja", pedirMotivosCaja)

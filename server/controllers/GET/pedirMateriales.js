@@ -80,6 +80,6 @@ export const pedirMotivosCaja = async (req, res) => {
     res.status(200).json(motivos);
   } catch (error) {
     console.error("Error obteniendo las tarjetas:", error);
-    res.status(500).json({ error: "Error obteniendo las tarjetas." });
+    res.status(500).json({ error: "Error obteniendo las los motivos de la caja." });
   }
 };

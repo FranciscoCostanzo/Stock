@@ -248,6 +248,14 @@ const FormVentas = () => {
     }
   }
 
+  const handleDescargarEspecifico = (articuloParaEliminar) => {
+    setCargasVentas((prevCargas) => {
+      const filteredCargas = prevCargas.filter((articulo) => 
+        articulo.Artículo !== articuloParaEliminar.Artículo
+      )
+      return filteredCargas
+    })
+  }
   useEffect(() => {
     const sumaTotal = cargasVentas.reduce((accumulator, carga) => {
       return accumulator + parseFloat(carga.Precio) * carga.Cantidad
@@ -375,6 +383,14 @@ const FormVentas = () => {
     }
   }
 
+  const handleKeyDownEnter = (e) => {
+    if (e.key === 'Enter') {
+      handlePedirPrecioArticulo()
+    }
+  }
+
+
+
   return (
     <>
       <div className="contenedor__busqueda">
@@ -386,6 +402,7 @@ const FormVentas = () => {
                 onChange={handleChangeArticuloAComprar} // Asocia el manejador de cambio
                 type="number"
                 name="id_mercaderia"
+                onKeyDown={handleKeyDownEnter}
                 className="input"
               />
               <span>Artículo</span>
@@ -411,7 +428,7 @@ const FormVentas = () => {
             </strong>
           </p>
           <p>
-            Precio de venta:{' '}
+            Precio de venta efectivo:{' '}
             <strong>{dataArticulo && dataArticulo.Precio ? `$${dataArticulo.Precio}` : ''}</strong>
           </p>
         </article>
@@ -460,7 +477,7 @@ const FormVentas = () => {
       </div>
       <div className="table__container">
         <div tipodetabla="ventas" className="table-wrapper">
-          <TablesProductos ventas={true} data={cargasVentas} />
+          <TablesProductos onRowClick={handleDescargarEspecifico} ventas={true} data={cargasVentas} />
         </div>
       </div>
       <div className="pasarela__de__pago">
