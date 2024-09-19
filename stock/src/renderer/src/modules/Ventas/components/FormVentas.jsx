@@ -96,12 +96,12 @@ const FormVentas = () => {
         id_mercaderia: articulo.Artículo,
         cantidad: articulo.Cantidad,
         metodo_de_pago: dataVentasFields.metodo_de_pago.toLowerCase(),
-        id_tarjeta: esTarjeta ? dataVentasFields.id_tarjeta : 0,
+        id_tarjeta: esTarjeta ? parseInt(dataVentasFields.id_tarjeta) : 0,
         nombre_cliente: esTarjeta ? dataVentasFields.nombre_cliente : '',
         apellido_cliente: esTarjeta ? dataVentasFields.apellido_cliente : '',
-        dni_cliente: esTarjeta ? dataVentasFields.dni_cliente : 0,
+        dni_cliente: esTarjeta ? parseInt(dataVentasFields.dni_cliente) : 0,
         adelanto: adelanto,
-        cuotas: esTarjeta ? dataVentasFields.cuotas : 0,
+        cuotas: esTarjeta ? parseInt(dataVentasFields.cuotas) : 0,
         total_venta: total_venta + total_venta * (porcentajePorUsarTarjeta / 100)
       }
     })
@@ -340,7 +340,7 @@ const FormVentas = () => {
     try {
       // Crear el formData dinámico
       const formDataDinamico = construirFormDataDinamico()
-      const response = await fetch(`${urlEndpoint}/venta`, {
+      const response = await fetch(`http://localhost:3000/venta`, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -369,8 +369,8 @@ const FormVentas = () => {
       })
       window.location.reload()
     } catch (error) {
-      console.error('Error al enviar datos:', error.message)
-      toast.error('Error al intentar iniciar sesión: ' + error.message, {
+      console.error('Error al enviar datos de venta:', error.message)
+      toast.error('Error al intentar realizar venta: ' + error.message, {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,

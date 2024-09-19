@@ -120,6 +120,7 @@ const VerVentas = () => {
             <FiltroProductos
               columns={Object.keys(filtros[0] || {})}
               onFilterChange={handleFilterChange}
+              dateColumns={["Fecha"]}
             />
             <div className="table-wrapper">
               <TablesProductos data={ventasUnificadasArray} filters={filters} />

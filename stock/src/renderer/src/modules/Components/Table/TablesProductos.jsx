@@ -11,7 +11,6 @@ const TablesProductos = ({
   filters = {},
   ventas,
   pedidos,
-  handleVolverAImprimir,
   onRowClick
 }) => {
   const [tooltipVisible, setTooltipVisible] = useState(false)
@@ -54,17 +53,6 @@ const TablesProductos = ({
         <tbody>
           {filteredData.map((row, index) => (
             <React.Fragment key={index}>
-              {pedidos && (
-                <BtnGeneral tocar={handleVolverAImprimir} claseBtn="btn__volver__imprimir">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" />
-                    <path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" />
-                    <path d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z" />
-                  </svg>
-                  Volver a Imprimir
-                </BtnGeneral>
-              )}
               <tr
                 key={index}
                 className={ventas && 'tr__ventas'}
@@ -78,11 +66,29 @@ const TablesProductos = ({
                 {ventas && tooltipVisible && hoveredRow !== null && (
                   <div
                     className="tooltip__eliminar"
-                    style={{
-                      left: `${tooltipPosition.x - 290}px` // Ajusta para evitar solapamiento
-                    }}
+                    style={
+                      pedidos
+                        ? {
+                          left: `${tooltipPosition.x - 150}px` // Ajusta para evitar solapamiento
+                        }
+                        : {
+                          left: `${tooltipPosition.x - 290}px` // Ajusta para evitar solapamiento
+                        }
+                    }
                   >
-                    <p>Eliminar Fila Entera</p>
+                    {pedidos ? (
+                      <>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                          <path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2" />
+                          <path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4" />
+                          <path d="M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z" />
+                        </svg>
+                        <p>Volver a Imprimir</p>
+                      </>
+                    ) : (
+                      <p>Eliminar Fila Entera</p>
+                    )}
                   </div>
                 )}
               </tr>

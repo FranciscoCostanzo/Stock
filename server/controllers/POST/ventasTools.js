@@ -1,24 +1,28 @@
 import db from "../../config/db.js";
 import crypto from "crypto";
+import { createErrorResponse, ErrorCodes } from "../../config/server.js";
 
+// Controlador para cargar ventas
 export const cargarVenta = async (req, res) => {
+  const connection = await db.getConnection();  // Obtén una conexión del pool
   try {
     const ventas = req.body;
 
-    // Generar un ID de venta único para todas las filas del mismo req.body
-    function generateUniqueId() {
-      return crypto.randomUUID(); // Node.js 15+ y versiones modernas
+    // Validar si hay ventas
+    if (!Array.isArray(ventas) || ventas.length === 0) {
+      return res.status(400).json(createErrorResponse(ErrorCodes.VALIDATION_ERROR, 'No hay ventas para registrar.'));
     }
-    const idVenta = generateUniqueId();
+
+    // Generar un ID de venta único para todas las filas
+    const idVenta = crypto.randomUUID();
 
     // Fecha y hora actual en formato ISO 8601
-    const fechaVenta = new Date()
-      .toLocaleDateString("en-CA")
-      .replace(/-/g, "/"); // YYYY/MM/DD
-    const horaVenta = new Date().toLocaleTimeString("es-AR", {
-      hour12: false,
-      timeZone: "America/Argentina/Buenos_Aires",
-    });
+    const currentDateTime = new Date();
+    const fechaVenta = currentDateTime.toISOString().split('T')[0]; // YYYY-MM-DD
+    const horaVenta = currentDateTime.toTimeString().split(' ')[0]; // HH:MM:SS
+
+    // Iniciar transacción
+    await connection.beginTransaction();
 
     // Insertar cada objeto como una fila en la tabla Ventas
     for (const venta of ventas) {
@@ -34,46 +38,37 @@ export const cargarVenta = async (req, res) => {
         dni_cliente,
         cuotas,
         adelanto,
-        total_venta,
+        total_venta
       } = venta;
 
-      // Validación adicional para ventas con método de pago 'tarjeta'
-      if (metodo_de_pago === "tarjeta") {
-        if (!nombre_cliente || !apellido_cliente || !dni_cliente) {
-          return res
-            .status(400)
-            .json({
-              message:
-                "Datos de cliente son obligatorios para pagos con tarjeta",
-            });
-        }
+      // Validación para ventas con método de pago 'tarjeta'
+      if (metodo_de_pago === 'tarjeta' && (!nombre_cliente || !apellido_cliente || !dni_cliente)) {
+        return res.status(400).json(createErrorResponse(ErrorCodes.VALIDATION_ERROR, 'Datos de cliente son obligatorios para pagos con tarjeta'));
       }
 
-      // Verificar si hay suficiente stock disponible antes de realizar la venta
-      const [stockResult] = await db.query(
+      // Verificar si hay suficiente stock
+      const [stockResult] = await connection.query(
         `SELECT cantidad FROM Stock WHERE id_mercaderia = ? AND id_sucursal = ?`,
         [id_mercaderia, id_sucursal]
       );
 
       if (stockResult.length === 0) {
-        return res
-          .status(400)
-          .json({ message: "Mercadería no encontrada en stock" });
+        await connection.rollback(); // Deshacer transacción
+        return res.status(400).json(createErrorResponse(ErrorCodes.STOCK_NOT_FOUND, 'Mercadería no encontrada en stock'));
       }
 
       const stockDisponible = stockResult[0].cantidad;
 
       if (stockDisponible < cantidad) {
-        return res
-          .status(400)
-          .json({ message: "Stock insuficiente para realizar la venta" });
+        await connection.rollback(); // Deshacer transacción
+        return res.status(400).json(createErrorResponse(ErrorCodes.STOCK_INSUFFICIENT, 'Stock insuficiente para realizar la venta'));
       }
 
-      // Calcular el campo total como suma de adelanto y total_venta
+      // Calcular el campo total
       const total = adelanto + total_venta;
 
-      // Ejecutar la inserción en la base de datos
-      await db.query(
+      // Ejecutar la inserción en la tabla Ventas
+      await connection.query(
         `INSERT INTO Ventas (
           id_venta, fecha_venta, hora_venta, id_usuario, id_sucursal, id_mercaderia, cantidad, 
           metodo_de_pago, id_tarjeta, nombre_cliente, apellido_cliente, dni_cliente, cuotas, 
@@ -88,34 +83,47 @@ export const cargarVenta = async (req, res) => {
           id_mercaderia,
           cantidad,
           metodo_de_pago,
-          metodo_de_pago === "tarjeta" ? id_tarjeta : null,
-          metodo_de_pago === "tarjeta" ? nombre_cliente : null,
-          metodo_de_pago === "tarjeta" ? apellido_cliente : null,
-          metodo_de_pago === "tarjeta" ? dni_cliente : null,
-          metodo_de_pago === "tarjeta" ? cuotas : null,
-          metodo_de_pago === "tarjeta" ? adelanto : null,
+          metodo_de_pago === 'tarjeta' ? id_tarjeta : null,
+          metodo_de_pago === 'tarjeta' ? nombre_cliente : null,
+          metodo_de_pago === 'tarjeta' ? apellido_cliente : null,
+          metodo_de_pago === 'tarjeta' ? dni_cliente : null,
+          metodo_de_pago === 'tarjeta' ? cuotas : null,
+          metodo_de_pago === 'tarjeta' ? adelanto : null,
           total_venta,
-          total,
+          total
         ]
       );
 
-      // Descontar la cantidad de mercadería en la tabla Stock
-      await db.query(
-        `UPDATE Stock
-        SET cantidad = cantidad - ?
-        WHERE id_mercaderia = ? AND id_sucursal = ?`,
+      // Descontar el stock
+      await connection.query(
+        `UPDATE Stock SET cantidad = cantidad - ? WHERE id_mercaderia = ? AND id_sucursal = ?`,
         [cantidad, id_mercaderia, id_sucursal]
       );
     }
 
-    res
-      .status(200)
-      .json({
-        message: "Ventas registradas correctamente y stock actualizado",
-      });
+    // Confirmar transacción
+    await connection.commit();
+    res.status(200).json({ success: true, message: 'Ventas registradas correctamente y stock actualizado' });
+
   } catch (error) {
-    console.error("Error al registrar las ventas:", error);
-    res.status(500).json({ message: "Error al registrar las ventas", error });
+    await connection.rollback(); // Deshacer transacción en caso de error
+
+    let errorCode = ErrorCodes.UNKNOWN_ERROR;
+    let errorMessage = 'Error desconocido al registrar las ventas';
+
+    // Detectar errores específicos de conexión o transacción
+    if (error.code === 'ER_NO_SUCH_TABLE') {
+      errorCode = ErrorCodes.DB_CONNECTION_ERROR;
+      errorMessage = 'Error de conexión a la base de datos';
+    } else if (error.message.includes('Transaction')) {
+      errorCode = ErrorCodes.TRANSACTION_ERROR;
+      errorMessage = 'Error durante la transacción';
+    }
+
+    console.error(`Error (${errorCode}):`, error);
+    res.status(500).json(createErrorResponse(errorCode, errorMessage, error.message));
+  } finally {
+    connection.release(); // Liberar la conexión
   }
 };
 

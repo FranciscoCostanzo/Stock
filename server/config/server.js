@@ -26,3 +26,25 @@ export const authenticateToken = (req, res, next) => {
     next();
   });
 };
+
+// Enumeración de errores
+export const ErrorCodes = {
+  VALIDATION_ERROR: 1001,
+  STOCK_NOT_FOUND: 1002,
+  STOCK_INSUFFICIENT: 1003,
+  DB_CONNECTION_ERROR: 1004,
+  TRANSACTION_ERROR: 1005,
+  UNKNOWN_ERROR: 1006
+};
+
+// Función para generar una respuesta de error enriquecida
+export function createErrorResponse(code, message, details = null) {
+  return {
+    success: false,
+    error: {
+      code,
+      message,
+      details
+    }
+  };
+}

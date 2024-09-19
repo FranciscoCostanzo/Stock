@@ -33,10 +33,14 @@ const VerPedidos = () => {
     loadMercaderia()
   }, [user])
 
-  console.log(pedidos)
-
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters)
+  }
+  const [etiquetas, setEtiquetas] = useState([])
+
+  const handleVolverAImprimir = (etiqueta) => {
+    console.log(etiqueta)
+    setEtiquetas(etiqueta)
   }
 
   return (
@@ -53,17 +57,33 @@ const VerPedidos = () => {
             <FiltroProductos
               columns={Object.keys(pedidos[0] || {})}
               onFilterChange={handleFilterChange}
+              dateColumns={["Fecha"]}
             />
             <div className="table-wrapper">
               <TablesProductos
                 pedidos={user.rol === 'admin' && true}
                 data={pedidos}
+                ventas={user.rol === 'admin' && true}
                 filters={filters}
+                onRowClick={handleVolverAImprimir}
               />
             </div>
           </article>
         </>
       )}
+                <div className="print-area">
+            {etiquetas.map((eti, i) =>
+              Array.from({ length: eti.Cantidad }).map((_, index) => (
+                <EtiquetaImpresion
+                  key={`${i}-${index}`}
+                  descripcion={eti.Descripcion}
+                  articulo={eti.Articulo}
+                  precio={eti.Precio}
+                  sucursal={eti.Sucursal}
+                />
+              ))
+            )}
+          </div>
     </section>
   )
 }

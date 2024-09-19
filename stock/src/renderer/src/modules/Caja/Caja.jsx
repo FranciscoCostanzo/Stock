@@ -192,71 +192,69 @@ const Caja = () => {
                                     )}
                                 </article>
                                 <p className="total__ventas__dia">Total de ventas del día: ${caja.totalVentas}</p>
+                                <p className="total__efectivo__dia">Total Adelantos: ${caja.totalAdelanto}</p>
                                 <p className="total__efectivo__dia">Efectivo de la Caja: ${calcularFondo()}</p>
+                                <h2>Cerrar caja:</h2>
+
+                                <SelectMotivosCaja onChange={handleMotivoChange} />
+
+                                <div className="flex">
+                                    <label>
+                                        <input
+                                            value={dataCajaFields.monto}
+                                            onChange={handleChange}
+                                            type="number"
+                                            name="monto"
+                                            className="input"
+                                            placeholder="Monto a salir"
+                                        />
+                                        <span>Monto a salir</span>
+                                    </label>
+                                </div>
+
+                                {selectedMotivoId === 2 && (
+                                    <div className="flex">
+                                        <label>
+                                            <input
+                                                value={dataCajaFields.sobrante}
+                                                onChange={handleChange}
+                                                type="number"
+                                                name="sobrante"
+                                                className="input"
+                                                placeholder="Sobrante"
+                                            />
+                                            <span>Sobrante</span>
+                                        </label>
+                                    </div>
+                                )}
+
+                                {/* Botón para agregar entrada */}
+                                <BtnGeneral tocar={handleAddEntry}>
+                                    <svg viewBox="0 0 24 24">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                                        <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                                        <path d="M14 11h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5" />
+                                        <path d="M12 17v1m0 -8v1" />
+                                    </svg>
+                                    Agregar
+                                </BtnGeneral>
+
+                                {/* Botón para cerrar la caja */}
+                                {isMotivoRendicionInEntries && (
+                                    <BtnGeneral tocar={handleCerrarCaja}>
+                                        <svg viewBox="0 0 24 24">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M9 14c0 1.657 2.686 3 6 3s6 -1.343 6 -3s-2.686 -3 -6 -3s-6 1.343 -6 3z" />
+                                            <path d="M9 14v4c0 1.656 2.686 3 6 3s6 -1.344 6 -3v-4" />
+                                            <path d="M3 6c0 1.072 1.144 2.062 3 2.598s4.144 .536 6 0c1.856 -.536 3 -1.526 3 -2.598c0 -1.072 -1.144 -2.062 -3 -2.598s-4.144 -.536 -6 0c-1.856 .536 -3 1.526 -3 2.598z" />
+                                            <path d="M3 6v10c0 .888 .772 1.45 2 2" />
+                                            <path d="M3 11c0 .888 .772 1.45 2 2" />
+                                        </svg>
+                                        Cerrar Caja
+                                    </BtnGeneral>
+                                )}
                             </>
-                        )}
-                        <h2>Cerrar caja:</h2>
-
-                        {/* Select para motivos */}
-                        <SelectMotivosCaja onChange={handleMotivoChange} />
-
-                        <div className="flex">
-                            <label>
-                                <input
-                                    value={dataCajaFields.monto}
-                                    onChange={handleChange}
-                                    type="number"
-                                    name="monto"
-                                    className="input"
-                                    placeholder="Monto a salir"
-                                />
-                                <span>Monto a salir</span>
-                            </label>
-                        </div>
-
-                        {/* Solo mostrar el campo sobrante si el motivo es 2 y no hay fondo */}
-                        {/* {selectedMotivoId === 2 && !isFondoAvailable() && ( */}
-                        {selectedMotivoId === 2 && (
-                            <div className="flex">
-                                <label>
-                                    <input
-                                        value={dataCajaFields.sobrante}
-                                        onChange={handleChange}
-                                        type="number"
-                                        name="sobrante"
-                                        className="input"
-                                        placeholder="Sobrante"
-                                    />
-                                    <span>Sobrante</span>
-                                </label>
-                            </div>
-                        )}
-
-                        {/* Botón para agregar entrada */}
-                        <BtnGeneral tocar={handleAddEntry}>
-                            <svg viewBox="0 0 24 24">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M14 3v4a1 1 0 0 0 1 1h4" />
-                                <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
-                                <path d="M14 11h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5" />
-                                <path d="M12 17v1m0 -8v1" />
-                            </svg>
-                            Agregar
-                        </BtnGeneral>
-
-                        {/* Botón para cerrar la caja */}
-                        {isMotivoRendicionInEntries && (
-                            <BtnGeneral tocar={handleCerrarCaja}>
-                                <svg viewBox="0 0 24 24">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M9 14c0 1.657 2.686 3 6 3s6 -1.343 6 -3s-2.686 -3 -6 -3s-6 1.343 -6 3z" />
-                                    <path d="M9 14v4c0 1.656 2.686 3 6 3s6 -1.344 6 -3v-4" />
-                                    <path d="M3 6c0 1.072 1.144 2.062 3 2.598s4.144 .536 6 0c1.856 -.536 3 -1.526 3 -2.598c0 -1.072 -1.144 -2.062 -3 -2.598s-4.144 -.536 -6 0c-1.856 .536 -3 1.526 -3 2.598z" />
-                                    <path d="M3 6v10c0 .888 .772 1.45 2 2" />
-                                    <path d="M3 11c0 .888 .772 1.45 2 2" />
-                                </svg>
-                                Cerrar Caja
-                            </BtnGeneral>
                         )}
                     </ContenedorPages>
                 </section>

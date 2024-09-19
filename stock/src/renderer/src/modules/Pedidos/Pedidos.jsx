@@ -222,14 +222,15 @@ const Pedidos = () => {
       // Filtrar los artículos que no coincidan con el artículo y sucursal que se quiere eliminar
       const filteredCargas = prevCargas.filter(
         (articulo) =>
-          !(articulo.Articulo === articuloParaEliminar.Articulo && 
-            articulo.Sucursal === articuloParaEliminar.Sucursal)
+          !(
+            articulo.Articulo === articuloParaEliminar.Articulo &&
+            articulo.Sucursal === articuloParaEliminar.Sucursal
+          )
       )
-      
+
       return filteredCargas
     })
   }
-  
 
   return (
     <>

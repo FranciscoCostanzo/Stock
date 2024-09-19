@@ -135,6 +135,9 @@ export const pedirTotalCajaSucursal = async (req, res) => {
       totalVentas: parseFloat(totalVentasResults[0].total_ventas || 0).toFixed(
         2
       ),
+      totalAdelanto: parseFloat(adelantoResults[0].total_adelanto || 0).toFixed(
+        2
+      ),
       totalTarjeta: parseFloat(
         totalTarjetaResults[0].total_tarjeta || 0
       ).toFixed(2),
