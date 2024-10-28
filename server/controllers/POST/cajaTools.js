@@ -1,5 +1,6 @@
 import db from "../../config/db.js";
 import crypto from "crypto";
+import { obtenerFechaHoraArgentina } from "../../config/server.js";
 
 export const cargarCierreCaja = async (req, res) => {
   try {
@@ -12,12 +13,9 @@ export const cargarCierreCaja = async (req, res) => {
     }
 
     const idSucursal = cajaEntries[0].id_sucursal;
-    const fechaActual = new Date()
-      .toLocaleDateString("en-CA")
-      .replace(/-/g, "/"); // YYYY/MM/DD
+    const { fecha } = obtenerFechaHoraArgentina();
 
     // Sumar el total de las ventas en efectivo del día
-
     const [totalEfectivoResults] = await db.query(
       `
           SELECT SUM(CAST(Ventas.total AS DECIMAL(10, 2))) AS total_efectivo
@@ -26,7 +24,7 @@ export const cargarCierreCaja = async (req, res) => {
           AND Ventas.metodo_de_pago = 'efectivo'
           AND DATE(Ventas.fecha_venta) = ?
           `,
-      [idSucursal, fechaActual]
+      [idSucursal, fecha]
     );
 
     // Sumar los adelantos de ventas con tarjeta del día
@@ -38,7 +36,7 @@ export const cargarCierreCaja = async (req, res) => {
       AND Ventas.metodo_de_pago = 'tarjeta'
       AND DATE(Ventas.fecha_venta) = ?
       `,
-      [idSucursal, fechaActual]
+      [idSucursal, fecha]
     );
 
     // Contar la cantidad de ventas en efectivo del día, agrupadas por id_venta
@@ -50,7 +48,7 @@ export const cargarCierreCaja = async (req, res) => {
       AND Ventas.metodo_de_pago = 'efectivo'
       AND DATE(Ventas.fecha_venta) = ?
       `,
-      [idSucursal, fechaActual]
+      [idSucursal, fecha]
     );
 
     // Contar la cantidad de ventas con tarjeta del día, agrupadas por id_venta
@@ -62,7 +60,7 @@ export const cargarCierreCaja = async (req, res) => {
       AND Ventas.metodo_de_pago = 'tarjeta'
       AND DATE(Ventas.fecha_venta) = ?
       `,
-      [idSucursal, fechaActual]
+      [idSucursal, fecha]
     );
 
     // Sumar el total de todas las ventas del día, sin discriminar método de pago
@@ -73,7 +71,7 @@ export const cargarCierreCaja = async (req, res) => {
       WHERE Ventas.id_sucursal = ?
       AND DATE(Ventas.fecha_venta) = ?
       `,
-      [idSucursal, fechaActual]
+      [idSucursal, fecha]
     );
 
     // Sumar el total de ventas con tarjeta
@@ -85,7 +83,7 @@ export const cargarCierreCaja = async (req, res) => {
       AND Ventas.metodo_de_pago = 'tarjeta'
       AND DATE(Ventas.fecha_venta) = ?
       `,
-      [idSucursal, fechaActual]
+      [idSucursal, fecha]
     );
 
     // Calcular el total de efectivo en ventas
@@ -134,12 +132,9 @@ export const cargarCierreCaja = async (req, res) => {
         message: "El sobrante no puede ser negativo si no hay fondo.",
       });
     }
-
     // Generar un ID único para el cierre de caja
     const idCierreCaja = crypto.randomUUID();
-    const fechaCierreCaja = new Date()
-      .toLocaleDateString("en-CA")
-      .replace(/-/g, "/");
+
 
     for (const entry of cajaEntries) {
       const { monto, sobrante, fondo, id_motivo, id_usuario, id_sucursal } =
@@ -157,7 +152,7 @@ export const cargarCierreCaja = async (req, res) => {
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           [
             idCierreCaja, // UUID generado
-            fechaCierreCaja, // Fecha en formato ISO 8601
+            fecha, // Fecha en formato ISO 8601
             montoTruncado, // Monto truncado a 2 decimales
             sobranteTruncado, // Sobrante truncado a 2 decimales
             fondoTruncado, // Fondo truncado a 2 decimales
@@ -178,7 +173,7 @@ export const cargarCierreCaja = async (req, res) => {
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
           [
             idCierreCaja, // UUID generado
-            fechaCierreCaja, // Fecha en formato ISO 8601
+            fecha, // Fecha en formato ISO 8601
             montoTruncado, // Monto truncado a 2 decimales
             sobranteTruncado, // Sobrante truncado a 2 decimales
             fondoTruncado, // Fondo truncado a 2 decimales

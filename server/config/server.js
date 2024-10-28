@@ -48,3 +48,26 @@ export function createErrorResponse(code, message, details = null) {
     }
   };
 }
+
+export const obtenerFechaHoraArgentina = () => {
+  const currentDateTime = new Date();
+
+  // Obtener la fecha en formato YYYY-MM-DD
+  const fecha = new Intl.DateTimeFormat("es-AR", {
+    timeZone: "America/Argentina/Buenos_Aires",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).format(currentDateTime).split('/').reverse().join('-');
+
+  // Obtener la hora en formato HH:MM:SS
+  const hora = new Intl.DateTimeFormat("es-AR", {
+    timeZone: "America/Argentina/Buenos_Aires",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false
+  }).format(currentDateTime);
+
+  return { fecha, hora };
+};

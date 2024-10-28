@@ -1,5 +1,6 @@
 import db from "../../config/db.js";
 import crypto from "crypto";
+import { obtenerFechaHoraArgentina } from "../../config/server.js";
 
 export const pedirArticuloPedidos = async (req, res) => {
   const { id_mercaderia } = req.body;
@@ -87,9 +88,7 @@ export const EnviarPedidoAdmin = async (req, res) => {
     }
 
     // Generar la fecha actual en formato ISO 8601
-    const fechaActual = new Date()
-      .toLocaleDateString("en-CA")
-      .replace(/-/g, "/"); // YYYY/MM/DD
+    const { fecha } = obtenerFechaHoraArgentina();
 
     // Insertar cada pedido en la tabla Pedidos
     const queries = [];
@@ -108,7 +107,7 @@ export const EnviarPedidoAdmin = async (req, res) => {
             id_sucursal,
             id_mercaderia,
             cantidad,
-            fechaActual,
+            fecha,
           ]
         )
       );

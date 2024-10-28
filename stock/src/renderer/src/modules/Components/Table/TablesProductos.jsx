@@ -6,13 +6,7 @@ const matchesFilter = (value, filter) => {
   return value?.toString().toLowerCase().startsWith(filter.toLowerCase())
 }
 
-const TablesProductos = ({
-  data = [],
-  filters = {},
-  ventas,
-  pedidos,
-  onRowClick
-}) => {
+const TablesProductos = ({ data = [], filters = {}, ventas, pedidos, analisis, onRowClick }) => {
   const [tooltipVisible, setTooltipVisible] = useState(false)
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
   const [hoveredRow, setHoveredRow] = useState(null)
@@ -66,15 +60,16 @@ const TablesProductos = ({
                 {ventas && tooltipVisible && hoveredRow !== null && (
                   <div
                     className="tooltip__eliminar"
-                    style={
-                      pedidos
-                        ? {
-                          left: `${tooltipPosition.x - 150}px` // Ajusta para evitar solapamiento
-                        }
-                        : {
-                          left: `${tooltipPosition.x - 290}px` // Ajusta para evitar solapamiento
-                        }
-                    }
+                    style={{
+                      left: `${tooltipPosition.x - (pedidos ? 330 : analisis ? 330 : 420)}px`,
+                      top: pedidos 
+                        ? `${tooltipPosition.y - 100}px`
+                        : analisis 
+                          ? `${tooltipPosition.y - 100}px` 
+                          : ventas 
+                          ? `${tooltipPosition.y - 290}px` 
+                          : `${tooltipPosition.y - 325}px`,
+                    }}
                   >
                     {pedidos ? (
                       <>
@@ -87,7 +82,23 @@ const TablesProductos = ({
                         <p>Volver a Imprimir</p>
                       </>
                     ) : (
-                      <p>Eliminar Fila Entera</p>
+                      <>
+                        {analisis ? (
+                          <p>Ver detalle</p>
+                        ) : (
+                          <>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                              <path d="M4 7l16 0" />
+                              <path d="M10 11l0 6" />
+                              <path d="M14 11l0 6" />
+                              <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                              <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                            </svg>
+                            <p>Eliminar Fila</p>
+                          </>
+                        )}
+                      </>
                     )}
                   </div>
                 )}

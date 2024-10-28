@@ -74,7 +74,6 @@ const Etiquetas = () => {
     setArticuloAComprar(e.target.value)
   }
 
-  console.log(etiquetaData.descripcion)
   return (
     <section className="ventas">
       <BtnVolver donde="/inicio" />

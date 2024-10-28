@@ -1,6 +1,6 @@
-const BtnGeneral = ({ children, claseBtn, tocar }) => {
+const BtnGeneral = ({ children, claseBtn, tocar, disabled }) => {
   return (
-    <p onClick={tocar} className={`btn__general ${claseBtn}`}>
+    <p onClick={!disabled && tocar} className={ disabled ? `disabled btn__general ${claseBtn}` : `btn__general ${claseBtn}`}>
       {children}
     </p>
   )

@@ -1,10 +1,11 @@
 import db from "../../config/db.js";
+import { obtenerFechaHoraArgentina } from "../../config/server.js";
 
 export const pedirTotalCajaSucursal = async (req, res) => {
   const { idSucursal } = req.params;
 
-  // Obtener la fecha actual en formato ISO 8601 (YYYY-MM-DD)
-  const fechaActual = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+  // Obtener la fecha actual en formato ISO 8601
+  const { fecha } = obtenerFechaHoraArgentina();
 
   try {
     // Verificar si ya se ha registrado un cierre de caja hoy para la misma sucursal
@@ -15,7 +16,7 @@ export const pedirTotalCajaSucursal = async (req, res) => {
       WHERE id_sucursal = ?
       AND DATE(fecha) = ?
       `,
-      [idSucursal, fechaActual]
+      [idSucursal, fecha]
     );
 
     if (cierreCajaResults[0].cierre_existente > 0) {
@@ -32,7 +33,7 @@ export const pedirTotalCajaSucursal = async (req, res) => {
       WHERE id_sucursal = ?
       AND DATE(fecha_venta) = ?
       `,
-      [idSucursal, fechaActual]
+      [idSucursal, fecha]
     );
 
     if (ventasResults[0].ventas_existentes === 0) {
@@ -48,7 +49,7 @@ export const pedirTotalCajaSucursal = async (req, res) => {
       AND Ventas.metodo_de_pago = 'efectivo'
       AND DATE(Ventas.fecha_venta) = ?
       `,
-      [idSucursal, fechaActual]
+      [idSucursal, fecha]
     );
 
     // Sumar los adelantos de ventas con tarjeta del día
@@ -60,7 +61,7 @@ export const pedirTotalCajaSucursal = async (req, res) => {
       AND Ventas.metodo_de_pago = 'tarjeta'
       AND DATE(Ventas.fecha_venta) = ?
       `,
-      [idSucursal, fechaActual]
+      [idSucursal, fecha]
     );
 
     // Contar la cantidad de ventas en efectivo del día, agrupadas por id_venta
@@ -72,7 +73,7 @@ export const pedirTotalCajaSucursal = async (req, res) => {
       AND Ventas.metodo_de_pago = 'efectivo'
       AND DATE(Ventas.fecha_venta) = ?
       `,
-      [idSucursal, fechaActual]
+      [idSucursal, fecha]
     );
 
     // Contar la cantidad de ventas con tarjeta del día, agrupadas por id_venta
@@ -84,7 +85,7 @@ export const pedirTotalCajaSucursal = async (req, res) => {
       AND Ventas.metodo_de_pago = 'tarjeta'
       AND DATE(Ventas.fecha_venta) = ?
       `,
-      [idSucursal, fechaActual]
+      [idSucursal, fecha]
     );
 
     // Sumar el total de todas las ventas del día, sin discriminar método de pago
@@ -95,7 +96,7 @@ export const pedirTotalCajaSucursal = async (req, res) => {
       WHERE Ventas.id_sucursal = ?
       AND DATE(Ventas.fecha_venta) = ?
       `,
-      [idSucursal, fechaActual]
+      [idSucursal, fecha]
     );
 
     // Sumar el total de ventas con tarjeta
@@ -107,7 +108,7 @@ export const pedirTotalCajaSucursal = async (req, res) => {
       AND Ventas.metodo_de_pago = 'tarjeta'
       AND DATE(Ventas.fecha_venta) = ?
       `,
-      [idSucursal, fechaActual]
+      [idSucursal, fecha]
     );
 
     // Sumar el total de ventas en efectivo
@@ -119,7 +120,7 @@ export const pedirTotalCajaSucursal = async (req, res) => {
       AND Ventas.metodo_de_pago = 'efectivo'
       AND DATE(Ventas.fecha_venta) = ?
       `,
-      [idSucursal, fechaActual]
+      [idSucursal, fecha]
     );
 
     // Calcular el total de efectivo en la caja (sumar ventas en efectivo y adelantos con tarjeta)

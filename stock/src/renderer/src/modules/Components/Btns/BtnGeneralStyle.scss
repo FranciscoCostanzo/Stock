@@ -35,3 +35,10 @@
         scale: 1.05;
     }
 }
+
+.disabled{
+    transition: 0.1s ease;
+    opacity: 0.6!important;
+    cursor: default!important;
+    scale: 0.95!important;
+}

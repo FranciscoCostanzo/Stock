@@ -24,6 +24,7 @@ const FormVentas = () => {
   const [finalizado, setFinalizado] = useState(false)
 
   const [tarjetas, setTarjetas] = useState([])
+  const [disabled, setDisabled] = useState(false)
 
   const optionsFormaDePago = ['Efectivo', 'Tarjeta']
 
@@ -142,6 +143,18 @@ const FormVentas = () => {
   const [articuloAComprar, setArticuloAComprar] = useState('')
 
   const handlePedirPrecioArticulo = async () => {
+
+    toast('Buscando...', {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      progress: undefined,
+      theme: 'light'
+    })
+
     const articuloTrimmed = articuloAComprar.trim()
 
     if (!articuloTrimmed) {
@@ -336,6 +349,7 @@ const FormVentas = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setDisabled(true)
 
     try {
       // Crear el formData dinámico
@@ -367,6 +381,7 @@ const FormVentas = () => {
         progress: undefined,
         theme: 'light'
       })
+      setDisabled(false)
       window.location.reload()
     } catch (error) {
       console.error('Error al enviar datos de venta:', error.message)
@@ -380,6 +395,7 @@ const FormVentas = () => {
         progress: undefined,
         theme: 'light'
       })
+      setDisabled(false)
     }
   }
 
@@ -543,7 +559,7 @@ const FormVentas = () => {
                       </div>
                       <p className="cambio">Cambio: {cambio}</p>
                       {entrega >= totalVenta && (
-                        <BtnGeneral claseBtn="btn__guardar__venta" tocar={handleSubmit}>
+                        <BtnGeneral disabled={disabled} claseBtn="btn__guardar__venta" tocar={handleSubmit}>
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                             <path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />

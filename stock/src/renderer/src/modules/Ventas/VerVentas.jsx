@@ -4,6 +4,7 @@ import TablesProductos from '../Components/Table/TablesProductos'
 import { AuthContext } from '../Auth/context/AuthContext'
 import FiltroProductos from '../Mercaderia/components/Filtros/FiltroProductos'
 import { obtenerVentasAdmin, obtenerVentasSucursal } from './lib/libVentas'
+import BtnGeneral from '../Components/Btns/BtnGeneral'
 
 const VerVentas = () => {
   const { user } = useContext(AuthContext)
@@ -35,40 +36,26 @@ const VerVentas = () => {
 
   // Agrupación y suma de valores
   const ventasUnificadas = ventasSemana.reduce((acc, venta) => {
-    const {
-      id_venta,
-      Fecha,
-      Usuario,
-      Sucursal,
-      Metodo,
-      Tarjeta,
-      NombreCliente,
-      ApellidoCliente,
-      DNICliente,
-      Adelanto,
-      total_venta,
-      Total
-    } = venta
+    const { id_venta, Fecha, Usuario, Sucursal, Metodo, Tarjeta, Adelanto, Total } = venta
 
     if (!acc[id_venta]) {
       acc[id_venta] = {
+        id_venta,
         Fecha,
+        Productos: 1,
         Usuario,
         Sucursal,
         Metodo,
         Tarjeta,
-        NombreCliente,
-        ApellidoCliente,
-        DNICliente,
+        // Cliente: `${NombreCliente} ${ApellidoCliente}`,
         Adelanto: Adelanto === 'No tiene' ? Adelanto : parseFloat(Adelanto),
-        Total_Venta: parseFloat(total_venta),
         Total: parseFloat(Total)
       }
     } else {
       acc[id_venta].Adelanto =
         Adelanto === 'No tiene' ? Adelanto : acc[id_venta].Adelanto + parseFloat(Adelanto)
-      acc[id_venta].Total_Venta += parseFloat(total_venta)
       acc[id_venta].Total += parseFloat(Total)
+      acc[id_venta].Productos += 1
     }
 
     return acc
@@ -79,24 +66,12 @@ const VerVentas = () => {
 
   // Filtros
   const filtros = ventasSemana.map(
-    ({
+    ({ Fecha, Usuario, Sucursal, Metodo, Tarjeta, DNICliente, Total }) => ({
       Fecha,
       Usuario,
       Sucursal,
       Metodo,
       Tarjeta,
-      NombreCliente,
-      ApellidoCliente,
-      DNICliente,
-      Total
-    }) => ({
-      Fecha,
-      Usuario,
-      Sucursal,
-      Metodo,
-      Tarjeta,
-      NombreCliente,
-      ApellidoCliente,
       DNICliente,
       Total: parseFloat(Total)
     })
@@ -106,6 +81,45 @@ const VerVentas = () => {
     setFilters(newFilters)
   }
 
+  const [ventasEspecificas, setVentasEspecificas] = useState([])
+
+  const handleVerVentasEspecifica = (ventaEspecifica) => {
+    const resultado = ventasSemana.filter(
+      (especifica) => especifica.id_venta === ventaEspecifica.id_venta
+    )
+
+    // const ventasUnificadas = resultado.reduce((acc, venta) => {
+    //   const { id_venta, Fecha, Hora, Usuario, Sucursal,Descripcion, NombreCliente, ApellidoCliente,  Metodo, Tarjeta, Adelanto, total_venta, Total } = venta
+
+    //   if (!acc[id_venta]) {
+    //     acc[id_venta] = {
+    //       Fecha,
+    //       Hora,
+    //       Usuario,
+    //       Sucursal,
+    //       Descripcion,
+    //       Metodo,
+    //       Tarjeta,
+    //       // Cliente: `${NombreCliente} ${ApellidoCliente}`,
+    //       Adelanto: Adelanto === 'No tiene' ? Adelanto : parseFloat(Adelanto),
+    //       total_venta,
+    //       Total: parseFloat(Total)
+    //     }
+    //   } else {
+    //     acc[id_venta].Adelanto =
+    //       Adelanto === 'No tiene' ? Adelanto : acc[id_venta].Adelanto + parseFloat(Adelanto)
+    //     acc[id_venta].Total += parseFloat(Total)
+    //   }
+
+    //   return acc
+    // }, {})
+    setVentasEspecificas(resultado)
+  }
+
+
+  const handleVolverAtrasAnalisis = () => {
+    setVentasEspecificas([])
+  }
   return (
     <section className="mercaderia">
       {loading ? (
@@ -120,11 +134,34 @@ const VerVentas = () => {
             <FiltroProductos
               columns={Object.keys(filtros[0] || {})}
               onFilterChange={handleFilterChange}
-              dateColumns={["Fecha"]}
+              dateColumns={['Fecha']}
             />
-            <div className="table-wrapper">
-              <TablesProductos data={ventasUnificadasArray} filters={filters} />
-            </div>
+            {ventasEspecificas.length === 0 ? (
+              <div className="table-wrapper">
+                <TablesProductos
+                  ventas={true}
+                  analisis={true}
+                  onRowClick={handleVerVentasEspecifica}
+                  data={ventasUnificadasArray}
+                  filters={filters}
+                />
+              </div>
+            ) : (
+              <>
+                <BtnGeneral tocar={handleVolverAtrasAnalisis} claseBtn="btn__atras__analisis">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M13 14l-4 -4l4 -4" />
+                    <path d="M8 14l-4 -4l4 -4" />
+                    <path d="M9 10h7a4 4 0 1 1 0 8h-1" />
+                  </svg>
+                  Atras
+                </BtnGeneral>
+                <div className="table-wrapper">
+                  <TablesProductos data={ventasEspecificas} filters={filters} />
+                </div>
+              </>
+            )}
           </article>
         </>
       )}
