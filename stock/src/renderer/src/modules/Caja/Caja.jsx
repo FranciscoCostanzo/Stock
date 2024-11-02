@@ -15,7 +15,6 @@ const Caja = () => {
         monto: 0,
         sobrante: 0
     })
-    const [selectedMotivoId, setSelectedMotivoId] = useState(null)
     const [cajaEntries, setCajaEntries] = useState([]) // Array que almacena las entradas de caja
     if (caja) {
         var totalCaja = parseFloat(caja.totalEfectivoVentas) + parseFloat(caja.totalAdelanto)
@@ -46,9 +45,16 @@ const Caja = () => {
         })
     }
 
-    const handleMotivoChange = (id) => {
-        setSelectedMotivoId(id)
-    }
+    const [motivoSeleccionado, setMotivoSeleccionado] = useState(null);
+
+    const handleMotivoChange = (motivo) => {
+      setMotivoSeleccionado(motivo); // Guardar el objeto con `id` y `motivo`
+    };
+
+
+    // const handleMotivoChange = (id) => {
+    //     setSelectedMotivoId(id)
+    // }
 
     const truncarADosDecimales = (num) => {
         return Math.trunc(num * 100) / 100
@@ -66,7 +72,7 @@ const Caja = () => {
         const { monto } = dataCajaFields
         const montoNumerico = Number(monto)
 
-        if (selectedMotivoId === null) {
+        if (motivoSeleccionado.id === null) {
             toast.error('Debes seleccionar un motivo')
             return
         }
@@ -78,37 +84,37 @@ const Caja = () => {
         }
 
         // Verificar que el motivo no se haya seleccionado antes
-        if (cajaEntries.some((entry) => entry.id_motivo === selectedMotivoId)) {
+        if (cajaEntries.some((entry) => entry.id_motivo === motivoSeleccionado.id)) {
             toast.error('Ya has seleccionado este motivo, elige otro.')
             return
         }
 
         let fondoFinal
-        let sobranteFinal = selectedMotivoId === 2 ? Number(dataCajaFields.sobrante) : 0
+        let sobranteFinal = motivoSeleccionado.id === 2 ? Number(dataCajaFields.sobrante) : 0
 
-        // Si se selecciona motivo 2, restar el monto acumulado antes de agregar la última entrada
-        if (selectedMotivoId === 2) {
-            const totalMontos = cajaEntries.reduce((total, entry) => total + entry.monto, 0)
-            const totalConNuevoMonto = totalMontos + montoNumerico
+        // // Si se selecciona motivo 2, restar el monto acumulado antes de agregar la última entrada
+        // if (selectedMotivoId === 2) {
+        //     const totalMontos = cajaEntries.reduce((total, entry) => total + entry.monto, 0)
+        //     const totalConNuevoMonto = totalMontos + montoNumerico
 
-            // Calcular el fondo con el nuevo monto incluido
-            fondoFinal = truncarADosDecimales(totalCaja - totalConNuevoMonto)
+        //     // Calcular el fondo con el nuevo monto incluido
+        //     fondoFinal = truncarADosDecimales(totalCaja - totalConNuevoMonto)
 
-            // Si el fondo es mayor a 0, mostrar error y no permitir agregar sobrante
-            if (fondoFinal > 0) {
-                toast.error(
-                    `Aún tienes un fondo disponible de ${fondoFinal}. Debes cerrar la caja antes de agregar sobrante.`
-                )
-                return
-            }
-        }
+        //     // Si el fondo es mayor a 0, mostrar error y no permitir agregar sobrante
+        //     if (fondoFinal > 0) {
+        //         toast.error(
+        //             `Aún tienes un fondo disponible de ${fondoFinal}. Debes cerrar la caja antes de agregar sobrante.`
+        //         )
+        //         return
+        //     }
+        // }
 
         // Crear nueva entrada
         const newEntry = {
             monto: montoNumerico,
             sobrante: sobranteFinal, // Asegurarse de que el sobrante sea 0 si fondo > 0
-            fondo: selectedMotivoId === 2 ? fondoFinal : 0,
-            id_motivo: selectedMotivoId,
+            fondo: motivoSeleccionado.id === 2 ? fondoFinal : 0,
+            id_motivo: motivoSeleccionado.id,
             id_usuario: user.id,
             id_sucursal: user.sucursal.id
         }
@@ -116,7 +122,7 @@ const Caja = () => {
         // Agregar nueva entrada al array
         setCajaEntries([...cajaEntries, newEntry])
         setDataCajaFields({ monto: 0, sobrante: 0 }) // Resetear los campos
-        setSelectedMotivoId(null) // Resetear motivo
+        setMotivoSeleccionado(null) // Resetear motivo
         toast.success('Entrada agregada exitosamente')
     }
 
@@ -198,7 +204,7 @@ const Caja = () => {
                                 </article>
                                 <p className="total__ventas__dia">Total de ventas del día: ${caja.totalVentas}</p>
                                 <p className="total__efectivo__dia">Total Adelantos: ${caja.totalAdelanto}</p>
-                                <p className="total__efectivo__dia">Total Fondo: ${caja.fondo}</p>
+                                <p className="total__efectivo__dia">Total fondo acumulado: ${caja.fondo}</p>
                                 <p className="total__efectivo__dia">Efectivo de la Caja: ${calcularFondo()}</p>
                                 <h2>Cerrar caja:</h2>
 
@@ -218,7 +224,7 @@ const Caja = () => {
                                     </label>
                                 </div>
 
-                                {selectedMotivoId === 2 && (
+                                {motivoSeleccionado.id === 2 && (
                                     <div className="flex">
                                         <label>
                                             <input
@@ -247,7 +253,7 @@ const Caja = () => {
                                 </BtnGeneral>
 
                                 {/* Botón para cerrar la caja */}
-                                {cajaEntries.length > 0 && (
+                                {isMotivoRendicionInEntries && (
                                     <BtnGeneral tocar={handleCerrarCaja}>
                                         <svg viewBox="0 0 24 24">
                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
