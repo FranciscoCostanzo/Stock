@@ -177,7 +177,7 @@ export const pedirInversionAdmin = async (req, res) => {
         Mercaderia.publico AS Publico,
         SUM(Stock.cantidad) AS StockTotal, 
         SUM(Stock.cantidad * Mercaderia.costo) AS Inversion,
-        SUM(Stock.cantidad * Mercaderia.publico) AS Retorno
+        SUM(Stock.cantidad * Mercaderia.publico) AS Ganancia
       FROM 
         Stock
       INNER JOIN 

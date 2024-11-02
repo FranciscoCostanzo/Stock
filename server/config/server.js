@@ -71,3 +71,7 @@ export const obtenerFechaHoraArgentina = () => {
 
   return { fecha, hora };
 };
+
+export const pasarADecimal = (num) => {
+  parseFloat(num)
+}

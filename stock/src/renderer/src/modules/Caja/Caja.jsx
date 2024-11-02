@@ -17,6 +17,9 @@ const Caja = () => {
     })
     const [selectedMotivoId, setSelectedMotivoId] = useState(null)
     const [cajaEntries, setCajaEntries] = useState([]) // Array que almacena las entradas de caja
+    if (caja) {
+        var totalCaja = parseFloat(caja.totalEfectivoVentas) + parseFloat(caja.totalAdelanto)
+    }
 
     useEffect(() => {
         const loadCaja = async () => {
@@ -53,7 +56,7 @@ const Caja = () => {
 
     const calcularFondo = () => {
         const totalMontos = cajaEntries.reduce((total, entry) => total + entry.monto, 0)
-        const fondoFinal = caja.totalCaja - totalMontos
+        const fondoFinal = totalCaja - totalMontos
         return truncarADosDecimales(fondoFinal)
     }
 
@@ -69,8 +72,8 @@ const Caja = () => {
         }
 
         // Verificar que el monto no exceda el efectivo disponible
-        if (montoNumerico > caja.totalCaja) {
-            toast.error(`No puedes usar más de ${caja.totalCaja} en efectivo`)
+        if (montoNumerico > calcularFondo()) {
+            toast.error(`No puedes usar más de ${calcularFondo()} en efectivo`)
             return
         }
 
@@ -89,7 +92,7 @@ const Caja = () => {
             const totalConNuevoMonto = totalMontos + montoNumerico
 
             // Calcular el fondo con el nuevo monto incluido
-            fondoFinal = truncarADosDecimales(caja.totalCaja - totalConNuevoMonto)
+            fondoFinal = truncarADosDecimales(totalCaja - totalConNuevoMonto)
 
             // Si el fondo es mayor a 0, mostrar error y no permitir agregar sobrante
             if (fondoFinal > 0) {
@@ -116,6 +119,8 @@ const Caja = () => {
         setSelectedMotivoId(null) // Resetear motivo
         toast.success('Entrada agregada exitosamente')
     }
+
+    console.log(cajaEntries)
 
     // Función para cerrar la caja y enviar los datos al endpoint
     const handleCerrarCaja = async () => {
@@ -193,6 +198,7 @@ const Caja = () => {
                                 </article>
                                 <p className="total__ventas__dia">Total de ventas del día: ${caja.totalVentas}</p>
                                 <p className="total__efectivo__dia">Total Adelantos: ${caja.totalAdelanto}</p>
+                                <p className="total__efectivo__dia">Total Fondo: ${caja.fondo}</p>
                                 <p className="total__efectivo__dia">Efectivo de la Caja: ${calcularFondo()}</p>
                                 <h2>Cerrar caja:</h2>
 
@@ -241,7 +247,7 @@ const Caja = () => {
                                 </BtnGeneral>
 
                                 {/* Botón para cerrar la caja */}
-                                {isMotivoRendicionInEntries && (
+                                {cajaEntries.length > 0 && (
                                     <BtnGeneral tocar={handleCerrarCaja}>
                                         <svg viewBox="0 0 24 24">
                                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
