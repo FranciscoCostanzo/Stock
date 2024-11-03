@@ -191,7 +191,6 @@ const Caja = () => {
                                     {cajaEntries.length > 0 && (
                                         <div className="contenedor__info__caja">
                                             <h2>La caja se va a cerrar con:</h2>
-                                            {/* Mostrar entradas actuales */}
                                             {cajaEntries.map((entry, index) => (
                                                 <p key={index}>
                                                     Motivo: {entry.id_motivo}, Monto: ${entry.monto}, Sobrante: $

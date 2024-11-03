@@ -55,7 +55,7 @@ const Fallas = () => {
   }
 
   if (user.rol === 'empleado') {
-    const additionalData = {
+    var additionalData = {
       id_sucursal: user.sucursal.id,
       id_usuario: user.id
     }
