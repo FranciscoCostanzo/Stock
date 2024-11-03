@@ -45,12 +45,11 @@ const Caja = () => {
         })
     }
 
-    const [motivoSeleccionado, setMotivoSeleccionado] = useState(null);
+    const [motivoSeleccionado, setMotivoSeleccionado] = useState({});
 
     const handleMotivoChange = (motivo) => {
       setMotivoSeleccionado(motivo); // Guardar el objeto con `id` y `motivo`
     };
-
 
     // const handleMotivoChange = (id) => {
     //     setSelectedMotivoId(id)
@@ -122,7 +121,7 @@ const Caja = () => {
         // Agregar nueva entrada al array
         setCajaEntries([...cajaEntries, newEntry])
         setDataCajaFields({ monto: 0, sobrante: 0 }) // Resetear los campos
-        setMotivoSeleccionado(null) // Resetear motivo
+        setMotivoSeleccionado({}) // Resetear motivo
         toast.success('Entrada agregada exitosamente')
     }
 
