@@ -6,7 +6,7 @@ const matchesFilter = (value, filter) => {
   return value?.toString().toLowerCase().startsWith(filter.toLowerCase())
 }
 
-const TablesProductos = ({ data = [], filters = {}, ventas, pedidos, analisis, onRowClick }) => {
+const TablesProductos = ({ data = [], filters = {}, ventas, pedidos, analisis, onRowClick, recibirPedido }) => {
   const [tooltipVisible, setTooltipVisible] = useState(false)
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
   const [hoveredRow, setHoveredRow] = useState(null)

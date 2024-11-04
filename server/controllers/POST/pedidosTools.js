@@ -221,3 +221,91 @@ export const recibirPedido = async (req, res) => {
     connection.release();
   }
 };
+
+export const recibirPedidoUnico = async (req, res) => {
+  const connection = await db.getConnection();
+
+  try {
+    // Obtener el ID del pedido y el ID de la mercadería desde el cuerpo de la solicitud
+    const { id, id_mercaderia } = req.body;
+
+    // Verificar que el ID del pedido y el ID de mercadería estén definidos
+    if (!id || !id_mercaderia) {
+      return res.status(400).json({
+        error: "FaltanDatos",
+        message: "Se requiere un ID de pedido y un ID de mercadería.",
+      });
+    }
+
+    // Verificar si el pedido existe y obtener sus datos
+    const checkQuery = `SELECT id, id_sucursal, id_mercaderia, cantidad, estado FROM Pedidos WHERE id = ? AND id_mercaderia = ?`;
+    const [pedidoData] = await connection.query(checkQuery, [id, id_mercaderia]);
+
+    if (pedidoData.length === 0) {
+      return res.status(404).json({
+        error: "NoExiste",
+        message: "No se encontró un pedido con los ID proporcionados.",
+      });
+    }
+
+    const { id_sucursal, cantidad, estado } = pedidoData[0];
+
+    // Verificar si el pedido ya ha sido procesado
+    if (estado === 1) {
+      return res.status(400).json({
+        error: "YaProcesado",
+        message: "El pedido ya ha sido procesado.",
+      });
+    }
+
+    // Iniciar una transacción para actualizar el Stock y el estado del pedido
+    await connection.beginTransaction();
+
+    // Verificar si existe un registro en Stock con id_sucursal e id_mercaderia
+    const stockQuery = `SELECT cantidad FROM Stock WHERE id_sucursal = ? AND id_mercaderia = ?`;
+    const [stockData] = await connection.query(stockQuery, [
+      id_sucursal,
+      id_mercaderia,
+    ]);
+
+    if (stockData.length === 0) {
+      // Si no existe, insertar una nueva fila en Stock
+      const insertQuery = `INSERT INTO Stock (id_sucursal, id_mercaderia, cantidad) VALUES (?, ?, ?)`;
+      await connection.query(insertQuery, [id_sucursal, id_mercaderia, cantidad]);
+    } else {
+      // Si existe, sumar la cantidad a la cantidad existente
+      const existingQuantity = stockData[0].cantidad;
+      const updatedQuantity = existingQuantity + cantidad;
+      const updateQuery = `UPDATE Stock SET cantidad = ? WHERE id_sucursal = ? AND id_mercaderia = ?`;
+      await connection.query(updateQuery, [
+        updatedQuantity,
+        id_sucursal,
+        id_mercaderia,
+      ]);
+    }
+
+    // Actualizar el estado del pedido a '1' solo para la línea específica
+    const updateEstadoQuery = `UPDATE Pedidos SET estado = 1 WHERE id = ? AND id_mercaderia = ?`;
+    await connection.query(updateEstadoQuery, [id, id_mercaderia]);
+
+    // Confirmar la transacción
+    await connection.commit();
+
+    res.status(200).json({
+      message: "Pedido actualizado correctamente.",
+      updatedId: id,
+    });
+  } catch (error) {
+    // Revertir la transacción en caso de error
+    await connection.rollback();
+    console.error("Error al recibir el pedido:", error);
+    res.status(500).json({
+      error: "ServerError",
+      message: "Error al procesar la solicitud de recibir el pedido.",
+    });
+  } finally {
+    // Liberar la conexión
+    connection.release();
+  }
+};
+

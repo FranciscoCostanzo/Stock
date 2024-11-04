@@ -71,7 +71,7 @@ const VerPedidos = () => {
           </article>
         </>
       )}
-                <div className="print-area">
+                {/* <div className="print-area">
             {etiquetas.map((eti, i) =>
               Array.from({ length: eti.Cantidad }).map((_, index) => (
                 <EtiquetaImpresion
@@ -83,7 +83,7 @@ const VerPedidos = () => {
                 />
               ))
             )}
-          </div>
+          </div> */}
     </section>
   )
 }
