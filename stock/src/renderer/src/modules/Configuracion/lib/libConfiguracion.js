@@ -59,7 +59,7 @@ export const obtenerSucursalesAdmin = async () => {
 // ${urlEndpoint}/sucursales-admin
 export const obtenerMotivosAdmin = async () => {
   try {
-    const response = await fetch(`http://localhost:3000/motivos-caja`, {
+    const response = await fetch(`${urlEndpoint}/motivos-caja`, {
       method: 'GET',
       credentials: 'include'
     })

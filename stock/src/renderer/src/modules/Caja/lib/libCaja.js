@@ -1,11 +1,10 @@
 
-
-// import { urlEndpoint } from "../../lib"
+import { urlEndpoint } from "../../lib"
 
 // Función para obtener la caja por sucursal
 export const obtenerCajaPorSucursal = async (idSucursal) => {
   try {
-    const response = await fetch(`http://localhost:3000/caja/${idSucursal}`, {
+    const response = await fetch(`${urlEndpoint}/${idSucursal}`, {
       method: 'GET',
       credentials: 'include'
     })
@@ -24,7 +23,7 @@ export const obtenerCajaPorSucursal = async (idSucursal) => {
 
 export const obtenerMotivosCaja = async () => {
   try {
-    const response = await fetch(`http://localhost:3000/motivos-caja`, {
+    const response = await fetch(`${urlEndpoint}/motivos-caja`, {
       method: 'GET',
       credentials: 'include'
     })
@@ -42,7 +41,7 @@ export const obtenerMotivosCaja = async () => {
 }
 export const obtenerCajaAdmin = async () => {
   try {
-    const response = await fetch(`http://localhost:3000/caja-admin`, {
+    const response = await fetch(`${urlEndpoint}/caja-admin`, {
       method: 'GET',
       credentials: 'include'
     })

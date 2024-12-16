@@ -1,4 +1,6 @@
+import { urlEndpoint } from '../lib'
 import Form from './components/FormAuth'
+
 const Login = () => {
   const camposInicioSesion = [
     {
@@ -18,7 +20,7 @@ const Login = () => {
       dataSucursales={undefined}
       fields={camposInicioSesion}
       tipoDeForm={false}
-      endpoint="https://servidor.asessaludsrl.com/login"
+      endpoint={`${urlEndpoint}/login`}
     />
   )
 }

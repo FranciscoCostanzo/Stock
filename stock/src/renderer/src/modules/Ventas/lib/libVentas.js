@@ -48,7 +48,7 @@ export const obtenerTarjetas = async () => {
 
 export const obtenerVentasAdmin = async () => {
   try {
-    const response = await fetch(`http://localhost:3000/ventas-admin`, {
+    const response = await fetch(`${urlEndpoint}/ventas-admin`, {
       method: 'GET',
       credentials: 'include'
     })
@@ -67,7 +67,7 @@ export const obtenerVentasAdmin = async () => {
 
 export const obtenerVentasSucursal = async (idSucursal) => {
   try {
-    const response = await fetch(`http://localhost:3000/ventas-sucursal/${idSucursal}`, {
+    const response = await fetch(`${urlEndpoint}/ventas-sucursal/${idSucursal}`, {
       method: 'GET',
       credentials: 'include'
     })

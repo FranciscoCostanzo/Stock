@@ -28,8 +28,8 @@ const Caja = () => {
                     setCaja(data)
                 }
             } catch (error) {
-                toast.error(data.message)
-                console.log('Error al cargar la caja:', error.message)
+                toast.error(error.message || 'Error al cargar la caja');
+                console.log('Error al cargar la caja:', error.message);
             } finally {
                 setLoading(false)
             }
@@ -124,8 +124,6 @@ const Caja = () => {
         setMotivoSeleccionado({}) // Resetear motivo
         toast.success('Entrada agregada exitosamente')
     }
-
-    console.log(cajaEntries)
 
     // Función para cerrar la caja y enviar los datos al endpoint
     const handleCerrarCaja = async () => {

@@ -92,7 +92,7 @@ export const obtenerPedidosEmpleadoPendientes = async (idSucursal) => {
 
 export const obtenerPedidosEmpleadoRecibidos = async (idSucursal) => {
   try {
-    const response = await fetch(`http://localhost:3000/ver-pedidos-empleado-recibidos/${idSucursal}`, {
+    const response = await fetch(`${urlEndpoint}/ver-pedidos-empleado-recibidos/${idSucursal}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'

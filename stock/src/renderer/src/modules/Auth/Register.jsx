@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import Form from './components/FormAuth'
 import { fetchSucursales } from './lib/libAuth.js'
 import BtnVolver from '../Components/Btns/BtnVolver/BtnVolver.jsx'
+import { urlEndpoint } from '../lib.js'
 
 const Register = () => {
   const [sucursales, setSucursales] = useState([])
@@ -51,7 +52,7 @@ const Register = () => {
       <Form
         fields={camposRegistro}
         tipoDeForm={true}
-        endpoint="https://servidor.asessaludsrl.com/register"
+        endpoint={`${urlEndpoint}/register`}
       />
     </section>
   )
