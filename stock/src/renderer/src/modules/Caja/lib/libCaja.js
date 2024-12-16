@@ -4,7 +4,7 @@ import { urlEndpoint } from "../../lib"
 // Función para obtener la caja por sucursal
 export const obtenerCajaPorSucursal = async (idSucursal) => {
   try {
-    const response = await fetch(`${urlEndpoint}/${idSucursal}`, {
+    const response = await fetch(`${urlEndpoint}/caja/${idSucursal}`, {
       method: 'GET',
       credentials: 'include'
     })
