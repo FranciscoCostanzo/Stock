@@ -10,6 +10,7 @@ import SelectSucursales from '../Components/Inputs/SelectSucursales'
 import ContenedorPages from '../Components/Contenedor/ContenedorPages'
 import EtiquetaImpresion from './components/EtiquetaImpresion'
 import { Link } from 'react-router-dom'
+import { urlEndpoint } from '../lib'
 
 const Pedidos = () => {
   const { user } = useContext(AuthContext)
@@ -195,7 +196,7 @@ const Pedidos = () => {
     // Construir los datos de FormData dinámicamente
     const data = construirFormDataDinamico()
     try {
-      const response = await fetch('http://localhost:3000/pedidos', {
+      const response = await fetch(`${urlEndpoint}/pedidos`, {
         method: 'POST',
         mode: 'cors',
         headers: {

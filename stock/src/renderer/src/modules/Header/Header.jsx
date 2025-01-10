@@ -1,7 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { AuthContext } from '../Auth/context/AuthContext'
 import { useContext, useState } from 'react'
-import { urlEndpoint } from '../lib'
+import { urlEndpoint, version } from '../lib'
 import BtnGeneral from '../Components/Btns/BtnGeneral'
 
 const Header = () => {
@@ -84,6 +84,9 @@ const Header = () => {
                   </span>
                 </>
               )}
+              <p>Version:</p>
+              <span>{version}</span>
+              
             </article>
           )}
           <span>
