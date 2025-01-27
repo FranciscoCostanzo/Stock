@@ -372,10 +372,6 @@ const Pedidos = () => {
                   </article>
 
                   <article className="table__container">
-                    <div className="table-wrapper table__pedidos">
-                      <TablesProductos data={mercaderia} filters={filters} />
-                    </div>
-                    <br />
                     <div>
                       <strong>Total Etiquetas: {sumaTotalCantidades}</strong>
                     </div>

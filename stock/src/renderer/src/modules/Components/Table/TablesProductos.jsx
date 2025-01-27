@@ -12,7 +12,7 @@ const TablesProductos = ({ data = [], filters = {}, ventas, pedidos, analisis, o
   const [hoveredRow, setHoveredRow] = useState(null)
 
   if (!data || data.length === 0)
-    return <>{ventas ? <div>No hay ventas cargadas</div> : <div>No hay datos para mostrar</div>}</>
+    return <>{ventas ? <div>No hay ventas o pedidos cargados</div> : <div>No hay datos para mostrar</div>}</>
 
   const columns = Object.keys(data[0] || {})
 
