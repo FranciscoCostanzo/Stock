@@ -1,43 +1,43 @@
-import { useEffect, useState } from 'react';
-import { fetchSucursales } from '../../Auth/lib/libAuth';
+import { useEffect, useState } from 'react'
+import { fetchSucursales } from '../../Auth/lib/libAuth'
 
 const SelectSucursales = ({ onChange }) => {
-  const [sucursales, setSucursales] = useState([]);
+  const [sucursales, setSucursales] = useState([])
 
   useEffect(() => {
     // Obtener sucursales del servidor
     const loadSucursales = async () => {
       try {
-        const data = await fetchSucursales();
-        setSucursales(data); // Guardar las sucursales completas
+        const data = await fetchSucursales()
+        setSucursales(data) // Guardar las sucursales completas
       } catch (error) {
-        console.log(error.message);
+        console.log(error.message)
       }
-    };
+    }
 
-    loadSucursales();
-  }, []);
+    loadSucursales()
+  }, [])
 
   const sucursalSelect = [
     {
       label: 'Sucursal',
       name: 'sucursal',
       type: 'select',
-      options: sucursales,
-    },
-  ];
+      options: sucursales
+    }
+  ]
 
   const handleSelectChange = (event) => {
-    const selectedSucursalId = Number(event.target.value); // Convertir a número
-    const selectedOption = sucursales.find(option => option.id === selectedSucursalId);
+    const selectedSucursalId = Number(event.target.value) // Convertir a número
+    const selectedOption = sucursales.find((option) => option.id === selectedSucursalId)
 
     if (selectedOption) {
-      const concatenatedText = `${selectedOption.ciudad} - ${selectedOption.nombre}`;
-      onChange(selectedSucursalId, concatenatedText); // Enviar ambos valores al componente padre
+      const concatenatedText = `${selectedOption.ciudad} - ${selectedOption.nombre}`
+      onChange(selectedSucursalId, concatenatedText) // Enviar ambos valores al componente padre
     } else {
-      onChange(null, null); // Enviar null si no hay selección válida
+      onChange(null, null) // Enviar null si no hay selección válida
     }
-  };
+  }
 
   return (
     <div className="flex">
@@ -61,7 +61,7 @@ const SelectSucursales = ({ onChange }) => {
         <span>Sucursal</span>
       </label>
     </div>
-  );
-};
+  )
+}
 
-export default SelectSucursales;
+export default SelectSucursales

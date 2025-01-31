@@ -85,10 +85,10 @@ const FormVentas = () => {
 
       const total_venta = esPorcentajeEnTarjeta
         ? truncarADosDecimales(
-          truncarADosDecimales(precioTotalArticulo - adelanto) +
-          truncarADosDecimales(precioTotalArticulo - adelanto) *
-          (parseFloat(dataVentasFields.porcentaje) / 100)
-        )
+            truncarADosDecimales(precioTotalArticulo - adelanto) +
+              truncarADosDecimales(precioTotalArticulo - adelanto) *
+                (parseFloat(dataVentasFields.porcentaje) / 100)
+          )
         : truncarADosDecimales(precioTotalArticulo - adelanto)
 
       return {
@@ -143,7 +143,6 @@ const FormVentas = () => {
   const [articuloAComprar, setArticuloAComprar] = useState('')
 
   const handlePedirPrecioArticulo = async () => {
-
     toast('Buscando...', {
       position: 'top-right',
       autoClose: 5000,
@@ -217,7 +216,7 @@ const FormVentas = () => {
           // Si existe, incrementa la cantidad
           return prevCargas.map((articulo) =>
             articulo.id_mercaderia === dataArticulo.id_mercaderia &&
-              articulo.Descripcion === dataArticulo.Descripcion
+            articulo.Descripcion === dataArticulo.Descripcion
               ? { ...articulo, Cantidad: articulo.Cantidad + 1 }
               : articulo
           )
@@ -263,8 +262,8 @@ const FormVentas = () => {
 
   const handleDescargarEspecifico = (articuloParaEliminar) => {
     setCargasVentas((prevCargas) => {
-      const filteredCargas = prevCargas.filter((articulo) => 
-        articulo.Artículo !== articuloParaEliminar.Artículo
+      const filteredCargas = prevCargas.filter(
+        (articulo) => articulo.Artículo !== articuloParaEliminar.Artículo
       )
       return filteredCargas
     })
@@ -405,8 +404,6 @@ const FormVentas = () => {
     }
   }
 
-
-
   return (
     <>
       <div className="contenedor__busqueda">
@@ -493,7 +490,11 @@ const FormVentas = () => {
       </div>
       <div className="table__container">
         <div tipodetabla="ventas" className="table-wrapper">
-          <TablesProductos onRowClick={handleDescargarEspecifico} ventas={true} data={cargasVentas} />
+          <TablesProductos
+            onRowClick={handleDescargarEspecifico}
+            ventas={true}
+            data={cargasVentas}
+          />
         </div>
       </div>
       <div className="pasarela__de__pago">
@@ -559,7 +560,11 @@ const FormVentas = () => {
                       </div>
                       <p className="cambio">Cambio: {cambio}</p>
                       {entrega >= totalVenta && (
-                        <BtnGeneral disabled={disabled} claseBtn="btn__guardar__venta" tocar={handleSubmit}>
+                        <BtnGeneral
+                          disabled={disabled}
+                          claseBtn="btn__guardar__venta"
+                          tocar={handleSubmit}
+                        >
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                             <path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />

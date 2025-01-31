@@ -12,7 +12,7 @@ const Etiquetas = () => {
   const [etiquetaData, setEtiquetaData] = useState(null)
   const [selectedSucursalId, setSelectedSucursalId] = useState(null)
   const [selectedSucursalText, setSelectedSucursalText] = useState('')
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const handleAceptar = async () => {
     const articuloTrimmed = articuloAComprar.trim()
@@ -71,11 +71,11 @@ const Etiquetas = () => {
     try {
       await window.print()
       toast.success('Todas las etiquetas han sido impresas.')
-      navigate('/inicio');
+      navigate('/inicio')
     } catch (error) {
       toast.error('Error al imprimir las etiquetas.')
     } finally {
-      console.log("finalizado")
+      console.log('finalizado')
     }
   }
 
@@ -111,8 +111,7 @@ const Etiquetas = () => {
           </div>
         </>
       ) : (
-        <section className='ventas'>
-
+        <section className="ventas">
           <BtnVolver donde="/inicio" />
           <article className="contenedor__generar__etiqueta">
             <h2>Seleccionar Artículo y Sucursal</h2>

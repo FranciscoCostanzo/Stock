@@ -13,7 +13,6 @@ const Header = () => {
   const currentPath = location.pathname
   const routeName = currentPath === '/' ? 'Inicio' : currentPath.replace('/', '').replace('-', ' ')
 
-
   const handleAbrirCerrarSesion = () => {
     setCerrarSesion(true)
   }
@@ -30,7 +29,7 @@ const Header = () => {
 
       if (response.ok) {
         setUser(null)
-        localStorage.removeItem('access_token');
+        localStorage.removeItem('access_token')
         navigate('/') // Redirige a / para cerrar la sesión
         window.location.reload()
       } else {
@@ -86,7 +85,6 @@ const Header = () => {
               )}
               <p>Version:</p>
               <span>{version}</span>
-              
             </article>
           )}
           <span>
@@ -108,27 +106,26 @@ const Header = () => {
       </header>
       {cerrarSesion && (
         <>
-        <section className='modal__cerrar__sesion'>
-        <div className="close__btn" onClick={handleCerrarCerrarSesion}>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <path d="M18 6l-12 12" />
-            <path d="M6 6l12 12" />
-          </svg>
-        </div>
-          <strong>¿Seguro que quieres cerrar la sesión de {user.nombre} - {user.rol}?</strong>
-          <BtnGeneral tocar={handleCerrarSesion} claseBtn="btn__cerrar__sesion">
-            Cerrar Sesion
-          </BtnGeneral>
-        </section>
-        <div className="overlay"></div>
+          <section className="modal__cerrar__sesion">
+            <div className="close__btn" onClick={handleCerrarCerrarSesion}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M18 6l-12 12" />
+                <path d="M6 6l12 12" />
+              </svg>
+            </div>
+            <strong>
+              ¿Seguro que quieres cerrar la sesión de {user.nombre} - {user.rol}?
+            </strong>
+            <BtnGeneral tocar={handleCerrarSesion} claseBtn="btn__cerrar__sesion">
+              Cerrar Sesion
+            </BtnGeneral>
+          </section>
+          <div className="overlay"></div>
         </>
       )}
     </>
   )
 }
-
-
-
 
 export default Header

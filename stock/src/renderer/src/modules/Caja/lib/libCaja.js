@@ -1,5 +1,4 @@
-
-import { urlEndpoint } from "../../lib"
+import { urlEndpoint } from '../../lib'
 
 // Función para obtener la caja por sucursal
 export const obtenerCajaPorSucursal = async (idSucursal) => {

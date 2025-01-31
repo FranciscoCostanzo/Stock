@@ -1,4 +1,4 @@
-import { urlEndpoint } from "../../lib"
+import { urlEndpoint } from '../../lib'
 
 export const obtenerArticuloPedidos = async (idMercadeia) => {
   try {
@@ -31,7 +31,7 @@ export const obtenerPedidosAdmin = async () => {
       headers: {
         'Content-Type': 'application/json'
       },
-      credentials: 'include',
+      credentials: 'include'
     })
 
     if (!response.ok) {
@@ -53,7 +53,7 @@ export const obtenerPedidosEmpleado = async (idSucursal) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      credentials: 'include',
+      credentials: 'include'
     })
 
     if (!response.ok) {
@@ -75,7 +75,7 @@ export const obtenerPedidosEmpleadoPendientes = async (idSucursal) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      credentials: 'include',
+      credentials: 'include'
     })
 
     if (!response.ok) {
@@ -97,7 +97,7 @@ export const obtenerPedidosEmpleadoRecibidos = async (idSucursal) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      credentials: 'include',
+      credentials: 'include'
     })
 
     if (!response.ok) {

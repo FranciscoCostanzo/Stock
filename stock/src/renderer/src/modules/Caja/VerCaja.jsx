@@ -1,38 +1,38 @@
-import { useContext, useEffect, useState } from 'react';
-import BtnVolver from '../Components/Btns/BtnVolver/BtnVolver';
-import TablesProductos from '../Components/Table/TablesProductos';
-import { AuthContext } from '../Auth/context/AuthContext';
-import FiltroProductos from '../Mercaderia/components/Filtros/FiltroProductos';
-import { obtenerCajaAdmin } from './lib/libCaja';
+import { useContext, useEffect, useState } from 'react'
+import BtnVolver from '../Components/Btns/BtnVolver/BtnVolver'
+import TablesProductos from '../Components/Table/TablesProductos'
+import { AuthContext } from '../Auth/context/AuthContext'
+import FiltroProductos from '../Mercaderia/components/Filtros/FiltroProductos'
+import { obtenerCajaAdmin } from './lib/libCaja'
 
 const VerCaja = () => {
-  const { user } = useContext(AuthContext);
-  const [cajaData, setCajaData] = useState([]);
-  const [filters, setFilters] = useState({});
-  const [loading, setLoading] = useState(true);
+  const { user } = useContext(AuthContext)
+  const [cajaData, setCajaData] = useState([])
+  const [filters, setFilters] = useState({})
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const loadCaja = async () => {
       try {
-        let data;
+        let data
         if (user) {
           if (user.rol === 'admin') {
-            data = await obtenerCajaAdmin();
+            data = await obtenerCajaAdmin()
           } else {
             // data = await obtenerCajaSucursal(user.sucursal.id);
           }
-          setCajaData(data);
+          setCajaData(data)
           console.log(data)
         }
       } catch (error) {
-        console.log('Error al cargar caja:', error.message);
+        console.log('Error al cargar caja:', error.message)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    loadCaja();
-  }, [user]);
+    loadCaja()
+  }, [user])
 
   // Agrupación y suma de valores
   const cajaUnificada = cajaData.reduce((acc, entry) => {
@@ -50,7 +50,7 @@ const VerCaja = () => {
       total_tarjeta,
       total_efectivo,
       total
-    } = entry;
+    } = entry
 
     if (!acc[id]) {
       acc[id] = {
@@ -65,23 +65,23 @@ const VerCaja = () => {
         total_tarjeta: parseFloat(total_tarjeta),
         total_efectivo: parseFloat(total_efectivo),
         total: parseFloat(total)
-      };
+      }
     } else {
-      acc[id].monto += parseFloat(monto);
-      acc[id].sobrante += parseFloat(sobrante);
-      acc[id].fondo += parseFloat(fondo);
-      acc[id].cantidad_tarjeta += parseInt(cantidad_tarjeta, 10);
-      acc[id].cantidad_efectivo += parseInt(cantidad_efectivo, 10);
-      acc[id].total_tarjeta += parseFloat(total_tarjeta);
-      acc[id].total_efectivo += parseFloat(total_efectivo);
-      acc[id].total += parseFloat(total);
+      acc[id].monto += parseFloat(monto)
+      acc[id].sobrante += parseFloat(sobrante)
+      acc[id].fondo += parseFloat(fondo)
+      acc[id].cantidad_tarjeta += parseInt(cantidad_tarjeta, 10)
+      acc[id].cantidad_efectivo += parseInt(cantidad_efectivo, 10)
+      acc[id].total_tarjeta += parseFloat(total_tarjeta)
+      acc[id].total_efectivo += parseFloat(total_efectivo)
+      acc[id].total += parseFloat(total)
     }
 
-    return acc;
-  }, {});
+    return acc
+  }, {})
 
   // Convertir el objeto agrupado en un array
-  const cajaUnificadaArray = Object.values(cajaUnificada);
+  const cajaUnificadaArray = Object.values(cajaUnificada)
 
   // Filtros
   const filtros = cajaData.map(
@@ -110,11 +110,11 @@ const VerCaja = () => {
       total_efectivo: parseFloat(total_efectivo),
       total: parseFloat(total)
     })
-  );
+  )
 
   const handleFilterChange = (newFilters) => {
-    setFilters(newFilters);
-  };
+    setFilters(newFilters)
+  }
 
   return (
     <section className="mercaderia">
@@ -138,7 +138,7 @@ const VerCaja = () => {
         </>
       )}
     </section>
-  );
-};
+  )
+}
 
-export default VerCaja;
+export default VerCaja

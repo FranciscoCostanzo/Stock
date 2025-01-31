@@ -6,13 +6,29 @@ const matchesFilter = (value, filter) => {
   return value?.toString().toLowerCase().startsWith(filter.toLowerCase())
 }
 
-const TablesProductos = ({ data = [], filters = {}, ventas, pedidos, analisis, onRowClick, recibirPedido }) => {
+const TablesProductos = ({
+  data = [],
+  filters = {},
+  ventas,
+  pedidos,
+  analisis,
+  onRowClick,
+  recibirPedido
+}) => {
   const [tooltipVisible, setTooltipVisible] = useState(false)
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
   const [hoveredRow, setHoveredRow] = useState(null)
 
   if (!data || data.length === 0)
-    return <>{ventas ? <div>No hay ventas o pedidos cargados</div> : <div>No hay datos para mostrar</div>}</>
+    return (
+      <>
+        {ventas ? (
+          <div>No hay ventas o pedidos cargados</div>
+        ) : (
+          <div>No hay datos para mostrar</div>
+        )}
+      </>
+    )
 
   const columns = Object.keys(data[0] || {})
 
@@ -62,13 +78,13 @@ const TablesProductos = ({ data = [], filters = {}, ventas, pedidos, analisis, o
                     className="tooltip__eliminar"
                     style={{
                       left: `${tooltipPosition.x - (pedidos ? 330 : analisis ? 330 : 420)}px`,
-                      top: pedidos 
+                      top: pedidos
                         ? `${tooltipPosition.y - 100}px`
-                        : analisis 
-                          ? `${tooltipPosition.y - 100}px` 
-                          : ventas 
-                          ? `${tooltipPosition.y - 290}px` 
-                          : `${tooltipPosition.y - 325}px`,
+                        : analisis
+                          ? `${tooltipPosition.y - 100}px`
+                          : ventas
+                            ? `${tooltipPosition.y - 290}px`
+                            : `${tooltipPosition.y - 325}px`
                     }}
                   >
                     {pedidos ? (

@@ -1,54 +1,54 @@
-.aviso__time__stamp{
-    position: absolute;
-    z-index: 1000;
-    width: 100vmax;
-    height: 100vh;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10000;
+.aviso__time__stamp {
+  position: absolute;
+  z-index: 1000;
+  width: 100vmax;
+  height: 100vh;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
 
-    .aviso{
-        text-align: center;
-        position: relative;
-        width: 400px;
-        display: flex;
-        gap: 10px;
-        padding: 20px;
-        background-color: white; // Color de fondo del formulario
-        border-radius: 10px;
+  .aviso {
+    text-align: center;
+    position: relative;
+    width: 400px;
+    display: flex;
+    gap: 10px;
+    padding: 20px;
+    background-color: white; // Color de fondo del formulario
+    border-radius: 10px;
+    font-weight: bold;
+    p {
+      font-weight: 500;
+      font-size: 20px;
+      strong {
+        font-size: 20px;
         font-weight: bold;
-        p{
-            font-weight: 500;
-            font-size: 20px;
-            strong{
-            font-size: 20px;
-            font-weight: bold;
-            text-decoration: underline;
-            cursor: pointer;
-            }
-        }
+        text-decoration: underline;
+        cursor: pointer;
+      }
     }
+  }
 }
 
-.contador__time__stamp{
-    position: absolute;
-    bottom: 0;
-    padding: 10px;
-    background-color: #000;
-    color: #fff;
-    width: fit-content;
-    text-align: start;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    border-radius: 0 8px 0 0;
+.contador__time__stamp {
+  position: absolute;
+  bottom: 0;
+  padding: 10px;
+  background-color: #000;
+  color: #fff;
+  width: fit-content;
+  text-align: start;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border-radius: 0 8px 0 0;
 
-    p{
-        font-size: 16px;
-    }
+  p {
+    font-size: 16px;
+  }
 }

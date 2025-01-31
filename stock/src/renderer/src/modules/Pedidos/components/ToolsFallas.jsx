@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import FormModal from '../../Components/Forms/FormModal'
 import { fetchSucursales } from '../../Auth/lib/libAuth'
+import { urlEndpoint } from '../../lib'
 
 const ToolsFallas = () => {
   const [abrirFormModal, setAbrirFormModal] = useState(false)
@@ -47,7 +48,7 @@ const ToolsFallas = () => {
           },
           { name: 'cantidad', type: 'text', label: 'Cantidad' }
         ]
-        apiEndpoint = 'http://localhost:3000/enviar-falla'
+        apiEndpoint = `${urlEndpoint}/enviar-falla`
         tituloFormulario = 'Enviar Falla'
         messageFormulario =
           'Enviar falla de producto para sacarlo del stock de una sucursal en especifico'
@@ -65,7 +66,7 @@ const ToolsFallas = () => {
           { name: 'cantidad', type: 'text', label: 'Cantidad' },
           { name: 'OKRF', type: 'text', label: 'Confirmación' }
         ]
-        apiEndpoint = 'http://localhost:3000/restablecer-falla'
+        apiEndpoint = `${urlEndpoint}/restablecer-falla`
         tituloFormulario = 'Restablecer Falla'
         messageFormulario =
           'Escribe el artículo en específico que quieras restablecer y luego escribe "OKRF" en el campo de confirmación'

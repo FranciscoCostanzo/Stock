@@ -1,34 +1,34 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import FormModal from '../Components/Forms/FormModal';
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import FormModal from '../Components/Forms/FormModal'
 
 const Tools = ({ formConfigs }) => {
-  const [abrirFormModal, setAbrirFormModal] = useState(false);
-  const [fieldsForm, setFieldsForm] = useState([]);
-  const [tituloForm, setTituloForm] = useState('');
-  const [messageForm, setMessageForm] = useState('');
-  const [endpoint, setEndpoint] = useState('');
-  const navigate = useNavigate(); // Hook para navegar
+  const [abrirFormModal, setAbrirFormModal] = useState(false)
+  const [fieldsForm, setFieldsForm] = useState([])
+  const [tituloForm, setTituloForm] = useState('')
+  const [messageForm, setMessageForm] = useState('')
+  const [endpoint, setEndpoint] = useState('')
+  const navigate = useNavigate() // Hook para navegar
 
   const handleAbrirFormModal = (config) => {
-    if (config.tituloFormulario === "Agregar Usuario") {
+    if (config.tituloFormulario === 'Agregar Usuario') {
       // Si el título del formulario es "Agregar Usuario", redirigimos a la página de registro
-      navigate('/register');
+      navigate('/register')
     } else {
       // Para otros formularios, abrimos el modal
-      setTituloForm(config.tituloFormulario);
-      setMessageForm(config.messageFormulario);
-      setFieldsForm(config.fields);
-      setEndpoint(config.apiEndpoint);
-      setAbrirFormModal(true);
+      setTituloForm(config.tituloFormulario)
+      setMessageForm(config.messageFormulario)
+      setFieldsForm(config.fields)
+      setEndpoint(config.apiEndpoint)
+      setAbrirFormModal(true)
     }
-  };
+  }
 
   const handleCerrarFormModal = () => {
-    setAbrirFormModal(false);
-    setFieldsForm([]);
-    setEndpoint('');
-  };
+    setAbrirFormModal(false)
+    setFieldsForm([])
+    setEndpoint('')
+  }
 
   return (
     <>
@@ -49,7 +49,7 @@ const Tools = ({ formConfigs }) => {
         />
       )}
     </>
-  );
-};
+  )
+}
 
-export default Tools;
+export default Tools

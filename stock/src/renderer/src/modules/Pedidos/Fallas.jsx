@@ -7,6 +7,7 @@ import FiltroProductos from '../Mercaderia/components/Filtros/FiltroProductos'
 import ToolsFallas from './components/ToolsFallas'
 import BtnGeneral from '../Components/Btns/BtnGeneral'
 import FormModal from '../Components/Forms/FormModal'
+import { urlEndpoint } from '../lib'
 
 const Fallas = () => {
   const { user } = useContext(AuthContext)
@@ -101,7 +102,7 @@ const Fallas = () => {
           {formFalla && (
             <FormModal
               fieldsForm={fieldsFallas}
-              endpoint="http://localhost:3000/enviar-falla"
+              endpoint={`${urlEndpoint}/enviar-falla`}
               onClose={handleCloseFormFallas}
               tituloForm="Enviar Falla"
               messageForm={`Formulario para enviar fallas de la sucursal ${user.sucursal.ciudad}`}

@@ -25,22 +25,22 @@ import Etiqueta from './modules/Etiqueta/Etiqueta.jsx'
 import VerCaja from './modules/Caja/VerCaja.jsx'
 
 const App = () => {
-  const [tokenStatus, setTokenStatus] = useState(null);
+  const [tokenStatus, setTokenStatus] = useState(null)
 
   useEffect(() => {
     const checkToken = () => {
-      const token = localStorage.getItem('access_token'); // Obtener el token del localStorage
+      const token = localStorage.getItem('access_token') // Obtener el token del localStorage
 
       if (token) {
-        setTokenStatus('Token ya está disponible:');
+        setTokenStatus('Token ya está disponible:')
         console.log(token)
       } else {
-        setTokenStatus('Token no disponible, solicitalo.');
+        setTokenStatus('Token no disponible, solicitalo.')
         console.error(tokenStatus)
       }
-    };
-    checkToken();
-  }, []);
+    }
+    checkToken()
+  }, [])
 
   return (
     <>

@@ -116,7 +116,6 @@ const VerVentas = () => {
     setVentasEspecificas(resultado)
   }
 
-
   const handleVolverAtrasAnalisis = () => {
     setVentasEspecificas([])
   }

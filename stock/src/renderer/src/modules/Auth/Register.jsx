@@ -49,11 +49,7 @@ const Register = () => {
   return (
     <section style={{ position: 'relative' }}>
       <BtnVolver donde="/configuracion" />
-      <Form
-        fields={camposRegistro}
-        tipoDeForm={true}
-        endpoint={`${urlEndpoint}/register`}
-      />
+      <Form fields={camposRegistro} tipoDeForm={true} endpoint={`${urlEndpoint}/register`} />
     </section>
   )
 }

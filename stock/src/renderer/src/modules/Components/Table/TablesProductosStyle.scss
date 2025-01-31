@@ -1,104 +1,103 @@
 .table__container {
-    width: 87%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    padding-bottom: 40px; // Separación del borde inferior
-    position: relative;
+  width: 87%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  padding-bottom: 40px; // Separación del borde inferior
+  position: relative;
 
-    // Contenedor para la tabla con scrollbar
-    .table-wrapper {
-        max-height: calc(60vh - 60px); // Ajusta la altura máxima según tus necesidades
-        overflow-y: auto;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        background-color: #fff;
-        scrollbar-gutter: stable;
-    }
+  // Contenedor para la tabla con scrollbar
+  .table-wrapper {
+    max-height: calc(60vh - 60px); // Ajusta la altura máxima según tus necesidades
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: #fff;
+    scrollbar-gutter: stable;
+  }
 
-    .table__pedidos {
-        max-height: calc(40vh); // Ajusta la altura máxima según tus necesidades
-    }
+  .table__pedidos {
+    max-height: calc(40vh); // Ajusta la altura máxima según tus necesidades
+  }
 
-    .table-wrapper[tipodetabla='ventas'] {
-        max-height: calc(36vh - 60px); // Ajusta la altura máxima según tus necesidades
-    }
+  .table-wrapper[tipodetabla='ventas'] {
+    max-height: calc(36vh - 60px); // Ajusta la altura máxima según tus necesidades
+  }
 }
 
 // Estilos para la tabla
 table {
-    width: 100%;
-    border-collapse: collapse; // Elimina el espacio entre bordes
+  width: 100%;
+  border-collapse: collapse; // Elimina el espacio entre bordes
 
-    // Estilos para los encabezados de la tabla
-    th {
-        border: 1px solid #000;
-        padding: 10px;
-        text-align: left;
-        background-color: #fff;
-        font-weight: bold;
-        font-size: 22px;
+  // Estilos para los encabezados de la tabla
+  th {
+    border: 1px solid #000;
+    padding: 10px;
+    text-align: left;
+    background-color: #fff;
+    font-weight: bold;
+    font-size: 22px;
+  }
+
+  // Estilos para las filas de la tabla
+  tr {
+    // Estilos para las celdas de la tabla
+    td {
+      border: 1px solid #000;
+      padding: 10px;
+      font-size: 18px;
+    }
+  }
+
+  // Estilos para las filas alternas
+  tbody tr:nth-of-type(even) {
+    background-color: #e0e0e0;
+  }
+
+  .tr__ventas {
+    cursor: pointer;
+
+    .tooltip__eliminar {
+      pointer-events: none;
+      opacity: 0;
+      z-index: 100;
+      background-color: #ddd;
+      border: 2px solid;
+      position: absolute;
+      width: 169px;
+      text-align: center;
+      font-size: 18px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-weight: bold;
+
+      svg {
+        width: 25px;
+        height: 25px;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke: #000;
+        fill: none;
+      }
     }
 
-    // Estilos para las filas de la tabla
-    tr {
+    &:hover {
+      background-color: #c9c9c9 !important;
 
-        // Estilos para las celdas de la tabla
-        td {
-            border: 1px solid #000;
-            padding: 10px;
-            font-size: 18px;
-        }
+      .tooltip__eliminar {
+        opacity: 1;
+      }
     }
+  }
 
-    // Estilos para las filas alternas
-    tbody tr:nth-of-type(even) {
-        background-color: #e0e0e0;
+  .btn__volver__imprimir {
+    position: absolute;
+    left: -14%;
+
+    @media (max-width: 1600px) {
+      left: -13%;
     }
-
-    .tr__ventas {
-        cursor: pointer;
-
-        .tooltip__eliminar {
-            pointer-events: none;
-            opacity: 0;
-            z-index: 100;
-            background-color: #ddd;
-            border: 2px solid;
-            position: absolute;
-            width: 169px;
-            text-align: center;
-            font-size: 18px;
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-weight: bold;
-
-            svg {
-                width: 25px;
-                height: 25px;
-                stroke-width: 1.8;
-                stroke-linecap: round;
-                stroke-linejoin: round;
-                stroke: #000;
-                fill: none;
-            }
-        }
-
-        &:hover {
-            background-color: #c9c9c9 !important;
-
-            .tooltip__eliminar {
-                opacity: 1;
-            }
-        }
-    }
-
-    .btn__volver__imprimir {
-        position: absolute;
-        left: -14%;
-
-        @media (max-width: 1600px) {
-            left: -13%;
-        }
-    }
+  }
 }

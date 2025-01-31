@@ -22,9 +22,9 @@ const FormModal = ({ fieldsForm, endpoint, onClose, tituloForm, messageForm, add
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-  
-    const dataToSend = { ...formData, ...additionalData };
-  console.log(JSON.stringify(dataToSend))
+
+    const dataToSend = { ...formData, ...additionalData }
+    console.log(JSON.stringify(dataToSend))
     try {
       const response = await fetch(endpoint, {
         method: 'POST',
@@ -34,28 +34,27 @@ const FormModal = ({ fieldsForm, endpoint, onClose, tituloForm, messageForm, add
         credentials: 'include',
         body: JSON.stringify(dataToSend)
       })
-  
+
       if (!response.ok) {
         // Obtener el mensaje y código del error desde el backend
-        const errorData = await response.json();
-        throw errorData;  // Lanzamos el error con su código y mensaje
+        const errorData = await response.json()
+        throw errorData // Lanzamos el error con su código y mensaje
       }
-  
-      const data = await response.json();
-      console.log('Respuesta del servidor:', data);
-  
+
+      const data = await response.json()
+      console.log('Respuesta del servidor:', data)
+
       // Notificación de éxito
-      toast.success('¡Enviado con éxito!', { autoClose: 5000 });
-  
-      onClose(); // Cerrar el modal
-      window.location.reload();
+      toast.success('¡Enviado con éxito!', { autoClose: 5000 })
+
+      onClose() // Cerrar el modal
+      window.location.reload()
     } catch (error) {
       // Si el error tiene un código y mensaje, lo mostramos
-      console.error('Error:', error.code);
-      toast.error(`Error al enviar: ${error.code} - ${error.message}`, { autoClose: 5000 });
+      console.error('Error:', error.code)
+      toast.error(`Error al enviar: ${error.code} - ${error.message}`, { autoClose: 5000 })
     }
-  };
-  
+  }
 
   return (
     <div className="overlay">

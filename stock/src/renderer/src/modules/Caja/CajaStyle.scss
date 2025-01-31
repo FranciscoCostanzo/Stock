@@ -1,27 +1,27 @@
-.detalle__caja{
-    display: flex;
-    align-items: start;
-    justify-content: start;
-    gap: 20px;
+.detalle__caja {
+  display: flex;
+  align-items: start;
+  justify-content: start;
+  gap: 20px;
 
-    .contenedor__info__caja{
-        text-align: start;
-        border-radius: 8px;
-        border: 1px solid;
-        padding: 10px;
-    }
+  .contenedor__info__caja {
+    text-align: start;
+    border-radius: 8px;
+    border: 1px solid;
+    padding: 10px;
+  }
 
-    p{
-        font-size: 20px;
-    }
+  p {
+    font-size: 20px;
+  }
 }
 
-.total__ventas__dia{
-    font-size: 28px;
-    font-weight: bold;
+.total__ventas__dia {
+  font-size: 28px;
+  font-weight: bold;
 }
 
-.total__efectivo__dia{
-    font-size: 22px;
-    font-weight: bold;
+.total__efectivo__dia {
+  font-size: 22px;
+  font-weight: bold;
 }

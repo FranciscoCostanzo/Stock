@@ -7,6 +7,7 @@ import BtnVolver from '../Components/Btns/BtnVolver/BtnVolver'
 import BtnGeneral from '../Components/Btns/BtnGeneral'
 import { toast } from 'react-toastify' // Asegúrate de que Toastify esté importado
 import { Link } from 'react-router-dom'
+import { urlEndpoint } from '../lib'
 
 const RecibirPedidos = () => {
   const { user } = useContext(AuthContext)
@@ -49,7 +50,7 @@ const RecibirPedidos = () => {
       const uniqueIds = [...new Set(pedidos.map((pedido) => pedido.id))]
 
       // Enviar el formato correcto al servidor
-      const response = await fetch('http://localhost:3000/recibir-pedidos', {
+      const response = await fetch(`${urlEndpoint}/recibir-pedidos`, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -80,44 +81,41 @@ const RecibirPedidos = () => {
     try {
       // Validación: Si no hay pedidos, salir temprano
       if (!pedidos || pedidos.length === 0) {
-        toast.info('No hay pedidos para procesar.');
-        return;
+        toast.info('No hay pedidos para procesar.')
+        return
       }
-  
+
       // Enviar el formato correcto al servidor
-      const response = await fetch('http://localhost:3000/recibir-pedido-unico', {
+      const response = await fetch(`${urlEndpoint}/recibir-pedido-unico`, {
         method: 'POST',
         mode: 'cors',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ id: dato.id, id_mercaderia: dato.Articulo }), // Enviar el formato correcto
-        credentials: 'include', // Solo si es necesario para tu autenticación
-      });
-  
+        credentials: 'include' // Solo si es necesario para tu autenticación
+      })
+
       // Verificar la respuesta
-      const result = await response.json();
+      const result = await response.json()
       if (!response.ok) {
-        toast.error(`Error al recibir el pedido: ${result.message}`);
-        return;
+        toast.error(`Error al recibir el pedido: ${result.message}`)
+        return
       }
-  
-      toast.success('Pedido recibido con éxito.');
-  
+
+      toast.success('Pedido recibido con éxito.')
+
       // Actualizar la lista de pedidos filtrando solo el pedido específico
       setPedidos((prevPedidos) =>
         prevPedidos.filter(
           (pedido) => !(pedido.id === dato.id && pedido.Articulo === dato.Articulo)
         )
-      );
-      
+      )
     } catch (error) {
-      toast.error(`Error al enviar el pedido: ${error.message}`);
-      console.error('Error al enviar el pedido:', error.message);
+      toast.error(`Error al enviar el pedido: ${error.message}`)
+      console.error('Error al enviar el pedido:', error.message)
     }
-  };
-  
-  
+  }
 
   return (
     <section className="mercaderia">
@@ -136,7 +134,7 @@ const RecibirPedidos = () => {
             />
             <div className="table-wrapper">
               <TablesProductos
-              ventas={true}
+                ventas={true}
                 analisis={true}
                 onRowClick={handleRecibirPedidoUnico}
                 data={pedidos}

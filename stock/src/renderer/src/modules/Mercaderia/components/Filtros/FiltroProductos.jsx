@@ -44,7 +44,7 @@ const FiltroProductos = ({ columns, dateColumns = [], onFilterChange }) => {
   // Manejo de cambios en los inputs de fecha
   useEffect(() => {
     if (dateColumns.length > 0) {
-      dateColumns.forEach(column => {
+      dateColumns.forEach((column) => {
         if (fechaRefs.current[column]) {
           fechaRefs.current[column].addEventListener('change', (e) => {
             handleInputChange(column, e.target.value)
@@ -59,7 +59,7 @@ const FiltroProductos = ({ columns, dateColumns = [], onFilterChange }) => {
       {columns.map((column) => (
         <div key={column}>
           <input
-            ref={el => dateColumns.includes(column) && (fechaRefs.current[column] = el)}
+            ref={(el) => dateColumns.includes(column) && (fechaRefs.current[column] = el)}
             min="2020-01-01"
             max="2025-12-31"
             id={dateColumns.includes(column) ? `fecha-${column}` : ''}

@@ -57,7 +57,7 @@ const VerPedidos = () => {
             <FiltroProductos
               columns={Object.keys(pedidos[0] || {})}
               onFilterChange={handleFilterChange}
-              dateColumns={["Fecha"]}
+              dateColumns={['Fecha']}
             />
             <div className="table-wrapper">
               <TablesProductos
@@ -71,7 +71,7 @@ const VerPedidos = () => {
           </article>
         </>
       )}
-                {/* <div className="print-area">
+      {/* <div className="print-area">
             {etiquetas.map((eti, i) =>
               Array.from({ length: eti.Cantidad }).map((_, index) => (
                 <EtiquetaImpresion

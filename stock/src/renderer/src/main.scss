@@ -99,20 +99,18 @@ p {
     border-bottom-color: #000;
   }
 
-  .text__loader{
+  .text__loader {
     font-size: 20px;
     font-weight: bold;
     border-radius: 8px;
     border: 1px solid;
     padding: 4px;
   }
-
 }
 
-[loader="interno"]{
+[loader='interno'] {
   top: 150px;
 }
-
 
 @keyframes rotation {
   0% {
@@ -125,22 +123,21 @@ p {
 }
 
 /* Para navegadores WebKit (Chrome, Safari, etc.) */
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-    -webkit-appearance: none;
-    margin: 0;
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /* Para Firefox */
-input[type=number] {
-    -moz-appearance: textfield;
+input[type='number'] {
+  -moz-appearance: textfield;
 }
 
 /* Para Edge y otros navegadores */
-input[type=number]::-ms-clear {
-    display: none;
+input[type='number']::-ms-clear {
+  display: none;
 }
-
 
 @import './modules/Auth/components/FormStyle.scss';
 @import './modules/Header/HeaderStyle.scss';

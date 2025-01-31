@@ -1,26 +1,26 @@
 .tools__productos {
-    display: flex;
-    gap: 30px;
-    position: absolute;
+  display: flex;
+  gap: 30px;
+  position: absolute;
+  text-decoration: none;
+  left: 50%;
+  transform: translate(-50%);
+  p {
+    z-index: 10;
+    cursor: pointer;
+    text-align: center;
     text-decoration: none;
-    left: 50%;
-    transform: translate(-50%);
-    p {
-        z-index: 10;
-        cursor: pointer;
-        text-align: center;
-        text-decoration: none;
-        color: #000;
-        font-size: 18px;
-        padding: 6px;
-        border: #000 1px solid;
-        font-weight: bold;
-        border-radius: 6px;
-        transition: 0.1s ease;
-        background-color: #fff;
+    color: #000;
+    font-size: 18px;
+    padding: 6px;
+    border: #000 1px solid;
+    font-weight: bold;
+    border-radius: 6px;
+    transition: 0.1s ease;
+    background-color: #fff;
 
-        &:hover {
-            scale: 1.05;
-        }
+    &:hover {
+      scale: 1.05;
     }
+  }
 }

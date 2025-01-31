@@ -1,4 +1,4 @@
-import { urlEndpoint } from "../../lib"
+import { urlEndpoint } from '../../lib'
 
 // Función para obtener sucursales
 export const fetchSucursales = async () => {

@@ -6,7 +6,7 @@ const EtiquetaImpresion = ({ descripcion, precio, articulo, sucursal }) => {
       <p>Artículo: {articulo}</p>
       <p>Sucursal: {sucursal}</p>
     </div>
-  );
-};
+  )
+}
 
-export default EtiquetaImpresion;
+export default EtiquetaImpresion

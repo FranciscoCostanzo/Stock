@@ -104,7 +104,7 @@ const Form = ({ fields, endpoint, tipoDeForm }) => {
       }
 
       const responseData = await response.json()
-      localStorage.setItem('access_token', responseData.token);
+      localStorage.setItem('access_token', responseData.token)
       navigate('/inicio')
 
       toast.success(`${tipoDeForm ? 'Te has registrado con éxito' : 'Te has logueado con éxito'}`, {
@@ -140,7 +140,11 @@ const Form = ({ fields, endpoint, tipoDeForm }) => {
   }
 
   return (
-    <form tipodeformulario={tipoDeForm ? 'register' : undefined} className="form" onSubmit={handleSubmit}>
+    <form
+      tipodeformulario={tipoDeForm ? 'register' : undefined}
+      className="form"
+      onSubmit={handleSubmit}
+    >
       {tipoDeForm === true ? (
         <>
           <p className="title">Registrar Usuario</p>

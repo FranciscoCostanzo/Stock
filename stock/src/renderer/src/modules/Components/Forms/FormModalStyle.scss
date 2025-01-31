@@ -35,7 +35,6 @@ $font-xxs: 12px;
   }
 }
 
-
 .message {
   font-size: 16px;
 }
@@ -49,7 +48,7 @@ $font-xxs: 12px;
   label {
     position: relative;
 
-    .invisible{
+    .invisible {
       display: none;
       width: 0;
       height: 0;
@@ -68,7 +67,7 @@ $font-xxs: 12px;
         background-color: rgb(233, 230, 230);
       }
 
-      &+span {
+      & + span {
         position: absolute;
         left: 11px;
         top: 39px;
