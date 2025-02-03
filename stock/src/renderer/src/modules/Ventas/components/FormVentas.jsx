@@ -353,7 +353,7 @@ const FormVentas = () => {
     try {
       // Crear el formData dinámico
       const formDataDinamico = construirFormDataDinamico()
-      const response = await fetch(`http://localhost:3000/venta`, {
+      const response = await fetch(`${urlEndpoint}/venta`, {
         method: 'POST',
         mode: 'cors',
         headers: {
