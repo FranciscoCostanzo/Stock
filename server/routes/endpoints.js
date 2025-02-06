@@ -48,7 +48,7 @@ import {
 import { agregarTarjeta, editarTarjeta } from "../controllers/POST/materialesTools.js";
 import { pedirCajaAdmin, pedirTotalCajaSucursal } from "../controllers/GET/pedirCaja.js";
 import { cargarCierreCaja } from "../controllers/POST/cajaTools.js";
-import { pedirPedidosAdmin, pedirPedidosEmpleado, pedirPedidosEmpleadoPendientes, pedirPedidosEmpleadoRecibidos } from "../controllers/GET/pedirPedidos.js";
+import { obtenerPublicoPorId, pedirPedidosAdmin, pedirPedidosEmpleado, pedirPedidosEmpleadoPendientes, pedirPedidosEmpleadoRecibidos } from "../controllers/GET/pedirPedidos.js";
 
 const router = Router();
 
@@ -110,6 +110,7 @@ router.post("/articulo-pedidos", pedirArticuloPedidos);
 router.post("/recibir-pedidos", recibirPedido);
 router.post("/recibir-pedido-unico", recibirPedidoUnico);
 router.post("/pedidos", EnviarPedidoAdmin);
+router.post("/id-impresion", obtenerPublicoPorId);
 
 router.get("/ver-pedidos-admin", pedirPedidosAdmin);
 router.get("/ver-pedidos-empleado/:id_sucursal", pedirPedidosEmpleado);

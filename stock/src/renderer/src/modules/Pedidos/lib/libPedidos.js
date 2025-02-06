@@ -24,6 +24,7 @@ export const obtenerArticuloPedidos = async (idMercadeia) => {
     throw error
   }
 }
+
 export const obtenerPedidosAdmin = async () => {
   try {
     const response = await fetch(`${urlEndpoint}/ver-pedidos-admin`, {
@@ -98,6 +99,32 @@ export const obtenerPedidosEmpleadoRecibidos = async (idSucursal) => {
         'Content-Type': 'application/json'
       },
       credentials: 'include'
+    })
+
+    if (!response.ok) {
+      throw new Error('Error al obtener el Articulo.')
+    }
+
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.error('Error en la solicitud:', error)
+    throw error
+  }
+}
+
+export const obtenerPublicoPorId = async (idMercadeia) => {
+  try {
+    // const response = await fetch(`${urlEndpoint}/id-impresion`, {
+      const response = await fetch(`http://localhost:3000/id-impresion`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        id: idMercadeia
+      })
     })
 
     if (!response.ok) {

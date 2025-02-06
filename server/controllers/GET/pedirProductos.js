@@ -165,7 +165,6 @@ export const pedirFallasEmpleado = async (req, res) => {
   }
 };
 
-
 export const pedirInversionAdmin = async (req, res) => {
   try {
     // Consulta para obtener el stock total, inversión y retorno para cada producto

@@ -1,10 +1,10 @@
 const EtiquetaImpresion = ({ descripcion, precio, articulo, sucursal }) => {
   return (
     <div>
-      <p>Descripción: {descripcion}</p>
-      <p>Precio: {precio}</p>
+      <p>{sucursal}</p>
       <p>Artículo: {articulo}</p>
-      <p>Sucursal: {sucursal}</p>
+      <p>{descripcion}</p>
+      <p>Precio contado: ${precio}</p>
     </div>
   )
 }

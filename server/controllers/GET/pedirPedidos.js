@@ -207,3 +207,44 @@ export const pedirPedidosEmpleadoRecibidos = async (req, res) => {
     });
   }
 };
+
+export const obtenerPublicoPorId = async (req, res) => {
+  const { id } = req.body; // Obtener id desde el cuerpo de la solicitud
+  console.log(id)
+  if (!id) {
+    return res.status(400).json({
+      error: "FaltanDatos",
+      message: "El ID de la mercadería es obligatorio en el cuerpo de la solicitud.",
+    });
+  }
+
+  try {
+    // Consulta para obtener el valor de la columna "publico" para el ID especificado
+    const query = `
+      SELECT publico
+      FROM Mercaderia
+      WHERE id = ?
+    `;
+
+    // Ejecutar la consulta con el id proporcionado
+    const [resultados] = await db.query(query, [id]);
+
+    if (resultados.length === 0) {
+      return res.status(404).json({
+        error: "NoEncontrado",
+        message: "No se encontró mercadería con el ID especificado.",
+      });
+    }
+
+    // Envía el valor de "publico"
+    res.status(200).json(resultados[0].publico);
+  console.log(resultados[0].publico)
+
+  } catch (error) {
+    console.error("Error obteniendo el valor de 'publico' para la mercadería:", error);
+    res.status(500).json({
+      error: "ServerError",
+      message: "Error obteniendo el valor de 'publico'.",
+    });
+  }
+};
