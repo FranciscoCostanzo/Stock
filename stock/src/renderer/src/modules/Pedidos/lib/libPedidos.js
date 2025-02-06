@@ -115,8 +115,7 @@ export const obtenerPedidosEmpleadoRecibidos = async (idSucursal) => {
 
 export const obtenerPublicoPorId = async (idMercadeia) => {
   try {
-    // const response = await fetch(`${urlEndpoint}/id-impresion`, {
-      const response = await fetch(`http://localhost:3000/id-impresion`, {
+    const response = await fetch(`${urlEndpoint}/id-impresion`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
