@@ -3,6 +3,14 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
+// 🔒 ¿Qué hacen esas líneas?
+// ignore-certificate-errors: le dice a Chromium que ignore errores SSL, como certificados autofirmados o no confiables.
+
+// NODE_TLS_REJECT_UNAUTHORIZED = '0': le dice a Node.js (y por ende a fetch o axios del main/renderer) que no rechace conexiones inseguras.
+app.commandLine.appendSwitch('ignore-certificate-errors', 'true')
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0'
+
+
 function createWindow() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
   const mainWindow = new BrowserWindow({

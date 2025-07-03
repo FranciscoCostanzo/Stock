@@ -27,6 +27,20 @@ import VerCaja from './modules/Caja/VerCaja.jsx'
 const App = () => {
   const [tokenStatus, setTokenStatus] = useState(null)
 
+  const isWindows = navigator.userAgent.includes("Windows");
+
+console.log("¿Es Windows?", isWindows);
+console.log("User agent:", navigator.userAgent);
+const ua = navigator.userAgent;
+
+if (ua.includes("Windows NT 6.1")) {
+  console.log("Es Windows 7");
+} else if (ua.includes("Windows NT 10.0")) {
+  console.log("Es Windows 10 o 11");
+}
+
+
+
   useEffect(() => {
     const checkToken = () => {
       const token = localStorage.getItem('access_token') // Obtener el token del localStorage
