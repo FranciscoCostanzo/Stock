@@ -2,65 +2,77 @@ import db from "../../config/db.js";
 
 // Productos TOOLS
 export const agregarArticulo = async (req, res) => {
-  let { descripcion, costo, publico } = req.body;
+  let { id, descripcion, costo, publico } = req.body;
 
+  
   try {
-    // Validar que todos los campos estén presentes
+    // Validación básica de campos obligatorios
     if (!descripcion || costo === undefined || publico === undefined) {
       return res
         .status(400)
         .json({ error: "Todos los campos son requeridos." });
     }
 
-    // Eliminar espacios al principio y al final de las cadenas de texto
+    // Limpieza de texto
     descripcion = descripcion.trim();
 
-    // Verificar si algún campo de texto está vacío después de eliminar espacios
     if (descripcion === "") {
       return res
         .status(400)
         .json({ error: "La descripción no puede estar vacía." });
     }
 
-    // Verificar si los valores numéricos son válidos
     if (isNaN(costo) || isNaN(publico) || costo === "" || publico === "") {
       return res
         .status(400)
         .json({ error: "Costo y público deben ser números válidos." });
     }
 
-    // Obtener una conexión a la base de datos
     const connection = await db.getConnection();
-
-    // Normalizar la descripción a minúsculas para la comparación
     const descripcionLower = descripcion.toLowerCase();
 
-    // Verificar si ya existe un producto con la misma descripción
+    // Verificar si ya existe un producto con esa descripción
     const [existingProduct] = await connection.execute(
       "SELECT * FROM Mercaderia WHERE LOWER(descripcion) = ?",
       [descripcionLower]
     );
-
     if (existingProduct.length > 0) {
       connection.release();
-      return res.status(409).json({ error: "El producto ya existe." });
+      return res.status(409).json({ error: "El producto ya existe por descripción." });
     }
 
-    // Insertar el producto en la base de datos
-    const [result] = await connection.execute(
-      "INSERT INTO Mercaderia (descripcion, costo, publico) VALUES (?, ?, ?)",
-      [descripcion, costo, publico]
-    );
+    // Si se pasa un ID manual, verificar que no exista
+    let result;
+    if (id && Number(id) > 0) {
+      // Verificar si ese ID ya existe
+      const [existingId] = await connection.execute(
+        "SELECT * FROM Mercaderia WHERE id = ?",
+        [id]
+      );
+      if (existingId.length > 0) {
+        connection.release();
+        return res.status(409).json({ error: `El ID ${id} ya existe.` });
+      }
 
-    const productoId = result.insertId;
+      // Insertar con ID explícito
+      result = await connection.execute(
+        "INSERT INTO Mercaderia (id, descripcion, costo, publico) VALUES (?, ?, ?, ?)",
+        [id, descripcion, costo, publico]
+      );
+    } else {
+      // Insertar sin ID (autoincremental)
+      [result] = await connection.execute(
+        "INSERT INTO Mercaderia (descripcion, costo, publico) VALUES (?, ?, ?)",
+        [descripcion, costo, publico]
+      );
+      id = result.insertId;
+    }
 
-    // Liberar la conexión a la base de datos
     connection.release();
 
-    // Enviar una respuesta exitosa
-    res.status(201).json({
+    return res.status(201).json({
       message: "Producto agregado correctamente.",
-      productoId: productoId,
+      productoId: id,
     });
   } catch (error) {
     console.error("Error al agregar producto:", error);

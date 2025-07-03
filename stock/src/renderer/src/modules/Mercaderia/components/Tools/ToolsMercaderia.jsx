@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import FormModal from '../../../Components/Forms/FormModal'
-import { urlEndpoint } from '../../../lib'
+import { urlEndpoint, urlEndpointPruebas } from '../../../lib'
 
 const ToolsMercaderia = () => {
   const [abrirFormModal, setAbrirFormModal] = useState(false)
@@ -18,6 +18,7 @@ const ToolsMercaderia = () => {
     switch (action) {
       case 'add':
         fields = [
+          { name: 'id', type: 'number', label: 'ID del artículo' },
           { name: 'descripcion', type: 'text', label: 'Descripción' },
           { name: 'costo', type: 'number', label: 'Precio de Costo' },
           { name: 'publico', type: 'number', label: 'Precio Público' }
