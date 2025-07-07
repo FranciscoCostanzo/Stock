@@ -38,6 +38,8 @@ export const agregarArticulo = async (req, res) => {
     );
     if (existingProduct.length > 0) {
       connection.release();
+      // Si ya existe un producto con esa descripción, retornar un error
+      console.error("El producto ya existe por descripción.");
       return res.status(409).json({ error: "El producto ya existe por descripción." });
     }
 
@@ -51,6 +53,8 @@ export const agregarArticulo = async (req, res) => {
       );
       if (existingId.length > 0) {
         connection.release();
+        // Si el ID ya existe, retornar un error
+        console.error(`El ID ${id} ya existe.`);
         return res.status(409).json({ error: `El ID ${id} ya existe.` });
       }
 
