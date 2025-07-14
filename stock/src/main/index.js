@@ -96,7 +96,7 @@ function createWindow() {
           "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
           "font-src 'self' https://fonts.gstatic.com; " +
           "script-src 'self' 'unsafe-inline'; " +
-          "connect-src 'self' http://localhost:3000 https://servidor.asessaludsrl.com;"
+          "connect-src 'self' http://localhost:3000 http://servidor.insutec.shop;"
       }
     })
   })

@@ -2,6 +2,8 @@ import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useContext, useState, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { AuthContext } from '../context/AuthContext'
+import { urlEndpoint } from '../../lib'
+
 
 export const AuthRouter = ({ requireAuth = true }) => {
   const { user, setUser } = useContext(AuthContext)
@@ -26,7 +28,7 @@ export const AuthRouter = ({ requireAuth = true }) => {
       }
 
       try {
-        const response = await fetch('https://servidor.asessaludsrl.com/check-token', {
+        const response = await fetch(`${urlEndpoint}/check-token`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
